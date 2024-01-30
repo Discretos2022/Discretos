@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:8
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:9
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -95,6 +95,7 @@ System
 	* Particle Effect Optimization (build 7)
 	* Migrating to Monogame 3.8.1.303 (build 8)
 	* Migrating to .NET 6 (build 8)
+	* Git adaptation (build 8)
 
 
 Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------

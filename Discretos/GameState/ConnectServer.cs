@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine;
-using Plateform_2D_v9.NetWorkEngine.Client;
 using Plateform_2D_v9.NetWorkEngine_2._0.Client;
 using System;
 using System.Collections.Generic;
@@ -11,10 +9,6 @@ namespace Plateform_2D_v9
 {
     class ConnectServer
     {
-
-        //Button
-        //private ButtonV1 Connect;
-        //private ButtonV1 Disconnect;
 
         public List<ButtonV3> connectionButtons;
 
@@ -38,9 +32,6 @@ namespace Plateform_2D_v9
 
         public ConnectServer()
         {
-
-            //Connect = new ButtonV1(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "se connecter");
-            //Disconnect = new ButtonV1(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "se deconnecter");
 
             connectionButtons = new List<ButtonV3>();
 
@@ -254,11 +245,6 @@ namespace Plateform_2D_v9
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            //Connect.Draw(Main.UltimateFont, new Vector2((1920 / 2) - Connect.getDimension().Width / 2, 600), 5, 4f, spriteBatch, false, 8 * 5 - 4);
-            //Disconnect.Draw(Main.UltimateFont, new Vector2((1920 / 2) - Disconnect.getDimension().Width / 2, 700), 5, 4f, spriteBatch, false, 8 * 5 - 4);
-
-
-            //Writer.DrawText(Main.UltimateFont, "connection", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("Connection").X * 6f + 50) / 2, 25), Color.Black, Color.LightGray, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f, 6f, spriteBatch, true);
             Writer.DrawText(Main.UltimateFont, "connection", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("connection").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
 
 

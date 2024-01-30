@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine;
 using Plateform_2D_v9.NetWorkEngine_2._0.Client;
 using Plateform_2D_v9.NetWorkEngine_2._0.Server;
 using System;
@@ -12,10 +11,6 @@ namespace Plateform_2D_v9
 {
     class CreateServer
     {
-
-        //Button
-        //private ButtonV1 LaunchServer;
-        //private ButtonV1 Shutdown;
 
         public List<ButtonV3> multiSettingsButtons;
         public List<ButtonV3> waitingPlayersButtons;
@@ -42,9 +37,6 @@ namespace Plateform_2D_v9
 
         public CreateServer()
         {
-
-            //LaunchServer = new ButtonV1(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "lancer");
-            //Shutdown = new ButtonV1(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "eteindre");
 
             multiSettingsButtons = new List<ButtonV3>();
             waitingPlayersButtons = new List<ButtonV3>();
@@ -241,11 +233,7 @@ namespace Plateform_2D_v9
         {
             if(serverState == State.SelectePort)
             {
-                //LaunchServer.Draw(Main.UltimateFont, new Vector2((1920 / 2) - LaunchServer.getDimension().Width / 2, 600), 5, 4f, spriteBatch, false, 8 * 5 - 4);
-                //Shutdown.Draw(Main.UltimateFont, new Vector2((1920 / 2) - Shutdown.getDimension().Width / 2, 700), 5, 4f, spriteBatch, false, 8 * 5 - 4);
 
-
-                //Writer.DrawText(Main.UltimateFont, "parametre de la partie", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("parametre du serveur").X * 6f + 50) / 2, 25), Color.Black, Color.LightGray, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f, 6f, spriteBatch, true);
                 Writer.DrawText(Main.UltimateFont, "multiplayer settings", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("multiplayer settings").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
 
 
@@ -254,9 +242,6 @@ namespace Plateform_2D_v9
                     multiSettingsButtons[i].Draw(spriteBatch);
                 }
 
-
-
-                //Writer.DrawText(Main.UltimateFont, message, new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString(message).X * 6f + 50) / 2, 100), Color.Black, Color.LightGray, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f, 6f, spriteBatch, true);
 
                 Writer.DrawText(Main.UltimateFont, "ip : " + Main.IP, new Vector2(1640, 1040), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
 

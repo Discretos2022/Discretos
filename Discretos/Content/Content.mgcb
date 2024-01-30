@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ChocEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:ChocEffect.fx
-
 #begin Images/Background/Background_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -727,18 +721,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/WallTile/Wall_6.png
 
-#begin PixelEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:PixelEffect.fx
-
-#begin RefractionEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:RefractionEffect.fx
-
 #begin Shaders/Light_1 1000x1000.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -769,9 +751,9 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/LightEffect.fx
 
-#begin Shadow.fx
+#begin Shaders/RefractionEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shadow.fx
+/build:Shaders/RefractionEffect.fx
 

@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 /// Les Aventures De Discretos
 /// Version : 0.0.0.9
 /// Build : 8
-/// SIEDEL Joshua © 2022-2023
-/// Copyright © 2022-2023 SIEDEL Joshua
+/// SIEDEL Joshua © 2022-2024
+/// Copyright © 2022-2024 SIEDEL Joshua
 /// </summary>
 
 namespace Plateform_2D_v9
@@ -72,8 +72,6 @@ namespace Plateform_2D_v9
 
         public static int TILESIZE = 16;
 
-        //public static PlayerV2 playerV2;
-
         public static bool[] SolidTile = new bool[100];
         public static bool[] SolidTileTop = new bool[100];
         public static bool[] LevelItem = new bool[100];
@@ -91,11 +89,6 @@ namespace Plateform_2D_v9
         public static float screenHeight = 768;
 
         public static Effect refractionEffect;
-        //public static Effect ShadowFX;
-
-        //public static Effect PixelShader;
-        //public static Effect PixelEffect;
-
         public static Effect LightEffect;
 
         // some default control values for the refractions.
@@ -127,7 +120,7 @@ namespace Plateform_2D_v9
         private Multiplay multiplay;
         public static bool isPaused;
 
-        public static SpriteFont UltimateFont = null;      //= new SpriteFont(null, null, null, null, 0, 0, null, null);
+        public static SpriteFont UltimateFont = null;
         Texture2D SuperFont;
         List<Rectangle> glyphRect = new List<Rectangle>();
         List<Rectangle> croppingList = new List<Rectangle>();
@@ -288,10 +281,6 @@ namespace Plateform_2D_v9
             LightManager.Init();
             Handler.InitPlayersList();
 
-
-            //playerV2 = new PlayerV2(new Vector2(300, 32), 1);
-            //Handler.players.Add(playerV2);
-
             WorldMap.CreateWorldMapData();
             WorldMap.LoadWorldMap();
             LevelData.CreateLevelData();
@@ -363,11 +352,8 @@ namespace Plateform_2D_v9
             //TileMap = new Texture2D(GraphicsDevice, 10, 20);
             //TileMap = Texture2D.FromFile(GraphicsDevice, "Content\\Images\\Map\\TileMap.jpg");
 
-            refractionEffect = Content.Load<Effect>("RefractionEffect");
-            //ShadowFX = Content.Load<Effect>("Shadow");
+            refractionEffect = Content.Load<Effect>("Shaders\\RefractionEffect");
 
-            //PixelShader = Content.Load<Effect>("ChocEffect");
-            //PixelEffect = Content.Load<Effect>("PixelEffect");
 
             LightEffect = Content.Load<Effect>("Shaders\\LightEffect");
 
@@ -491,9 +477,6 @@ namespace Plateform_2D_v9
 
             if (MouseInput.GetPos() != MouseInput.GetOldPos())
                 MouseInput.IsActived = true;
-
-
-            //Init();
 
 
             //Screen.LevelShader = Render.ShaderEffect.LightMaskLevel;
@@ -1128,25 +1111,6 @@ namespace Plateform_2D_v9
             spriteBatch.End();
         }
 
-        //public static void DrawShadow(string technique, Texture2D texture, Rectangle screenRectangle, GameTime gameTime, SpriteBatch spriteBatch)
-        //{
-        //    Vector2 displacement;
-
-        //    // Set an effect parameter to make the displacement texture scroll in a giant circle.
-        //    ShadowFX.Parameters["SpriteTexture"].SetValue(texture);
-        //    ShadowFX.CurrentTechnique = ShadowFX.Techniques[technique];
-
-
-
-        //    spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, ShadowFX);
-        //    spriteBatch.Draw(texture, screenRectangle, Color.White/**0.5f**/);
-        //    spriteBatch.End();
-
-        //}
-
     }
-
-
-   
 
 }
