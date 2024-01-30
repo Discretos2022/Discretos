@@ -69,5 +69,22 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             return tcpClient.Client.RemoteEndPoint.ToString();
         }
 
+        public void Disconnect()
+        {
+            if (stream != null)
+            {
+                writer.Close();
+                reader.Close();
+                stream.Close();
+                stream = null;
+                reader = null;
+                writer = null;
+            }
+
+            tcpClient.Close();
+            tcpClient = null;
+
+        }
+
     }
 }

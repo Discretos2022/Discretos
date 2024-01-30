@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
-using Plateform_2D_v9.NetWorkEngine_2._0.Server;
+
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+
+using Plateform_2D_v9.NetWorkEngine_3._0.Server;
 
 namespace Plateform_2D_v9
 {
@@ -20,11 +19,11 @@ namespace Plateform_2D_v9
         private ButtonV3 Cancel;
         private ButtonV3 Play;
 
-        private bool serverlaunched = false;
+        //private bool serverlaunched = false;
 
         //private string message = "";
 
-        public String serverInfo = "";
+        public string serverInfo = "";
 
         public TextBox textBoxPort;
         public ButtonV3 PortButton;
@@ -32,7 +31,7 @@ namespace Plateform_2D_v9
         private State serverState = State.SelectePort;
 
         public int numOfPlayer = 2;
-        public Client playerOne;
+        //public Client playerOne;
 
 
         public CreateServer()
@@ -88,11 +87,8 @@ namespace Plateform_2D_v9
                 if (port > Main.MaxPort)
                     LaunchServer.SetColor(Color.DarkGray, Color.Gray);
 
-                if (LaunchServer.IsCliqued() && !serverlaunched)
+                if (LaunchServer.IsCliqued() && !Server.IsLaunched())
                 {
-                    //Server.StartServer(2, 7777);
-
-                    //Server.players[1].tcp.SendData(new Packet(1));
 
                     if (port > Main.MaxPort)
                         textBoxPort.SetColor(Color.Red, Color.Black);
@@ -102,24 +98,9 @@ namespace Plateform_2D_v9
                         textBoxPort.SetColor(Color.White, Color.Black);
                         serverState = State.WaitPlayer;
 
-                        if (playerOne == null)
-                        {
-                            playerOne = new Client();
-                            playerOne.ConnectToServer(port);
-                        }
-
                     }
 
                 }
-
-                /*if (serverlaunched && Server.clients[1].tcp.socket != null)
-                {
-                    Main.inWorldMap = true;
-                    Main.inLevel = false;
-                    Camera.Zoom = 1f;
-                    Main.gameState = GameState.Multiplaying;
-
-                }*/
 
                 #endregion
 
@@ -188,8 +169,6 @@ namespace Plateform_2D_v9
                 if (Cancel.IsCliqued())
                 {
 
-                    playerOne.Disconnect();
-                    playerOne = null;
                     Server.Stop();
 
                     serverState = State.SelectePort;
@@ -207,12 +186,12 @@ namespace Plateform_2D_v9
                 else
                     Play.SetColor(Color.White, Color.Black);
 
-                if(Server.clients.ContainsKey(2))
+                if(Server.numOfClient == 1)
                     Play.SetColor(Color.DarkGray, Color.Gray);
 
                 if (Play.IsCliqued())
                 {
-                    if (Server.clients[2].tcp.socket != null)
+                    if (Server.numOfClient >= 2)
                     {
                         Main.playState = PlayState.InWorldMap;
                         Camera.Zoom = 1f;
@@ -263,9 +242,9 @@ namespace Plateform_2D_v9
                     waitingPlayersButtons[i].Draw(spriteBatch);
                 }
 
-                if (Server.clients[1].udp.endPoint != null)
+                if (Server.clients[0] != null)
                     Writer.DrawText(Main.UltimateFont, "player 1 is connected", new Vector2(20, 600), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                if (Server.clients[2].udp.endPoint != null)
+                if (Server.clients[1] != null)
                     Writer.DrawText(Main.UltimateFont, "player 2 is connected", new Vector2(20, 700), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
                 //if (Server.clients[3].udp.endPoint != null)
                   //  Writer.DrawText(Main.UltimateFont, "player 3 is connected", new Vector2(20, 800), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);

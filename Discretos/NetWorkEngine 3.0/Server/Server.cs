@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
-using System.Text;
 
 namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 {
@@ -18,7 +18,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public static int numOfClient = 1;
 
         private static TcpListener tcpListener;
-        private static UdpClient udpListener;
 
         /// <summary>
         /// The port max is 65535
@@ -64,6 +63,53 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
             }
 
+        }
+
+        public static void Stop()
+        {
+
+            if (tcpListener != null)
+            {
+
+                for(int i = 0; i < clients.Length; i++)
+                {
+
+                    if (clients[i] != null)
+                    {
+                        if (clients[i] != null)
+                        {
+                            clients[i].Disconnect();
+                            clients[i] = null;
+                            numOfClient -= 1;
+                        }
+
+                    }
+
+                }
+
+                tcpListener.Stop();
+
+                tcpListener = null;
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Server Shutdown ! \n");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Le server est déjà hors ligne ! \n");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+        }
+
+        public static bool IsLaunched()
+        {
+            if (tcpListener == null)
+                return false;
+            else
+                return true;
         }
 
     }
