@@ -1,0 +1,171 @@
+Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
+
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:8
+
+	* World Map added (implemented) (build 1)
+	* World Map added (almost functional) (build 6)
+	* New Enemy added - Guard (Spear Knight) (build 2)
+	* New Enemy added - Guard (Swordsman) (build 2)
+	* New Multiplayer Mode (not fonctionnel) (build 2)
+	* New Multiplayer Mode (almost fonctional) (build 6)
+	* Multiplayer Mode Updated (almost fonctional) (build 8)
+
+Game Interface
+
+	* Font improved (build 1)
+	* New Logo (build 2)
+	* Button improved (build 2)
+	* Show IP addresse (build 2)
+	* New Button - Quit (build 2)
+	* New Button - Settings (build 3)
+	* New Title Bar Icon - Forest Icon (build 7)
+	* New Menu Screen - SnowLand (build 8)
+	* Menu Screen improved - GrassLand (build 8)
+
+Camera
+
+	* Camera improved (Zoom) (build 2)
+	* Camera improved 2 (Zoom, shader) (build 7)
+
+Player
+
+	* Animation improved (build 1, 3, 5)
+	* New Sprite (build 2)
+	* New Player Graphics (build 3)
+	* New Mechanics - Sword Fight (build 5)
+	* Sword Fight Animation corrected (build 7)
+
+Tile
+
+	* New Tile - Slope (build 1)
+	* New Tile - Brick (build 1)
+	* New Tile - Volcano_Tile (build 2)
+	* New Tile - Mechanical Block (build 4)
+	* Tile Sprite improved - Grass (build 2)
+	* Tile Sprite improved - Snow (build 2, 7)
+
+Level
+
+	* New Level 7 (build 1)
+	* New Level 8 (build 1)
+	* New Level 9 (build 5)
+	* New Particle Effect - SnowFall (build 1)
+	* New Effect - SnowStorm (build 3)
+	* New Shader Effect - Heat Distortion (build 1) (Shaders Not Fonctionnal, Experimental)
+	* New Shader Effect - Heat Distortion (build 7) (Shaders Fonctionnal, Experimental)
+	* New Shader Effect - Light And Shadow (build 7, 8) (Shaders Fonctionnal, Experimental)
+	* New Background - SnowForest (build 2)
+	* New Background - Desert (build 2)
+	* New Background - Mountains (build 3)
+	* New Background - Forest (buld 6)
+	* New LevelData Mechanism (build 5)
+	* Update Background - Desert (build 6)
+	* Update Effect - SnowStorm (build 7)
+	* Level 7 Extension 1 (build 3)
+	* Level 7 Extension 2 (build 5)
+	* Level 7 Extension 3 (build 6)
+	* New Platform - BrokenBrick (build 3)
+	* New Object - Golden Key (build 6)
+	* New Object - Wood Door (build 6)
+	* New Object - Spring (build 6)
+	* New Object - CheckPoint (build "6", 7)
+	* New Object - Wood Ladder (build 7)
+	* New Wall - Brick Wall (build 6)
+	* Object Sprite improved - CheckPoint (build 7)
+
+Collision
+
+	* Collision improved (build 1, 2, 3, 4, 5, 6, 7)
+	* New Collision System (implemented) (build 4)
+	* New Collision System (build 5)
+
+System
+
+	* New DEBUG Mode - F1 (build 2)
+	* New TIMEDEBUG Mode - F2 (build 7)
+	* DEBUG Mode impoved - F1 (build 3, 4, 5, 6)
+	* General Optimization (Level) (build 5)
+	* Background Optimization (build 6)
+	* Resolution adaptation (1080p, 1600x900, 720p) (build 7)
+	* Camera adaptation for Shaders (build 7)
+	* Tiles Drawing Optimization (build 7, 8)
+	* Walls Drawing Optimization (build 8)
+	* Multiplayer improved (build 7)
+	* Graphics Optimization (build 7)
+	* Particle Effect Optimization (build 7)
+	* Migrating to Monogame 3.8.1.303 (build 8)
+	* Migrating to .NET 6 (build 8)
+
+
+Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------
+
+Game Interface
+
+	* New Main Menu
+
+Collision
+
+	* Collision improved
+
+Tile
+
+	* Level Selector ver 2.0
+
+
+Version 0.0.0.7 Changes -----------------------------------------------------------------------------------------
+
+Game Interface
+
+	* Fullscreen added
+
+Collision
+
+	* Collision improved
+
+
+Version 0.0.0.6 Changes -----------------------------------------------------------------------------------------
+
+Item
+
+	* New Item
+
+Graphism
+
+	* New Item Graphics
+	* New Player Graphics
+	* New Tile Graphics
+
+Level
+
+	* New Level added 4,5,6
+
+
+Version 0.0.0.5 Changes -----------------------------------------------------------------------------------------
+
+Tile Mecanisme
+
+	* New Level Selector
+	* New Level 3
+	* New Tile - Platform
+
+
+Collision
+
+	* Collision
+
+
+Version 0.0.0.4 Changes -----------------------------------------------------------------------------------------
+
+	* Collision
+
+Version 0.0.0.3 Changes -----------------------------------------------------------------------------------------
+
+	* Collision
+
+Version 0.0.0.2 Changes -----------------------------------------------------------------------------------------
+
+	* Collision
+
+Version 0.0.0.1 -------------------------------------------------------------------------------------------------
+
+	* 1ère Version
