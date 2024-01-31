@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 using Plateform_2D_v9.NetWorkEngine_3._0.Server;
+using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 
 namespace Plateform_2D_v9
 {
@@ -19,10 +20,6 @@ namespace Plateform_2D_v9
         private ButtonV3 Cancel;
         private ButtonV3 Play;
 
-        //private bool serverlaunched = false;
-
-        //private string message = "";
-
         public string serverInfo = "";
 
         public TextBox textBoxPort;
@@ -31,7 +28,6 @@ namespace Plateform_2D_v9
         private State serverState = State.SelectePort;
 
         public int numOfPlayer = 2;
-        //public Client playerOne;
 
 
         public CreateServer()
@@ -95,6 +91,7 @@ namespace Plateform_2D_v9
                     else
                     {
                         Server.Start(4, port); // Le server est compté dedans !
+                        Client.playerID = Client.PlayerID.PLayerOne;
                         textBoxPort.SetColor(Color.White, Color.Black);
                         serverState = State.WaitPlayer;
 

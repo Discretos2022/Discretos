@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
-using Plateform_2D_v9.NetWorkEngine_2._0.Server;
+using Plateform_2D_v9.NetWorkEngine_3._0.Client;
+using Plateform_2D_v9.NetWorkEngine_3._0.Server;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,7 +64,7 @@ namespace Plateform_2D_v9
                       //  ClientSend.PlayerPos();
 
 
-                    Main.camera.FollowObject(new Vector2(Handler.playersV2[Client.instance.myId].GetPosForCamera().X + Handler.playersV2[Client.instance.myId].GetRectangle().Width / 2, Handler.playersV2[Client.instance.myId].GetPosForCamera().Y + Handler.playersV2[Client.instance.myId].GetRectangle().Height / 2));
+                    Main.camera.FollowObject(new Vector2(Handler.playersV2[(int)Client.playerID].GetPosForCamera().X + Handler.playersV2[(int)Client.playerID].GetRectangle().Width / 2, Handler.playersV2[(int)Client.playerID].GetPosForCamera().Y + Handler.playersV2[(int)Client.playerID].GetRectangle().Height / 2));
 
                     for (int j = 0; j < Handler.Level.GetLength(1); j++)
                         for (int i = 0; i < Handler.Level.GetLength(0); i++)
@@ -108,12 +108,12 @@ namespace Plateform_2D_v9
                     Camera.Zoom = 4f;
                     Main.gameState = GameState.Multiplaying;
 
-                    ServerSend.Level(2, 5);
+                    //ServerSend.Level(2, 5);
 
-                    if (Server.clients[3] != null)
-                        ServerSend.Level(3, 5);
-                    if (Server.clients[4] != null)
-                        ServerSend.Level(4, 5);
+                    //if (Server.clients[3] != null)
+                    //    ServerSend.Level(3, 5);
+                    //if (Server.clients[4] != null)
+                    //    ServerSend.Level(4, 5);
                 }
 
             Level_7.Update(screen);
@@ -135,12 +135,12 @@ namespace Plateform_2D_v9
                     Camera.Zoom = 4f;
                     Main.gameState = GameState.Multiplaying;
 
-                    ServerSend.Level(2, 7);
+                    //ServerSend.Level(2, 7);
 
-                    if (Server.clients[3] != null)
-                        ServerSend.Level(3, 7);
-                    if (Server.clients[4] != null)
-                        ServerSend.Level(4, 7);
+                    //if (Server.clients[3] != null)
+                    //    ServerSend.Level(3, 7);
+                    //if (Server.clients[4] != null)
+                    //    ServerSend.Level(4, 7);
 
                 }
 
@@ -163,12 +163,12 @@ namespace Plateform_2D_v9
                     Camera.Zoom = 4f;
                     Main.gameState = GameState.Multiplaying;
 
-                    ServerSend.Level(2, 3);
+                    //ServerSend.Level(2, 3);
 
-                    if(Server.clients[3] != null)
-                        ServerSend.Level(3, 3);
-                    if (Server.clients[4] != null)
-                        ServerSend.Level(4, 3);
+                    //if(Server.clients[3] != null)
+                    //    ServerSend.Level(3, 3);
+                    //if (Server.clients[4] != null)
+                    //    ServerSend.Level(4, 3);
 
                 }
 
@@ -190,7 +190,7 @@ namespace Plateform_2D_v9
 
 
                 Main.camera.FollowObjectInWorldMap(new Vector2(WorldMap.GetLevelSelectorPos().X, WorldMap.GetLevelSelectorPos().Y));
-                if(Client.instance.myId == 1)
+                if((int)Client.playerID == 1)
                     WorldMap.Update(gameTime);
             }
 
@@ -249,7 +249,7 @@ namespace Plateform_2D_v9
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if (Main.playState == PlayState.InWorldMap && Client.instance.myId == 1)
+            if (Main.playState == PlayState.InWorldMap && Client.playerID == Client.PlayerID.PLayerOne)
             {
                 Level_3.setPos(ButtonV2.Position.centerX, y: 200);
                 Level_3.Draw(Main.UltimateFont, 4f, spriteBatch, false, 8 * 5 - 4);
@@ -287,15 +287,15 @@ namespace Plateform_2D_v9
 
             if (Main.Debug)
             {
-                Writer.DrawText(Main.UltimateFont, "player " + Client.instance.myId, new Vector2(5, 150), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
-                Writer.DrawText(Main.UltimateFont, "socket : " + Client.instance.tcp.socket.Connected.ToString().ToLower(), new Vector2(5, 200), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
-                Writer.DrawText(Main.UltimateFont, "client : " + Client.instance.tcp.socket.Client.Connected.ToString().ToLower(), new Vector2(5, 250), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
-               // Writer.DrawText(Main.UltimateFont, "stream : " + Client.instance.tcp.socket.GetStream().CanTimeout.ToString().ToLower(), new Vector2(5, 300), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
+                Writer.DrawText(Main.UltimateFont, "player " + (int)Client.playerID, new Vector2(5, 150), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
+                Writer.DrawText(Main.UltimateFont, "socket : " + Client.IsConnected().ToString().ToLower(), new Vector2(5, 200), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
+                //Writer.DrawText(Main.UltimateFont, "client : " + Client.instance.tcp.socket.Client.Connected.ToString().ToLower(), new Vector2(5, 250), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
+                // Writer.DrawText(Main.UltimateFont, "stream : " + Client.instance.tcp.socket.GetStream().CanTimeout.ToString().ToLower(), new Vector2(5, 300), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
             }
             
 
-            if (Handler.playersV2.ContainsKey(Client.instance.myId))
-                for (int i = 0; i < Handler.playersV2[Client.instance.myId].PV; i++)
+            if (Handler.playersV2.ContainsKey((int)Client.playerID))
+                for (int i = 0; i < Handler.playersV2[(int)Client.playerID].PV; i++)
                 {
                     if (i > 9)
                         spriteBatch.Draw(Main.Object[2], new Rectangle(500 + (i - 10) * 60, 60, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);

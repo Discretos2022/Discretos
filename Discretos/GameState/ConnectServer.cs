@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
+using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,8 +17,6 @@ namespace Plateform_2D_v9
 
         public static bool IsConnected;
 
-        public Client client;
-
         public TextBox textBoxIP;
         public TextBox textBoxPort;
 
@@ -29,6 +27,8 @@ namespace Plateform_2D_v9
 
         private int timeOut = 0;
         public bool connection = false;
+
+        private int animTime = 0;
 
         public ConnectServer()
         {
@@ -64,41 +64,13 @@ namespace Plateform_2D_v9
             if (connection)
                 timeOut += 1;
 
-            if (client != null)
+            if (Client.IsConnected())
             {
-                if (client.tcp != null)
-                {
-                    if (client.tcp.socket != null)
-                        if (client.tcp.socket.Connected) 
-                        {
-
-                            int data = client.tcp.socket.Available;
-
-                            if (data > 0)
-                            {
-                                Main.inWorldMap = true;
-                                Main.inLevel = false;
-                                Camera.Zoom = 1f;
-                                Main.gameState = GameState.Multiplaying;
-                                connection = false;
-                                timeOut = 0;
-                                
-                            }
-                            else
-                            {
-                                if (timeOut > 60)
-                                {
-                                    client = null;
-                                    Main.gameState = GameState.Menu;
-                                    Console.WriteLine("Timeout");
-                                    timeOut = 0;
-                                    connection = false;
-                                }
-                            }
-
-                        }
-
-                }
+                
+                Main.inWorldMap = true;
+                Main.inLevel = false;
+                Camera.Zoom = 1f;
+                Main.gameState = GameState.Multiplaying;
 
             }
 
@@ -111,51 +83,34 @@ namespace Plateform_2D_v9
             else
                 Connect.SetColor(Color.White, Color.Black);
 
-            if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()))
+            if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || Client.state == Client.ClientState.Connecting)
                 Connect.SetColor(Color.DarkGray, Color.Gray);  // 0.6f       0.2f
 
             if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()))
                 if (Connect.IsCliqued())
                 {
 
-                    if (client != null)
+                    if (Client.state == Client.ClientState.Disconnected)
                     {
-                        if(client.tcp != null)
-                        {
-                            if (client.tcp.socket == null)
-                                client = null;
-                            else if (!client.tcp.socket.Connected)
-                                client = null;
-                        }
-                    
-                    }
-                    
 
-                    if (client == null)
-                    {
-                        client = new Client();
-
-                        connection = true;
-                        
-                        client.ip = textBoxIP.GetText();
-
-                        if (textBoxIP.GetText() != "")
-                        {
-                            if(textBoxPort.GetText() == "")
-                                client.ConnectToServer(int.Parse("7777"));
-                            else
-                                client.ConnectToServer(int.Parse(textBoxPort.GetText()));
-                            //Main.inWorldMap = true;
-                            //Main.inLevel = false;
-                            //Camera.Zoom = 1f;
-                            //Main.gameState = GameState.Multiplaying;
-                        }
+                        if(textBoxPort.GetText() == "")
+                            Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
+                        else
+                            Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
 
                     }
                     else
                         Console.WriteLine("You already connected ! ©");
 
                 }
+
+            if (Client.IsConnected())
+            {
+                Main.inWorldMap = true;
+                Main.inLevel = false;
+                Camera.Zoom = 1f;
+                Main.gameState = GameState.Multiplaying;
+            }
 
             #endregion
 
@@ -259,6 +214,34 @@ namespace Plateform_2D_v9
             textBoxIP.Draw(spriteBatch);
 
             textBoxPort.Draw(spriteBatch);
+
+            if(Client.state == Client.ClientState.Connecting)
+            {
+
+                animTime += 1;
+
+                string connecting = "";
+
+                if (animTime == 60)
+                    animTime = 0;
+
+                if (animTime >= 0 && animTime < 20)
+                    connecting = "connecting.";
+                else if (animTime >= 20 && animTime < 40)
+                    connecting = "connecting..";
+                else if (animTime >= 40 && animTime < 60)
+                    connecting = "connecting...";
+
+                Writer.DrawText(Main.UltimateFont, connecting, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+
+            }
+            else
+            {
+                if (Client.IsTimeOut())
+                    Writer.DrawText(Main.UltimateFont, "connection failed", new Vector2(10, 5), Color.Black, Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+            }
+
+
 
         }
 
