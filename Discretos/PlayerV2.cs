@@ -129,7 +129,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public void Init()
+        public void InitLight()
         {
             light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 50f, Color.White);
             LightManager.lights.Add(light);

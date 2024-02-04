@@ -48,19 +48,19 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
                     if(numOfClient < MaxPlayers)
                     {
-                        clients[numOfClient] = new ServerClient(await tcpListener.AcceptTcpClientAsync());
+                        clients[numOfClient] = new ServerClient(await tcpListener.AcceptTcpClientAsync(), numOfClient + 1);
                         Console.WriteLine("[SERVER] Une connection accepté : " + clients[numOfClient].GetIP());
+                        AddPlayer(numOfClient + 1);
                         clients[numOfClient].Recepter();
                         numOfClient += 1;
                     }
                     tcpListener.Stop();
-                        
                 }
 
             }
-            catch(IOException e)
+            catch(SocketException e)
             {
-
+                //Console.WriteLine("[SERVER] Le serveur est fermé !");
             }
 
         }
@@ -111,6 +111,20 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             else
                 return true;
         }
+
+
+
+
+
+        ///*********************************    DISCRETOS    ********************************************///
+
+
+        public static void AddPlayer(int ID)
+        {
+            Console.WriteLine("[SERVER] Un nouveau joueur avec l'ID : " + ID);
+            Handler.AddPlayerV2(ID);
+        }
+
 
     }
 }

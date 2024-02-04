@@ -37,12 +37,12 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                 reader = new StreamReader(stream, Encoding.UTF8);
                 writer.AutoFlush = true;
 
-
                 while (true)
                 {
 
                     try
                     {
+
                         string text = await reader.ReadLineAsync();
 
                         if(text != null)
@@ -72,6 +72,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
                 state = ClientState.Disconnected;
                 isTimeOut = true;
+                client = null;
                 Console.WriteLine("Connection failed !");
 
             }

@@ -11,7 +11,6 @@ namespace Plateform_2D_v9
     {
 
         public static List<Actor> actors = new List<Actor>();
-        public static List<Actor> players = new List<Actor>();
         public static List<Solid> solids = new List<Solid>();
         public static List<Solid> walls = new List<Solid>();
         public static List<Actor> ladder = new List<Actor>();
@@ -23,18 +22,12 @@ namespace Plateform_2D_v9
         public static Wall[,] Walls;
 
 
-        public static PlayerV2 p1 = new PlayerV2(Vector2.Zero, 1);
-        public static PlayerV2 p2 = new PlayerV2(Vector2.Zero, 2);
-
-
         public static void Initialize()
         {
             solids = new List<Solid>();
             walls = new List<Solid>();
             actors = new List<Actor>();
             ladder = new List<Actor>();
-
-            //players = new List<Actor>();
 
         }
 
@@ -51,11 +44,6 @@ namespace Plateform_2D_v9
                 actors[i].Update(gameTime);
             }
 
-            //for (int i = 0; i < walls.Count; i++)
-            //{
-            //    walls[i].Update(gameTime);
-            //}
-
             for (int i = 1; i <= playersV2.Count; i++)
             {
                 playersV2[i].Update(gameTime);
@@ -65,12 +53,6 @@ namespace Plateform_2D_v9
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
-            //for (int i = 0; i < walls.Count; i++)
-            //{
-            //    walls[i].Draw(spriteBatch, gameTime);
-            //}
-
 
             #region Tiles and Walls Optimization
 
@@ -125,17 +107,13 @@ namespace Plateform_2D_v9
 
         public static void InitPlayersList()
         {
-            players = new List<Actor>();
+            playersV2.Clear();
         }
 
         public static void AddPlayerV2(int ID)
         {
-
-            players.Add(new PlayerV2(Vector2.Zero, ID));
-
             if(!playersV2.ContainsKey(ID))
                 playersV2.Add(ID, new PlayerV2(Vector2.Zero, ID));
-
         }
 
 

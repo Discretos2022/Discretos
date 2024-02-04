@@ -13,10 +13,14 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public StreamReader reader;
         public StreamWriter writer;
 
-        public ServerClient(TcpClient client)
+        public int ID;
+
+        public ServerClient(TcpClient client, int ID)
         {
 
             tcpClient = client;
+
+            this.ID = ID;
 
             stream = tcpClient.GetStream();
             reader = new StreamReader(stream, Encoding.UTF8);
@@ -34,13 +38,15 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 try
                 {
 
+                    Console.WriteLine("Attente de message !");
+
                     string text = await reader.ReadLineAsync();
 
                     if (text != null)
                     {
 
                         /// TODO : Que faire du message ?
-                        Console.WriteLine("[CLIENT 1] " + text);
+                        Console.WriteLine("[PLAYER " + ID + "] " + text);
 
                     }
                     else

@@ -990,12 +990,7 @@ namespace Plateform_2D_v9
 
             LightManager.Init();
 
-            Handler.playersV2[1].Init();
-
-            //playerV2 = new PlayerV2(Vector2.Zero, 1);
-
-            //Handler.players.Add(playerV2);
-            //Handler.players.Add(new PlayerV2(Vector2.Zero, 1));
+            Handler.playersV2[1].InitLight();
 
             Handler.Level = null;
             Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
@@ -1004,11 +999,6 @@ namespace Plateform_2D_v9
             Handler.Walls = new Wall[LevelData.GetWallType(LevelPlaying).GetLength(1), LevelData.GetWallType(LevelPlaying).GetLength(0)];
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(Level.LoadLevel), 1);
-
-            //while (!MapLoaded)
-            //{
-                //Console.WriteLine("Loading...");
-            //}
 
         }
 

@@ -268,40 +268,6 @@ namespace Plateform_2D_v9
         public void ActorCollision()
         {
 
-            /// (old) system : List of players
-            for (int i = 0; i < Handler.players.Count; i++)
-            {
-                Actor actor = Handler.players[i];
-
-                if (actor.actorType == ActorType.Player)
-                {
-                    if (Collision.RectVsRect(GetRectangle(), actor.GetAttackRectangle()))
-                    {
-                        RemovePV(1);
-                        Acceleration.Y = -KnockBack.Y;
-                        Acceleration.X = KnockBack.X;
-
-
-                        if(GetRectangle().X <= actor.GetRectangle().X && isLeft)
-                        {
-                            Velocity.X *= -1;
-                            isLeft = false;
-                        }
-
-                        if (GetRectangle().X >= actor.GetRectangle().X && !isLeft)
-                        {
-                            Velocity.X *= -1;
-                            isLeft = true;
-                        }
-
-                        //Console.WriteLine("KnockBach");
-
-                    }
-                }
-            }
-
-
-
             /// (new) system : Dictonary of players
             for (int i = 1; i <= Handler.playersV2.Count; i++)
             {
@@ -327,15 +293,9 @@ namespace Plateform_2D_v9
                             Velocity.X *= -1;
                             isLeft = true;
                         }
-
-                        //Console.WriteLine("KnockBach");
-
                     }
                 }
             }
-
-
-
         }
 
 
