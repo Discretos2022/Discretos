@@ -10,7 +10,6 @@ namespace Plateform_2D_v9
     {
         private bool isDisposed;
         private Game game;
-        private SpriteBatch spriteBatch;
         private BasicEffect effect;
 
         private Matrix Transform;
@@ -38,7 +37,7 @@ namespace Plateform_2D_v9
         public static int NumOfLight;
 
 
-        public Render(Game game, SpriteBatch spriteBatch)
+        public Render(Game game)
         {
             if (game is null)
             {
@@ -48,8 +47,6 @@ namespace Plateform_2D_v9
             this.game = game;
 
             this.isDisposed = false;
-
-            this.spriteBatch = spriteBatch;
 
             this.effect = new BasicEffect(this.game.GraphicsDevice);
             this.effect.FogEnabled = false;
@@ -71,121 +68,8 @@ namespace Plateform_2D_v9
                 return;
             }
 
-            this.spriteBatch?.Dispose();
-
             this.isDisposed = true;
         }
-
-
-        [ObsoleteAttribute("This property is obsolete. Use NewProperty instead.")]
-        public void Begin(Camera camera, bool isTextureFileteringEnabled, GameTime gameTime, SpriteBatch spriteBatch)
-        {
-
-            SamplerState sampler = SamplerState.PointClamp;
-            if (isTextureFileteringEnabled)
-            {
-                sampler = SamplerState.LinearClamp;
-            }
-
-
-            if(Main.camActived == true)
-            {
-                if (camera is null)
-                {
-                    Viewport vp = this.game.GraphicsDevice.Viewport;
-                    this.effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0f, 1f);
-                    this.effect.View = Matrix.Identity;
-                }
-                else
-                {
-                    camera.UpdateMatrices();
-                    
-                    this.effect.View = camera.View;
-                    this.effect.Projection = camera.Projection;
-                    
-                    //this.effect.CurrentTechnique = Main.refractionEffect.CurrentTechnique;
-                }
-            }
-
-            //this.Transform = Matrix.CreateScale(2.5f, 1f, 1f) * Matrix.CreateRotationZ(0f) * Matrix.CreateTranslation(new Vector3(01f, 01f, 0f));
-
-            if (Main.camActived)
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullNone, null);
-            else 
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullNone, null);
-
-
-
-        }
-
-        [ObsoleteAttribute("This property is obsolete. Use NewProperty instead.")]
-        public void Begin2(Camera camera, bool isTextureFileteringEnabled, GameTime gameTime, SpriteBatch spriteBatch)
-        {
-
-            SamplerState sampler = SamplerState.PointClamp;
-            if (isTextureFileteringEnabled)
-            {
-                sampler = SamplerState.LinearClamp;
-            }
-
-
-            if (Main.camActived == true)
-            {
-                if (camera is null)
-                {
-                    Viewport vp = this.game.GraphicsDevice.Viewport;
-                    this.effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0f, 1f);
-                    this.effect.View = Matrix.Identity;
-                }
-                else
-                {
-                    camera.UpdateMatrices();
-
-                    this.effect.View = camera.View;
-                    this.effect.Projection = camera.Projection;
-
-                    //this.effect.CurrentTechnique = Main.refractionEffect.CurrentTechnique;
-                }
-            }
-
-            //this.Transform = Matrix.CreateScale(2.5f, 1f, 1f) * Matrix.CreateRotationZ(0f) * Matrix.CreateTranslation(new Vector3(01f, 01f, 0f));
-
-            if (Main.camActived)
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullCounterClockwise, effect);
-            else
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullCounterClockwise, null);
-
-
-
-        }
-
-        [ObsoleteAttribute("This property is obsolete. Use NewProperty instead.")]
-        public void Begin(bool isTextureFileteringEnabled, GameTime gameTime = null)
-        {
-
-            SamplerState sampler = SamplerState.PointClamp;
-            if (isTextureFileteringEnabled)
-            {
-                sampler = SamplerState.LinearClamp;
-            }
-
-            Viewport vp = this.game.GraphicsDevice.Viewport;
-            this.effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0f, 1f);
-            this.effect.View = Matrix.Identity;
-
-
-            
-
-            //this.Transform = Matrix.CreateScale(3f, 3f, 0f) * Matrix.CreateRotationZ(0f) * Matrix.CreateTranslation(new Vector3(0f, 0f, 0f));
-
-            if (gameTime != null)
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullNone, Main.refractionEffect);
-            else
-                this.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, sampler, null, RasterizerState.CullNone, null);
-
-
-        }
-
 
         public void Begin(bool isTextureFileteringEnabled, GameTime gameTime, SpriteBatch spriteBatch, Camera camera = null, bool withEffect = true)
         {
@@ -276,81 +160,11 @@ namespace Plateform_2D_v9
 
         }
 
-        public void End()
+        public void End(SpriteBatch spriteBatch)
         {
-            this.spriteBatch.End();
+            spriteBatch.End();
         }
 
-
-        public void Draw(Texture2D texture, Vector2 origine, Vector2 position, Color color)
-        {
-            this.spriteBatch.Draw(texture, position, null, color, 0f, origine, 1f, SpriteEffects.None, 0f);
-        }
-
-
-        public void Draw(Texture2D texture, Rectangle? sourcerectangle, Vector2 origine, Vector2 position, float rotation, Vector2 scale, Color color)
-        {
-            this.spriteBatch.Draw(texture, position, sourcerectangle, color, rotation, origine, scale, SpriteEffects.FlipVertically, 0f);
-        }
-
-
-        public void Draw(Texture2D texture, Rectangle? sourceRectangle, Rectangle destinationRectangle, Color color)
-        {
-            this.spriteBatch.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-        }
-
-
-        public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
-        {
-            spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
-        }
-
-
-        public void Draw(Texture2D texture, Vector2 position, Color color)
-        {
-            spriteBatch.Draw(texture, position, color);
-        }
-
-
-        public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color)
-        {
-            spriteBatch.Draw(texture, position, sourceRectangle, color);
-        }
-
-
-        public void Draw(Texture2D texture, Rectangle position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origine, SpriteEffects effects, float layerDepth)
-        {
-            spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origine, effects, layerDepth);
-        }
-
-        [ObsoleteAttribute("This property is obsolete. Use NewProperty instead.")]
-        public void Draw(Texture2D texture, Rectangle destinationRectangle, Color color, GameTime gameTime, bool effect, Rectangle sourceRectangle = default, string technique = "RefractAntiRefractionArea")
-        {
-            if(effect && technique == "RefractAntiRefractionArea")
-                Main.Draw2dRefractionTechnique(technique, texture, Main.effect, destinationRectangle, 0.02f, 1f, 0.006f, 0.4f, new Vector2(-1000, -1000), 0, new Vector2(1920 / 2, 1080 / 2), false, gameTime, spriteBatch);
-            else if(effect && technique == "1")
-            {
-                Main.Draw2dRefractionTechnique("RefractAntiRefractionArea", texture, Main.effect, destinationRectangle, 0.02f, 1f, 0.006f, 0.4f, new Vector2(-1000, -1000), 0, new Vector2(1920 / 2, 1080 / 2), false, gameTime, spriteBatch);
-            }
-            else
-            {
-                //Main.DrawShadow(technique, texture, destinationRectangle, time, spriteBatch);
-
-                
-
-                Begin(null, !Main.PixelPerfect, gameTime, this.spriteBatch);
-
-                this.spriteBatch.Draw(texture, destinationRectangle, null, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-                
-                End();
-            }
-
-
-            
-
-
-
-        }
 
         public void DrawRenderTarget(Texture2D texture, Rectangle destinationRectangle, Color color, GameTime gameTime, SpriteBatch spriteBatch, Rectangle sourceRectangle = default, ShaderEffect shader = ShaderEffect.None)
         {
@@ -506,7 +320,7 @@ namespace Plateform_2D_v9
 
             Main.refractionEffect.CurrentTechnique = null;
 
-            End();
+            End(spriteBatch);
 
         }
 

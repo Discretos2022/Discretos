@@ -218,7 +218,7 @@ namespace Plateform_2D_v9
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             screen = new Screen(this, 1920, 1080);             //1024, 768);
-            render = new Render(this, spriteBatch);
+            render = new Render(this);
             camera = new Camera(screen);
 
             ScreenWidth = 1920;
@@ -521,7 +521,7 @@ namespace Plateform_2D_v9
 
             //camera.UpdateBackground();
 
-            render.End();
+            render.End(spriteBatch);
             screen.UnSet();
 
             #endregion
@@ -539,7 +539,7 @@ namespace Plateform_2D_v9
 
             state.DrawInCamera(spriteBatch, gameState, gameTime);
 
-            render.End();
+            render.End(spriteBatch);
             screen.UnSet();
 
 
@@ -568,7 +568,7 @@ namespace Plateform_2D_v9
 
             //spriteBatch.Draw(Main.Bounds, new Rectangle(0,0, 2000, 2000), Color.Red);
 
-            render.End();
+            render.End(spriteBatch);
             screen.UnSet();
 
             /// Background Light
@@ -594,7 +594,7 @@ namespace Plateform_2D_v9
             //    LightManager.lights[i].Draw(spriteBatch);
             //}
 
-            render.End();
+            render.End(spriteBatch);
             screen.UnSet();
 
             #endregion
@@ -675,7 +675,7 @@ namespace Plateform_2D_v9
 
             //Writer.DrawText(UltimateFont, "Les Aventures de Discretos ?", new Vector2(200, 650), Color.Black, color, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 3f, spriteBatch, false);
 
-            render.End();
+            render.End(spriteBatch);
             screen.UnSet();
 
 

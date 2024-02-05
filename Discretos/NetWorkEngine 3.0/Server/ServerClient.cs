@@ -55,6 +55,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 }
                 catch(IOException e)
                 {
+                    Console.WriteLine("ERROR : " + e);
                     break;
                 }
 

@@ -43,16 +43,18 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                     try
                     {
 
-                        string text = await reader.ReadLineAsync();
+                        //string text = await reader.ReadLineAsync();
 
-                        if(text != null)
-                        {
-                            /// TODO : Que faire du message ?
-                        }
-                        else
-                        {
-                            Disconnect("Server shutdown !");
-                        }
+                        await writer.WriteAsync("Salut");
+
+                        //if (text != null)
+                        //{
+                        //    /// TODO : Que faire du message ?
+                        //}
+                        //else
+                        //{
+                        //    Disconnect("Server shutdown !");
+                        //}
 
                     }
                     catch (IOException e)
