@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Plateform_2D_v9.NetWorkEngine_3._0;
 using System;
 using System.Collections.Generic;
 
@@ -140,6 +141,8 @@ namespace Plateform_2D_v9
 
             L_2:;
             }
+
+            NetPlay.IsMultiplaying = false;
 
         }
 

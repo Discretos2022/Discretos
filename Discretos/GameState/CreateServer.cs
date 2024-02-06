@@ -188,11 +188,12 @@ namespace Plateform_2D_v9
 
                 if (Play.IsCliqued())
                 {
-                    if (Server.numOfClient >= 2)
+                    if (Server.numOfClient >= 1) /// 2
                     {
                         Main.playState = PlayState.InWorldMap;
                         Camera.Zoom = 1f;
-                        Main.gameState = GameState.Multiplaying;
+                        Main.gameState = GameState.Playing;
+                        Server.SendGameStarted();
                     }
 
                 }

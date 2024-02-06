@@ -22,7 +22,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
             this.ID = ID;
 
-            stream = tcpClient.GetStream();
+            stream = client.GetStream();
             reader = new StreamReader(stream, Encoding.UTF8);
             writer = new StreamWriter(stream, Encoding.UTF8);
             writer.AutoFlush = true;
@@ -38,15 +38,13 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 try
                 {
 
-                    Console.WriteLine("Attente de message !");
-
                     string text = await reader.ReadLineAsync();
 
                     if (text != null)
                     {
 
                         /// TODO : Que faire du message ?
-                        Console.WriteLine("[PLAYER " + ID + "] " + text);
+                        ServerReader.ReadPacket(text);
 
                     }
                     else
@@ -60,7 +58,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 }
 
             }
-
 
             reader.Close();
             writer.Close();

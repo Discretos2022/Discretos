@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
+using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,7 +39,7 @@ namespace Plateform_2D_v9
         public bool Up = false;
         public bool Down = false;
 
-        public bool BlockMove = false;          ///For Collision correction
+        public bool BlockMove = false;          /// For Collision correction
 
         public bool isLower;
         public bool wasLower;
@@ -66,7 +66,7 @@ namespace Plateform_2D_v9
         private List<Object> collectedObjects;
 
 
-        private int clientID = 1;
+        private int clientID;
 
         public bool LeftKey;
         public bool RightKey;
@@ -100,6 +100,7 @@ namespace Plateform_2D_v9
             this.actorType = ActorType.Player;
 
             this.ID = PlayerID;
+            clientID = (int)Client.playerID;
 
             Walk = new Animation(Main.Player, 9, 1, 0.03f, 1);
             BasicAttack = new Animation(Main.Player_Basic_Attack, 6, 1, 0.02f);
@@ -138,8 +139,6 @@ namespace Plateform_2D_v9
 
         public override void Update(GameTime gameTime)
         {
-            if (Client.instance != null)
-                clientID = Client.instance.myId;
 
             //GamePad.SetVibration(PlayerIndex.One, 1f, 1f);
 
@@ -320,15 +319,15 @@ namespace Plateform_2D_v9
 
             #region Second Player
 
-            if (Client.instance != null)
-            {
-                //ClientSend.PlayerState();
+            //if (Client.instance != null)
+            //{
+            //    //ClientSend.PlayerState();
 
-                PlayerKeyMultiPlayer();
-                ClientSend.PLayerKey();
-                ClientSend.PlayerPos();
+            //    //PlayerKeyMultiPlayer();
+            //    //ClientSend.PLayerKey();
+            //    //ClientSend.PlayerPos();
 
-            }
+            //}
 
             //Attack();
 
@@ -465,6 +464,9 @@ namespace Plateform_2D_v9
                 Writer.DrawText(Main.UltimateFont, "AttackKey " + AttackKey, Position + new Vector2(20, 60), Color.Black, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f, 0.5f, spriteBatch);
                 Writer.DrawText(Main.UltimateFont, "AttackOldKey " + AttackOldKey, Position + new Vector2(20, 70), Color.Black, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f, 0.5f, spriteBatch);
                 Writer.DrawText(Main.UltimateFont, "IsAttack " + isAttack, Position + new Vector2(20, 80), Color.Black, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f, 0.5f, spriteBatch);
+
+                Writer.DrawText(Main.UltimateFont, "ID " + ID, Position + new Vector2(-50, -80), Color.Black, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f, 0.5f, spriteBatch);
+                Writer.DrawText(Main.UltimateFont, "clientID " + clientID, Position + new Vector2(-50, -120), Color.Black, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f, 0.5f, spriteBatch);
 
 
             }

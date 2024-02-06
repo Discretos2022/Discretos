@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Plateform_2D_v9.NetWorkEngine_3._0;
+using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Threading;
 
@@ -197,6 +199,7 @@ namespace Plateform_2D_v9
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+
             if (Main.inWorldMap)
             {
                 Level_3.setPos(ButtonV2.Position.centerX, y: 200);
@@ -259,8 +262,7 @@ namespace Plateform_2D_v9
 
                 handler.Update(gameTime);
 
-
-                Main.camera.FollowObject(new Vector2(Handler.playersV2[1].GetPosForCamera().X + Handler.playersV2[1].GetRectangle().Width / 2, Handler.playersV2[1].GetPosForCamera().Y + Handler.playersV2[1].GetRectangle().Height / 2));
+                Main.camera.FollowObject(new Vector2(Handler.playersV2[(int)Client.playerID].GetPosForCamera().X + Handler.playersV2[(int)Client.playerID].GetRectangle().Width / 2, Handler.playersV2[(int)Client.playerID].GetPosForCamera().Y + Handler.playersV2[(int)Client.playerID].GetRectangle().Height / 2));
 
                 for (int j = 0; j < Handler.Level.GetLength(1); j++)
                     for (int i = 0; i < Handler.Level.GetLength(0); i++)
@@ -353,7 +355,7 @@ namespace Plateform_2D_v9
         {
             spriteBatch.Draw(Main.BlackBar, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            for(int i = 0; i < Handler.playersV2[1].PV; i++)
+            for(int i = 0; i < Handler.playersV2[(int)Client.playerID].PV; i++)
             {
                 if (i > 9)
                     spriteBatch.Draw(Main.Object[2], new Rectangle(500 + (i - 10) * 60, 60, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);

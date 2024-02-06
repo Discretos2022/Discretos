@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.NetWorkEngine_3._0;
 using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Plateform_2D_v9
         public ButtonV3 PortButton;
         public ButtonV3 IPButton;
 
-        private State serverState = State.Connection;
+        private State clientState = State.Connection;
 
         private int timeOut = 0;
         public bool connection = false;
@@ -48,7 +49,7 @@ namespace Plateform_2D_v9
             connectionButtons.Add(PortButton);
             connectionButtons.Add(IPButton);
 
-            textBoxIP = new TextBox(15, 4, 4, false, "", true, false);
+            textBoxIP = new TextBox(15, 4, 4, false, "192.168.1.25", true, false);
             textBoxIP.SetPosition(0, 252, ButtonV3.Position.centerX);
 
             textBoxPort = new TextBox(5, 4, 4, false, "7777", true, true);
@@ -61,138 +62,129 @@ namespace Plateform_2D_v9
         public void Update(GameState state, GameTime gameTime, Screen screen)
         {
 
-            if (connection)
-                timeOut += 1;
-
-            if (Client.IsConnected())
+            if (clientState == State.Connection)
             {
-                
-                Main.inWorldMap = true;
-                Main.inLevel = false;
-                Camera.Zoom = 1f;
-                Main.gameState = GameState.Multiplaying;
+                #region ConnectButton
 
-            }
+                Connect.Update(gameTime, screen);
 
-            #region ConnectButton
+                if (Connect.IsSelected())
+                    Connect.SetColor(Color.Gray, Color.Black);
+                else
+                    Connect.SetColor(Color.White, Color.Black);
 
-            Connect.Update(gameTime, screen);
+                if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || Client.state == Client.ClientState.Connecting)
+                    Connect.SetColor(Color.DarkGray, Color.Gray);  // 0.6f       0.2f
 
-            if (Connect.IsSelected())
-                Connect.SetColor(Color.Gray, Color.Black);
-            else
-                Connect.SetColor(Color.White, Color.Black);
-
-            if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || Client.state == Client.ClientState.Connecting)
-                Connect.SetColor(Color.DarkGray, Color.Gray);  // 0.6f       0.2f
-
-            if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()))
-                if (Connect.IsCliqued())
-                {
-
-                    if (Client.state == Client.ClientState.Disconnected)
+                if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()))
+                    if (Connect.IsCliqued())
                     {
 
-                        if(textBoxPort.GetText() == "")
-                            Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
+                        if (Client.state == Client.ClientState.Disconnected)
+                        {
+
+                            if (textBoxPort.GetText() == "")
+                                Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
+                            else
+                                Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
+
+                        }
                         else
-                            Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
+                            Console.WriteLine("You already connected ! ©");
 
                     }
-                    else
-                        Console.WriteLine("You already connected ! ©");
 
+                if (Client.IsConnected())
+                {
+                    //Main.inWorldMap = true;
+                    //Main.inLevel = false;
+                    //Camera.Zoom = 1f;
+                    //Main.gameState = GameState.Playing;
+                    clientState = State.WaitPlayer;
                 }
 
-            if (Client.IsConnected())
-            {
-                Main.inWorldMap = true;
-                Main.inLevel = false;
-                Camera.Zoom = 1f;
-                Main.gameState = GameState.Multiplaying;
-            }
+                #endregion
 
-            #endregion
+                #region BackButton
 
-            #region BackButton
+                Back.Update(gameTime, screen);
 
-            Back.Update(gameTime, screen);
-
-            if (Back.IsSelected())
-                Back.SetColor(Color.Gray, Color.Black);
-            else
-                Back.SetColor(Color.White, Color.Black);
-
-            if (Back.IsCliqued())
-                Main.gameState = GameState.MultiplayerMode;
-
-            #endregion
-
-            #region PortButton
-
-            PortButton.Update(gameTime, screen);
-
-            if (PortButton.IsSelected())
-                PortButton.SetTexture(Main.PortBox, new Rectangle(53, 0, 52, 16));
-            else
-            {
-                if(textBoxPort.isSelected)
-                    PortButton.SetTexture(Main.PortBox, new Rectangle(106, 0, 52, 16));
+                if (Back.IsSelected())
+                    Back.SetColor(Color.Gray, Color.Black);
                 else
-                    PortButton.SetTexture(Main.PortBox, new Rectangle(0, 0, 52, 16));
-            }
+                    Back.SetColor(Color.White, Color.Black);
+
+                if (Back.IsCliqued())
+                    Main.gameState = GameState.MultiplayerMode;
+
+                #endregion
+
+                #region PortButton
+
+                PortButton.Update(gameTime, screen);
+
+                if (PortButton.IsSelected())
+                    PortButton.SetTexture(Main.PortBox, new Rectangle(53, 0, 52, 16));
+                else
+                {
+                    if (textBoxPort.isSelected)
+                        PortButton.SetTexture(Main.PortBox, new Rectangle(106, 0, 52, 16));
+                    else
+                        PortButton.SetTexture(Main.PortBox, new Rectangle(0, 0, 52, 16));
+                }
 
 
-            if (PortButton.IsCliqued())
-            { textBoxPort.isSelected = true; textBoxIP.isSelected = false; }
+                if (PortButton.IsCliqued())
+                { textBoxPort.isSelected = true; textBoxIP.isSelected = false; }
 
-            #endregion
+                #endregion
 
-            #region IPButton
+                #region IPButton
 
-            IPButton.Update(gameTime, screen);
+                IPButton.Update(gameTime, screen);
 
-            if (IPButton.IsSelected())
-                IPButton.SetTexture(Main.IPBox, new Rectangle(121, 0, 120, 16));
-            else
-            {
+                if (IPButton.IsSelected())
+                    IPButton.SetTexture(Main.IPBox, new Rectangle(121, 0, 120, 16));
+                else
+                {
+                    if (textBoxIP.isSelected)
+                        IPButton.SetTexture(Main.IPBox, new Rectangle(242, 0, 120, 16));
+                    else
+                        IPButton.SetTexture(Main.IPBox, new Rectangle(0, 0, 120, 16));
+                }
+
+
+                if (IPButton.IsCliqued())
+                { textBoxIP.isSelected = true; textBoxPort.isSelected = false; }
+
+                #endregion
+
                 if (textBoxIP.isSelected)
-                    IPButton.SetTexture(Main.IPBox, new Rectangle(242, 0, 120, 16));
+                    textBoxIP.Update();
+                if (textBoxPort.isSelected)
+                    textBoxPort.Update();
+
+                if (MouseInput.isSimpleClickLeft())
+                {
+                    if (!IPButton.IsSelected())
+                        textBoxIP.isSelected = false;
+                    if (!PortButton.IsSelected())
+                        textBoxPort.isSelected = false;
+                }
+
+                if (textBoxPort.GetText() != "")
+                {
+                    if (int.Parse(textBoxPort.GetText()) > Main.MaxPort)
+                        textBoxPort.SetColor(Color.Red, Color.Black);
+                    else
+                        textBoxPort.SetColor(Color.White, Color.Black);
+                }
+
+                if (!IsValidIP(textBoxIP.GetText()))
+                    textBoxIP.SetColor(Color.Red, Color.Black);
                 else
-                    IPButton.SetTexture(Main.IPBox, new Rectangle(0, 0, 120, 16));
+                    textBoxIP.SetColor(Color.White, Color.Black);
             }
-
-
-            if (IPButton.IsCliqued())
-            { textBoxIP.isSelected = true; textBoxPort.isSelected = false; }
-
-            #endregion
-
-            if(textBoxIP.isSelected)
-                textBoxIP.Update();
-            if (textBoxPort.isSelected)
-                textBoxPort.Update();
-
-            if (MouseInput.isSimpleClickLeft())
-            {
-                if (!IPButton.IsSelected())
-                    textBoxIP.isSelected = false;
-                if (!PortButton.IsSelected())
-                    textBoxPort.isSelected = false;
-            }
-
-            if(textBoxPort.GetText() != "")
-            {
-                if (int.Parse(textBoxPort.GetText()) > Main.MaxPort)
-                    textBoxPort.SetColor(Color.Red, Color.Black);
-                else
-                    textBoxPort.SetColor(Color.White, Color.Black);
-            }
-            
-            if (!IsValidIP(textBoxIP.GetText()))
-                textBoxIP.SetColor(Color.Red, Color.Black);
-            else
-                textBoxIP.SetColor(Color.White, Color.Black);
 
         }
 
@@ -200,47 +192,49 @@ namespace Plateform_2D_v9
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            Writer.DrawText(Main.UltimateFont, "connection", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("connection").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
-
-
-            for (int i = 0; i < connectionButtons.Count; i++)
+            if(clientState == State.Connection)
             {
-                connectionButtons[i].Draw(spriteBatch);
+                Writer.DrawText(Main.UltimateFont, "connection", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("connection").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
+
+
+                for (int i = 0; i < connectionButtons.Count; i++)
+                {
+                    connectionButtons[i].Draw(spriteBatch);
+                }
+
+
+                Writer.DrawText(Main.UltimateFont, "ip : " + NetPlay.LocalIPAddress(), new Vector2(1640, 1040), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+
+                textBoxIP.Draw(spriteBatch);
+
+                textBoxPort.Draw(spriteBatch);
+
+                if (Client.state == Client.ClientState.Connecting)
+                {
+
+                    animTime += 1;
+
+                    string connecting = "";
+
+                    if (animTime == 60)
+                        animTime = 0;
+
+                    if (animTime >= 0 && animTime < 20)
+                        connecting = "connecting.";
+                    else if (animTime >= 20 && animTime < 40)
+                        connecting = "connecting..";
+                    else if (animTime >= 40 && animTime < 60)
+                        connecting = "connecting...";
+
+                    Writer.DrawText(Main.UltimateFont, connecting, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+
+                }
+                else
+                {
+                    if (Client.IsTimeOut())
+                        Writer.DrawText(Main.UltimateFont, "connection failed", new Vector2(10, 5), Color.Black, Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+                }
             }
-
-
-            Writer.DrawText(Main.UltimateFont, "ip : " + NetPlay.LocalIPAddress(), new Vector2(1640, 1040), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-
-            textBoxIP.Draw(spriteBatch);
-
-            textBoxPort.Draw(spriteBatch);
-
-            if(Client.state == Client.ClientState.Connecting)
-            {
-
-                animTime += 1;
-
-                string connecting = "";
-
-                if (animTime == 60)
-                    animTime = 0;
-
-                if (animTime >= 0 && animTime < 20)
-                    connecting = "connecting.";
-                else if (animTime >= 20 && animTime < 40)
-                    connecting = "connecting..";
-                else if (animTime >= 40 && animTime < 60)
-                    connecting = "connecting...";
-
-                Writer.DrawText(Main.UltimateFont, connecting, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-
-            }
-            else
-            {
-                if (Client.IsTimeOut())
-                    Writer.DrawText(Main.UltimateFont, "connection failed", new Vector2(10, 5), Color.Black, Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-            }
-
 
 
         }

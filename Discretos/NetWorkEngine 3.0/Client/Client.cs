@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
 
 namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 {
@@ -19,7 +20,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         public static ClientState state = ClientState.Disconnected;
 
-        public static PlayerID playerID = PlayerID.None;
+        public static PlayerID playerID = PlayerID.PLayerOne;
 
         public async static void Connect(string IP, int port = 7777)
         {
@@ -32,6 +33,8 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                 await client.ConnectAsync(IP, port);
                 state = ClientState.Connected;
 
+                NetPlay.IsMultiplaying = true;
+
                 stream = client.GetStream();
                 writer = new StreamWriter(stream, Encoding.UTF8);
                 reader = new StreamReader(stream, Encoding.UTF8);
@@ -43,18 +46,17 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                     try
                     {
 
-                        //string text = await reader.ReadLineAsync();
+                        string text = await reader.ReadLineAsync();
 
-                        await writer.WriteAsync("Salut");
-
-                        //if (text != null)
-                        //{
-                        //    /// TODO : Que faire du message ?
-                        //}
-                        //else
-                        //{
-                        //    Disconnect("Server shutdown !");
-                        //}
+                        if (text != null)
+                        {
+                            /// TODO : Que faire du message ?
+                            ClientReader.ReadPacket(text);
+                        }
+                        else
+                        {
+                            Disconnect("Server shutdown !");
+                        }
 
                     }
                     catch (IOException e)
@@ -133,6 +135,41 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             PlayerFour = 4,
 
         }
+
+        private static async void Send(string data, int clientID)
+        {
+            await writer.WriteLineAsync(data);
+        }
+
+
+        ///*********************************    DISCRETOS    ********************************************///
+
+
+
+        private static void SendPacket(PacketType type, string data, int clientID)
+        {
+
+            string segment = "";
+            int packetID = (int)type;
+
+            if (packetID < 10) segment += "000";
+            else if (packetID < 100) segment += "00";
+            else if (packetID < 1000) segment += "0";
+
+            segment += packetID;
+            segment += ":";
+            segment += data;
+
+            Send(segment, clientID - 1);
+
+        }
+
+
+        //public static void SendID(int playerID, int clientID)
+        //{
+        //    SendPacket(PacketType.playerID, playerID.ToString(), clientID);
+        //}
+
 
     }
 }
