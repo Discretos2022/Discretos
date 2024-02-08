@@ -66,100 +66,104 @@ namespace Plateform_2D_v9
             if (Main.inWorldMap)
                 UpdateWorldMap(gameTime, screen);
 
-            #region Button
-
-            Level_5.Update(screen);
-
-            if (Level_5.IsSelected())
+            if (Client.playerID == Client.PlayerID.PLayerOne)
             {
-                Level_5.SetColor(Color.Gray, Color.Black);
-            }
-            else
-            {
-                Level_5.SetColor(Color.White, Color.Black);
-            }
-            if (Main.inWorldMap)
-                if (Level_5.IsCliqued())
+                #region Button
+
+                Level_5.Update(screen);
+
+                if (Level_5.IsSelected())
                 {
-
-                    if (NetPlay.IsMultiplaying)
+                    Level_5.SetColor(Color.Gray, Color.Black);
+                }
+                else
+                {
+                    Level_5.SetColor(Color.White, Color.Black);
+                }
+                if (Main.inWorldMap)
+                    if (Level_5.IsCliqued())
                     {
 
+                        if (NetPlay.IsMultiplaying)
+                        {
 
-                        //if (NetPlay.serversock.client != null)
-                        //{
-                        //    Main.MapLoaded = false;
-                        //    Main.LevelSelector(5);
-                        //    Main.inWorldMap = false;
-                        //    Main.inLevel = true;
-                        //    Camera.Zoom = 4f;
-                        //    Main.gameState = GameState.Playing;
 
-                        //    NetPlay.serversock.Send(Main.LevelPlaying);
-                        //}
+                            //if (NetPlay.serversock.client != null)
+                            //{
+                            //    Main.MapLoaded = false;
+                            //    Main.LevelSelector(5);
+                            //    Main.inWorldMap = false;
+                            //    Main.inLevel = true;
+                            //    Camera.Zoom = 4f;
+                            //    Main.gameState = GameState.Playing;
+
+                            //    NetPlay.serversock.Send(Main.LevelPlaying);
+                            //}
+                        }
+                        else
+                        {
+                            Main.MapLoaded = false;
+                            Main.LevelSelector(5);
+                            Main.inWorldMap = false;
+                            Main.inLevel = true;
+                            Camera.Zoom = 4f;
+                            Main.gameState = GameState.Playing;
+
+                            SnowEffect.Actived = false;
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(SnowEffect.Generate), 1);
+
+                        }
+
+
                     }
-                    else
+
+                Level_7.Update(screen);
+
+                if (Level_7.IsSelected())
+                {
+                    Level_7.SetColor(Color.Gray, Color.Black);
+                }
+                else
+                {
+                    Level_7.SetColor(Color.White, Color.Black);
+                }
+                if (Main.inWorldMap)
+                    if (Level_7.IsCliqued())
                     {
                         Main.MapLoaded = false;
-                        Main.LevelSelector(5);
+                        Main.LevelSelector(7);
                         Main.inWorldMap = false;
                         Main.inLevel = true;
                         Camera.Zoom = 4f;
                         Main.gameState = GameState.Playing;
 
-                        SnowEffect.Actived = false;
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(SnowEffect.Generate), 1);
+                    }
+
+                Level_3.Update(screen);
+
+                if (Level_3.IsSelected())
+                {
+                    Level_3.SetColor(Color.Gray, Color.Black);
+                }
+                else
+                {
+                    Level_3.SetColor(Color.White, Color.Black);
+                }
+                if (Main.inWorldMap)
+                    if (Level_3.IsCliqued())
+                    {
+                        Main.MapLoaded = false;
+                        Main.LevelSelector(3);
+                        Main.inWorldMap = false;
+                        Main.inLevel = true;
+                        Camera.Zoom = 4f;
+                        Main.gameState = GameState.Playing;
 
                     }
 
-
-                }
-
-            Level_7.Update(screen);
-
-            if (Level_7.IsSelected())
-            {
-                Level_7.SetColor(Color.Gray, Color.Black);
+                #endregion
             }
-            else
-            {
-                Level_7.SetColor(Color.White, Color.Black);
-            }
-            if (Main.inWorldMap)
-                if (Level_7.IsCliqued())
-                {
-                    Main.MapLoaded = false;
-                    Main.LevelSelector(7);
-                    Main.inWorldMap = false;
-                    Main.inLevel = true;
-                    Camera.Zoom = 4f;
-                    Main.gameState = GameState.Playing;
 
-                }
-
-            Level_3.Update(screen);
-
-            if (Level_3.IsSelected())
-            {
-                Level_3.SetColor(Color.Gray, Color.Black);
-            }
-            else
-            {
-                Level_3.SetColor(Color.White, Color.Black);
-            }
-            if (Main.inWorldMap)
-                if (Level_3.IsCliqued())
-                {
-                    Main.MapLoaded = false;
-                    Main.LevelSelector(3);
-                    Main.inWorldMap = false;
-                    Main.inLevel = true;
-                    Camera.Zoom = 4f;
-                    Main.gameState = GameState.Playing;
-
-                }
-
-            #endregion
 
         }
 
@@ -200,7 +204,7 @@ namespace Plateform_2D_v9
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            if (Main.inWorldMap)
+            if (Main.inWorldMap && Client.playerID == Client.PlayerID.PLayerOne)
             {
                 Level_3.setPos(ButtonV2.Position.centerX, y: 200);
                 Level_3.Draw(Main.UltimateFont, 4f, spriteBatch, false, 8 * 5 - 4);
@@ -287,7 +291,13 @@ namespace Plateform_2D_v9
             }
 
             Main.camera.FollowObjectInWorldMap(new Vector2(WorldMap.GetLevelSelectorPos().X, WorldMap.GetLevelSelectorPos().Y));
-            WorldMap.Update(gameTime);
+
+            if(Client.playerID == Client.PlayerID.PLayerOne)
+            {
+                WorldMap.Update(gameTime);
+                Client.SendWorldMapPosition((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
+            }
+                
 
         }
 

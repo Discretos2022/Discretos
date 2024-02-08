@@ -36,6 +36,9 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0
             playerID = 1,
             gameStarted = 2,
             otherPlayerJoined = 3,
+            disconnectedPlayer = 4,
+            playerOneWorldMapPosition = 5,
+            otherPlayerWorldMapPosition = 6,
         }
 
     }

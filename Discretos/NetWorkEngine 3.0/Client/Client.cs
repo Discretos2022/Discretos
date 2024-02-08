@@ -136,7 +136,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         }
 
-        private static async void Send(string data, int clientID)
+        private static async void Send(string data)
         {
             await writer.WriteLineAsync(data);
         }
@@ -146,7 +146,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
 
 
-        private static void SendPacket(PacketType type, string data, int clientID)
+        private static void SendPacket(PacketType type, string data)
         {
 
             string segment = "";
@@ -160,15 +160,15 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             segment += ":";
             segment += data;
 
-            Send(segment, clientID - 1);
+            Send(segment);
 
         }
 
 
-        //public static void SendID(int playerID, int clientID)
-        //{
-        //    SendPacket(PacketType.playerID, playerID.ToString(), clientID);
-        //}
+        public static void SendWorldMapPosition(int x, int y)
+        {
+            SendPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
+        }
 
 
     }

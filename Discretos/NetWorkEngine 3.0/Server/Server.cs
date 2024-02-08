@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
 
@@ -40,8 +41,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             // GetPublicIP()
             Console.WriteLine("Server started ! | Public IP : " + "***.***.***.***" + " | Private IP : " + GetPrivateIP());
             Console.WriteLine($"Server started on {Port}.");
-
-            
 
 
             try
@@ -171,9 +170,11 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public static void AddPlayer(int ID)
         {
             Console.WriteLine("[SERVER] Un nouveau joueur avec l'ID : " + ID);
-            Handler.AddPlayerV2(ID);
+            //Handler.AddPlayerV2(ID);
             SendID(ID, ID);
-            if (ID == 3)
+            if (ID == 2)
+                SendOtherPlayer(2, 1);
+            else if (ID == 3)
             {
                 SendOtherPlayer(3, 1);
                 SendOtherPlayer(3, 2);
@@ -184,7 +185,48 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 SendOtherPlayer(4, 2);
                 SendOtherPlayer(4, 3);
             }
+
+            Console.WriteLine("");
+            for (int i = 0; i < clients.Length; i++)
+            {
+                Console.WriteLine(i + " : " + clients[i]);
+            }
+
+        }
+
+        public static void RemovePlayer(int ID)
+        {
+            Console.WriteLine($"[SERVER] Player {ID} was disconnected !");
+
+            clients[ID - 1] = null;
+
+            Console.WriteLine("");
+            for (int i = 0; i < clients.Length; i++)
+            {
+                Console.WriteLine(i + " : " + clients[i]);
+            }
+
+            for (int i = 0; i < clients.Length; i++)
+            {
+                int newID = i + 1;
+                if (i + 1 >= ID)
+                    newID = i;
+
+                if (clients[i] != null)
+                    SendDisconnectedPlayer(ID, newID, i + 1);
+
+                if (i + 1 > ID)
+                    clients[i - 1] = clients[i];
+
                 
+
+            }
+
+            Console.WriteLine("");
+            for (int i = 0; i < clients.Length; i++)
+            {
+                Console.WriteLine(i + " : " + clients[i]);
+            }
 
         }
 
@@ -223,6 +265,18 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public static void SendOtherPlayer(int newPlayer, int clientID)
         {
             SendPacket(PacketType.otherPlayerJoined, newPlayer.ToString(), clientID);
+        }
+
+        public static void SendDisconnectedPlayer(int disconnectedPlayer, int newID, int clientID)
+        {
+            SendPacket(PacketType.disconnectedPlayer, disconnectedPlayer.ToString() + "/" + newID.ToString(), clientID);
+        }
+
+        public static void SendWorldMapPositionPlayer(int x, int y)
+        {
+            for (int i = 2; i <= numOfClient; i++)
+                SendPacket(PacketType.otherPlayerWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
+
         }
 
     }

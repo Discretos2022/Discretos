@@ -240,14 +240,11 @@ namespace Plateform_2D_v9
                     waitingPlayersButtons[i].Draw(spriteBatch);
                 }
 
-                if (Server.clients[0] != null)
-                    Writer.DrawText(Main.UltimateFont, "player 1 is connected", new Vector2(20, 600), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                if (Server.clients[1] != null)
-                    Writer.DrawText(Main.UltimateFont, "player 2 is connected", new Vector2(20, 700), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                //if (Server.clients[3].udp.endPoint != null)
-                  //  Writer.DrawText(Main.UltimateFont, "player 3 is connected", new Vector2(20, 800), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                //if (Server.clients[4].udp.endPoint != null)
-                  //  Writer.DrawText(Main.UltimateFont, "player 4 is connected: ", new Vector2(20, 900), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                for (int i = 1; i <= Handler.playersV2.Count; i++)
+                {
+                    if (Handler.playersV2.ContainsKey(i))
+                        Writer.DrawText(Main.UltimateFont, $"player {i} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                }
 
             }
 

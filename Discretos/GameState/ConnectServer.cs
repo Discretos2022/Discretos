@@ -236,6 +236,22 @@ namespace Plateform_2D_v9
                 }
             }
 
+            else if (clientState == State.WaitPlayer)
+            {
+
+                Writer.DrawText(Main.UltimateFont, "waiting for players", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
+
+
+                for (int i = 1; i <= Handler.playersV2.Count; i++)
+                {
+                    if (Handler.playersV2.ContainsKey(i))
+                        Writer.DrawText(Main.UltimateFont, $"player {i} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                }
+
+                
+
+            }
+
 
         }
 

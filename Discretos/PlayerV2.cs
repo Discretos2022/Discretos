@@ -66,7 +66,7 @@ namespace Plateform_2D_v9
         private List<Object> collectedObjects;
 
 
-        private int clientID;
+        public int clientID;
 
         public bool LeftKey;
         public bool RightKey;

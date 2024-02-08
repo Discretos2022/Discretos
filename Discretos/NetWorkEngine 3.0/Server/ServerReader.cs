@@ -25,6 +25,15 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 case PacketType.otherPlayerJoined:
                     break;
 
+                case PacketType.playerOneWorldMapPosition:
+
+                    int x = (int.Parse(GetData(packet).Split("/")[0]));
+                    int y = (int.Parse(GetData(packet).Split("/")[1]));
+
+                    Server.SendWorldMapPositionPlayer(x, y);
+
+                    break;
+
             }
 
         }
