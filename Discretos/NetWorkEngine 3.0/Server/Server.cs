@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
+using System.Text.RegularExpressions;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
 
 namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
@@ -21,6 +23,9 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public static int numOfClient = 0;
 
         private static TcpListener tcpListener;
+        private static UdpClient udpListener;
+
+        public static IPEndPoint localEP;
 
         /// <summary>
         /// The port max is 65535
@@ -37,6 +42,10 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             Console.WriteLine("Starting server...");
 
             tcpListener = new TcpListener(IPAddress.Any, _port);
+
+            localEP = new IPEndPoint(IPAddress.Any, 7777);
+            udpListener = new UdpClient(7777);
+            RecepterUDP();
 
             // GetPublicIP()
             Console.WriteLine("Server started ! | Public IP : " + "***.***.***.***" + " | Private IP : " + GetPrivateIP());
@@ -57,7 +66,8 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                         clients[numOfClient] = new ServerClient(await tcpListener.AcceptTcpClientAsync(), numOfClient + 1);
                         Console.WriteLine("[SERVER] Une connection accepté : " + clients[numOfClient].GetIP());
                         AddPlayer(numOfClient + 1);
-                        clients[numOfClient].Recepter();
+                        clients[numOfClient].RecepterTCP();
+                        RecepterUDP();
                         numOfClient += 1;
                     }
                     tcpListener.Stop();
@@ -119,9 +129,51 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         }
 
 
-        private static async void Send(string data, int clientID)
+        private static void SendTCP(string data, int clientID)
         {
-            await clients[clientID].writer.WriteLineAsync(data);
+            clients[clientID].SendTCP(data);
+        }
+
+        private async  static void RecepterUDP()
+        {
+            try
+            {
+                while (true)
+                {
+                    UdpReceiveResult result = await udpListener.ReceiveAsync();
+                    byte[] bytes = result.Buffer;
+                    string msg = Encoding.UTF8.GetString(bytes);
+
+                    Console.WriteLine(msg);
+
+                    SendUDP("SALUT !", result.RemoteEndPoint);
+
+                }
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private async static void SendUDP(string data, int clientID)
+        {
+
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
+
+            //IPEndPoint ip = new IPEndPoint(IPAddress.Parse(clients[clientID - 1]), Port);
+
+            //await udpListener.SendAsync(bytes, bytes.Length, ip);
+        }
+
+        private async static void SendUDP(string data, IPEndPoint end)
+        {
+
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
+
+            IPEndPoint ip = end;
+
+            await udpListener.SendAsync(bytes, bytes.Length, ip);
         }
 
 
@@ -245,7 +297,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             segment += ":";
             segment += data;
 
-            Send(segment, clientID-1);
+            SendTCP(segment, clientID-1);
 
         }
 

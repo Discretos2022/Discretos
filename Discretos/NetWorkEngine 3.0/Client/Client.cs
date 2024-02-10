@@ -12,6 +12,9 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
     {
 
         private static TcpClient client;
+        private static UdpClient udpClient;
+
+        private static IPEndPoint ip;
 
         private static NetworkStream stream;
         private static StreamWriter writer;
@@ -22,11 +25,23 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         public static PlayerID playerID = PlayerID.PLayerOne;
 
+        public static string IPserver;
+        public static int IPport;
+
         public async static void Connect(string IP, int port = 7777)
         {
 
             try
             {
+                udpClient = new UdpClient();
+                IPserver = IP;
+                IPport = port;
+
+                ip = new IPEndPoint(IPAddress.Parse("192.168.1.25"), 7777);
+
+                udpClient.Connect(ip);
+
+                RecepterUDP();
                 client = new TcpClient();
                 isTimeOut = false;
                 state = ClientState.Connecting;
@@ -81,6 +96,32 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
             }
 
+        }
+
+        public async static void RecepterUDP()
+        {
+            try
+            {
+                while (true)
+                {
+
+                    UdpReceiveResult result = await udpClient.ReceiveAsync();
+                    byte[] bytes = result.Buffer;
+                    string msg = Encoding.UTF8.GetString(bytes);
+
+                    Console.WriteLine(msg);
+
+                    if (msg != null)
+                    {
+                        /// Lecture de messages UDP
+                    }
+
+                }
+            }
+            catch (SocketException e)
+            {
+
+            }
         }
 
         public static void Disconnect(string error = "")
@@ -141,6 +182,15 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             await writer.WriteLineAsync(data);
         }
 
+        private async static void SendUDP(string data)
+        {
+            //byte[] bytes = Encoding.UTF8.GetBytes(data);
+            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("HH:mm:ss.ff tt"));
+            //Console.WriteLine(ip.ToString() + " / " + data);
+
+            await udpClient.SendAsync(bytes, bytes.Length);
+        }
+
 
         ///*********************************    DISCRETOS    ********************************************///
 
@@ -164,10 +214,36 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         }
 
+        private static void SendUDPPacket(PacketType type, string data)
+        {
+
+            string segment = "";
+            int packetID = (int)type;
+
+            if (packetID < 10) segment += "000";
+            else if (packetID < 100) segment += "00";
+            else if (packetID < 1000) segment += "0";
+
+            segment += packetID;
+            segment += ":";
+            segment += (int)playerID;
+            segment += ":";
+            segment += data;
+
+            SendUDP(segment);
+
+        }
+
 
         public static void SendWorldMapPosition(int x, int y)
         {
             SendPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
+        }
+
+
+        public static void SendTest()
+        {
+            SendUDPPacket(PacketType.None, "12.12 vous me recevé ?");
         }
 
 

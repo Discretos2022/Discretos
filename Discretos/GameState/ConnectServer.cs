@@ -239,6 +239,8 @@ namespace Plateform_2D_v9
             else if (clientState == State.WaitPlayer)
             {
 
+                Client.SendTest();
+
                 Writer.DrawText(Main.UltimateFont, "waiting for players", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
 
 

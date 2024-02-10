@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
 
@@ -29,7 +30,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
         }
 
-        public async void Recepter()
+        public async void RecepterTCP()
         {
 
             while (true)
@@ -66,6 +67,11 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             tcpClient = null;
 
 
+        }
+
+        public async void SendTCP(string data)
+        {
+            await writer.WriteLineAsync(data);
         }
 
         public string GetIP()
