@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
@@ -10,38 +11,97 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
     public static class ServerReader
     {
 
-        public static void ReadPacket(string packet)
+        public static class TCP
         {
-            PacketType packetID = (PacketType)int.Parse(packet.Substring(0, 4));
-
-            switch (packetID)
+            public static void ReadPacket(string packet)
             {
-                case PacketType.playerID:
-                    break;
+                PacketType packetID = (PacketType)int.Parse(packet.Substring(0, 4));
 
-                case PacketType.gameStarted:
-                    break;
+                switch (packetID)
+                {
+                    case PacketType.playerID:
+                        break;
 
-                case PacketType.otherPlayerJoined:
-                    break;
+                    case PacketType.gameStarted:
+                        break;
 
-                case PacketType.playerOneWorldMapPosition:
+                    case PacketType.otherPlayerJoined:
+                        break;
 
-                    int x = (int.Parse(GetData(packet).Split("/")[0]));
-                    int y = (int.Parse(GetData(packet).Split("/")[1]));
+                    case PacketType.playerOneWorldMapPosition:
 
-                    Server.SendWorldMapPositionPlayer(x, y);
+                        int x = (int.Parse(GetData(packet).Split("/")[0]));
+                        int y = (int.Parse(GetData(packet).Split("/")[1]));
 
-                    break;
+                        Server.SendWorldMapPositionPlayer(x, y);
+
+                        break;
+
+                }
 
             }
 
+            private static string GetData(string packet)
+            {
+                return packet.Substring(5, packet.Length - 5);
+            }
         }
 
-        private static string GetData(string packet)
+
+        public static class UDP
         {
-            return packet.Substring(5, packet.Length - 5);
+            private static DateTime lastPacket = DateTime.Now;
+
+            public static void ReadPacket(string packet, UdpReceiveResult result)
+            {
+
+                DateTime packetTime = DateTime.ParseExact(packet.Substring(0, 16), "yyyy:HH:mm:ss.ff", null);
+
+                if (DateTime.Compare(lastPacket, packetTime) < 0)
+                    goto L_1;
+
+                lastPacket = packetTime;
+
+                PacketType packetID = (PacketType)int.Parse(packet.Substring(17, 4));
+
+                switch (packetID)
+                {
+                    case PacketType.playerID:
+                        break;
+
+                    case PacketType.gameStarted:
+                        break;
+
+                    case PacketType.otherPlayerJoined:
+                        break;
+
+                    case PacketType.disconnectedPlayer:
+                        break;
+
+                    case PacketType.otherPlayerWorldMapPosition:
+                        break;
+
+                    case PacketType.firstMsgForPortPlayer: 
+                        
+                        string data = GetData(packet);
+                        int clientID = int.Parse(data);
+
+                        Server.clients[clientID - 1].endPoint = result.RemoteEndPoint;
+
+                        break;
+
+                }
+
+            L_1:;
+
+            }
+
+            private static string GetData(string packet)
+            {
+                return packet.Substring(24, packet.Length - 24);
+            }
         }
+
 
     }
 }

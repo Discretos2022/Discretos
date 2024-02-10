@@ -33,15 +33,12 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
             try
             {
+
                 udpClient = new UdpClient();
-                IPserver = IP;
-                IPport = port;
-
-                ip = new IPEndPoint(IPAddress.Parse("192.168.1.25"), 7777);
-
+                ip = new IPEndPoint(IPAddress.Parse("192.168.1.25"), port);
                 udpClient.Connect(ip);
-
                 RecepterUDP();
+
                 client = new TcpClient();
                 isTimeOut = false;
                 state = ClientState.Connecting;
@@ -66,7 +63,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                         if (text != null)
                         {
                             /// TODO : Que faire du message ?
-                            ClientReader.ReadPacket(text);
+                            ClientReader.TCP.ReadPacket(text);
                         }
                         else
                         {
@@ -136,6 +133,9 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                 client.Dispose();
                 client = null;
 
+                udpClient.Dispose();
+                udpClient = null;
+
                 state = ClientState.Disconnected;
 
                 Console.WriteLine(error);
@@ -184,17 +184,14 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         private async static void SendUDP(string data)
         {
-            //byte[] bytes = Encoding.UTF8.GetBytes(data);
-            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("HH:mm:ss.ff tt"));
-            //Console.WriteLine(ip.ToString() + " / " + data);
-
+            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
             await udpClient.SendAsync(bytes, bytes.Length);
         }
 
 
         ///*********************************    DISCRETOS    ********************************************///
 
-
+        #region Tcp
 
         private static void SendPacket(PacketType type, string data)
         {
@@ -213,6 +210,15 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             Send(segment);
 
         }
+
+        public static void SendWorldMapPosition(int x, int y)
+        {
+            SendPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
+        }
+
+        #endregion
+
+        #region Udp
 
         private static void SendUDPPacket(PacketType type, string data)
         {
@@ -234,17 +240,17 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         }
 
-
-        public static void SendWorldMapPosition(int x, int y)
-        {
-            SendPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
-        }
-
-
         public static void SendTest()
         {
             SendUDPPacket(PacketType.None, "12.12 vous me recevé ?");
         }
+
+        public static void SendID()
+        {
+            SendUDPPacket(PacketType.firstMsgForPortPlayer, (int)playerID + "");
+        }
+
+        #endregion
 
 
     }

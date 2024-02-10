@@ -39,6 +39,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0
             disconnectedPlayer = 4,
             playerOneWorldMapPosition = 5,
             otherPlayerWorldMapPosition = 6,
+            firstMsgForPortPlayer = 7,
         }
 
     }

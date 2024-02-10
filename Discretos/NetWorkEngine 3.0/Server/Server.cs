@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Plateform_2D_v9.NetWorkEngine_3._0.Client.Client;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
 
 namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
@@ -144,34 +145,24 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                     byte[] bytes = result.Buffer;
                     string msg = Encoding.UTF8.GetString(bytes);
 
-                    Console.WriteLine(msg);
-
-                    SendUDP("SALUT !", result.RemoteEndPoint);
+                    if(msg != null)
+                    {
+                        ServerReader.UDP.ReadPacket(msg, result);
+                    }
 
                 }
             }
             catch (SocketException e)
             {
-                Console.WriteLine(e);
+                //Console.WriteLine(e);
             }
         }
 
+
         private async static void SendUDP(string data, int clientID)
         {
-
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-
-            //IPEndPoint ip = new IPEndPoint(IPAddress.Parse(clients[clientID - 1]), Port);
-
-            //await udpListener.SendAsync(bytes, bytes.Length, ip);
-        }
-
-        private async static void SendUDP(string data, IPEndPoint end)
-        {
-
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-
-            IPEndPoint ip = end;
+            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
+            IPEndPoint ip = clients[clientID - 1].endPoint;
 
             await udpListener.SendAsync(bytes, bytes.Length, ip);
         }
@@ -283,6 +274,8 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         }
 
 
+        #region Tcp
+
         private static void SendPacket(PacketType type, string data, int clientID)
         {
 
@@ -330,6 +323,32 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                 SendPacket(PacketType.otherPlayerWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
 
         }
+
+        #endregion
+
+        #region Udp
+
+        private static void SendUDPPacket(PacketType type, string data, int clientID)
+        {
+
+            string segment = "";
+            int packetID = (int)type;
+
+            if (packetID < 10) segment += "000";
+            else if (packetID < 100) segment += "00";
+            else if (packetID < 1000) segment += "0";
+
+            segment += packetID;
+            segment += ":";
+            segment += (int)playerID;
+            segment += ":";
+            segment += data;
+
+            SendUDP(segment, clientID);
+
+        }
+
+        #endregion
 
     }
 }

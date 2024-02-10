@@ -12,71 +12,121 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
     public static class ClientReader
     {
 
-        public static void ReadPacket(string packet)
+        public static class TCP
         {
-            PacketType packetID = (PacketType)int.Parse(packet.Substring(0, 4));
-
-            switch (packetID)
+            public static void ReadPacket(string packet)
             {
-                case PacketType.playerID:
-                    Client.playerID = (Client.PlayerID)int.Parse(GetData(packet));
-                    Console.WriteLine("[SERVER] Your ID : " + Client.playerID);
-                    for (int i = 1; i <= (int)Client.playerID; i++)
-                    {
-                        Handler.AddPlayerV2(i);
-                    }
-                    break;
+                PacketType packetID = (PacketType)int.Parse(packet.Substring(0, 4));
 
-                case PacketType.gameStarted:
-                    Main.gameState = GameState.Playing;
-                    break;
+                switch (packetID)
+                {
+                    case PacketType.playerID:
+                        Client.playerID = (Client.PlayerID)int.Parse(GetData(packet));
+                        Console.WriteLine("[SERVER] Your ID : " + Client.playerID);
+                        for (int i = 1; i <= (int)Client.playerID; i++)
+                        {
+                            Handler.AddPlayerV2(i);
+                        }
+                        break;
 
-                case PacketType.otherPlayerJoined:
-                    int newPlayer = int.Parse(GetData(packet));
-                    Console.WriteLine("[SERVER] Player " + newPlayer + " has joined.");
-                    Handler.AddPlayerV2(newPlayer);
-                    break;
+                    case PacketType.gameStarted:
+                        Main.gameState = GameState.Playing;
+                        break;
 
-                case PacketType.disconnectedPlayer:
-                    int disconnectedPlayer = (int.Parse(GetData(packet).Split("/")[0]));
-                    int newID = (int.Parse(GetData(packet).Split("/")[1]));
-                    Console.WriteLine("[SERVER] Player " + disconnectedPlayer + " was disconnected.");
-                    Console.WriteLine("[SERVER] Your ID : " + newID);
-                    Client.playerID = (Client.PlayerID)newID;
-                    Handler.playersV2[disconnectedPlayer] = null;
+                    case PacketType.otherPlayerJoined:
+                        int newPlayer = int.Parse(GetData(packet));
+                        Console.WriteLine("[SERVER] Player " + newPlayer + " has joined.");
+                        Handler.AddPlayerV2(newPlayer);
+                        break;
 
-                    for (int i = 1; i < Handler.playersV2.Count; i++)
-                    {
-                        if (Handler.playersV2[i] is null)
-                            Handler.playersV2[i] = Handler.playersV2[i + 1];
+                    case PacketType.disconnectedPlayer:
+                        int disconnectedPlayer = (int.Parse(GetData(packet).Split("/")[0]));
+                        int newID = (int.Parse(GetData(packet).Split("/")[1]));
+                        Console.WriteLine("[SERVER] Player " + disconnectedPlayer + " was disconnected.");
+                        Console.WriteLine("[SERVER] Your ID : " + newID);
+                        Client.playerID = (Client.PlayerID)newID;
+                        Handler.playersV2[disconnectedPlayer] = null;
 
-                    }
+                        for (int i = 1; i < Handler.playersV2.Count; i++)
+                        {
+                            if (Handler.playersV2[i] is null)
+                                Handler.playersV2[i] = Handler.playersV2[i + 1];
 
-                    Handler.playersV2[newID].ID = newID;
-                    Handler.playersV2[newID].clientID = newID;
+                        }
 
-                    Handler.playersV2.Remove(Handler.playersV2.Count);
+                        Handler.playersV2[newID].ID = newID;
+                        Handler.playersV2[newID].clientID = newID;
 
-                    break;
+                        Handler.playersV2.Remove(Handler.playersV2.Count);
 
-                case PacketType.otherPlayerWorldMapPosition:
-                    int x = (int.Parse(GetData(packet).Split("/")[0]));
-                    int y = (int.Parse(GetData(packet).Split("/")[1]));
+                        break;
 
-                    WorldMap.SetLevelSelectorPos(new Vector2(x, y));
+                    case PacketType.otherPlayerWorldMapPosition:
+                        int x = (int.Parse(GetData(packet).Split("/")[0]));
+                        int y = (int.Parse(GetData(packet).Split("/")[1]));
 
-                    Console.WriteLine(x + "/" + y);
+                        WorldMap.SetLevelSelectorPos(new Vector2(x, y));
 
-                    break;
+                        break;
+
+                }
 
             }
 
+            private static string GetData(string packet)
+            {
+                return packet.Substring(5, packet.Length - 5);
+            }
         }
 
-        private static string GetData(string packet)
+
+        public static class UDP
         {
-            return packet.Substring(5, packet.Length - 5);
+
+            private static DateTime lastPacket = DateTime.Now;
+
+            public static void ReadPacket(string packet)
+            {
+
+                DateTime packetTime = DateTime.Parse(packet.Substring(0, 15));
+
+                if(DateTime.Compare(lastPacket, packetTime) < 0)
+                    goto L_1;
+
+                lastPacket = packetTime;
+
+                PacketType packetID = (PacketType)int.Parse(packet.Substring(17, 4));
+
+                switch (packetID)
+                {
+                    case PacketType.playerID:
+                        break;
+
+                    case PacketType.gameStarted:
+                        break;
+
+                    case PacketType.otherPlayerJoined:
+                        break;
+
+                    case PacketType.disconnectedPlayer:
+                        break;
+
+                    case PacketType.otherPlayerWorldMapPosition:
+                        break;
+
+                }
+
+            L_1:;
+
+            }
+
+            private static string GetData(string packet)
+            {
+                return packet.Substring(22, packet.Length - 22);
+            }
         }
+
+
 
     }
 }

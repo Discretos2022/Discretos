@@ -11,22 +11,6 @@ namespace Plateform_2D_v9
         static void Main()
         {
 
-
-            //Server.Start(2, 7777);
-
-            //while (true)
-            //{
-            //    Thread.Sleep(1000);
-            //}
-
-            //Client.Connect("192.168.1.25", 7777);
-
-            //while (true)
-            //{
-            //    Thread.Sleep(1000);
-            //}
-
-
             using (var game = new Main())
             {
                 game.Run();

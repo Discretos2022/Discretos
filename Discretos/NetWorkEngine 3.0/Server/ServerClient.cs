@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public NetworkStream stream;
         public StreamReader reader;
         public StreamWriter writer;
+
+        public IPEndPoint endPoint;
 
         public int ID;
 
@@ -43,10 +46,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
                     if (text != null)
                     {
-
-                        /// TODO : Que faire du message ?
-                        ServerReader.ReadPacket(text);
-
+                        ServerReader.TCP.ReadPacket(text);
                     }
                     else
                         break; /// Client is disconnected
