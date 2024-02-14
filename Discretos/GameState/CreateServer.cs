@@ -248,7 +248,6 @@ namespace Plateform_2D_v9
 
             }
 
-
         }
 
         public enum State

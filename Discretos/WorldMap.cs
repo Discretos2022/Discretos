@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Plateform_2D_v9.NetWorkEngine_3._0.Server;
+using Plateform_2D_v9.NetWorkEngine_3._0;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,6 +53,10 @@ namespace Plateform_2D_v9
                 Main.inLevel = true;
                 Camera.Zoom = 4f;
                 Main.gameState = GameState.Playing;
+
+                if (NetPlay.IsMultiplaying)
+                    Server.SendLevelStated(Level);
+
 
             }
 

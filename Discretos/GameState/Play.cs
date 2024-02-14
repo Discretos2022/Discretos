@@ -295,7 +295,9 @@ namespace Plateform_2D_v9
             if(Client.playerID == Client.PlayerID.PLayerOne)
             {
                 WorldMap.Update(gameTime);
-                Client.SendWorldMapPosition((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
+
+                if(NetPlay.IsMultiplaying)
+                    Client.SendWorldMapPosition((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
             }
                 
 
@@ -393,6 +395,17 @@ namespace Plateform_2D_v9
             }
 
 
+        }
+
+
+        public static void PlayLvl(int level)
+        {
+            Main.MapLoaded = false;
+            Main.LevelSelector(level);
+            Main.inWorldMap = false;
+            Main.inLevel = true;
+            Camera.Zoom = 4f;
+            Main.gameState = GameState.Playing;
         }
 
 

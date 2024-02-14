@@ -23,6 +23,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         {
 
             tcpClient = client;
+            endPoint = (IPEndPoint)client.Client.RemoteEndPoint;
 
             this.ID = ID;
 

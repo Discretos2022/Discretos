@@ -96,7 +96,6 @@ namespace Plateform_2D_v9
 
                 if (Client.IsConnected())
                 {
-                    Client.SendID();
                     clientState = State.WaitPlayer;
                 }
 
@@ -244,8 +243,6 @@ namespace Plateform_2D_v9
                     if (Handler.playersV2.ContainsKey(i))
                         Writer.DrawText(Main.UltimateFont, $"player {i} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
                 }
-
-                
 
             }
 

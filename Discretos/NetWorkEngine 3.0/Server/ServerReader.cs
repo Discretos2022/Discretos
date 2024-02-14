@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,15 +29,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                     case PacketType.otherPlayerJoined:
                         break;
 
-                    case PacketType.playerOneWorldMapPosition:
-
-                        int x = (int.Parse(GetData(packet).Split("/")[0]));
-                        int y = (int.Parse(GetData(packet).Split("/")[1]));
-
-                        Server.SendWorldMapPositionPlayer(x, y);
-
-                        break;
-
                 }
 
             }
@@ -52,20 +44,22 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         {
             private static DateTime lastPacket = DateTime.Now;
 
-            public static void ReadPacket(string packet, UdpReceiveResult result)
+            public static void ReadPacket(string packet, IPEndPoint result)
             {
 
                 DateTime packetTime = DateTime.ParseExact(packet.Substring(0, 16), "yyyy:HH:mm:ss.ff", null);
 
-                if (DateTime.Compare(lastPacket, packetTime) < 0)
+                if (DateTime.Compare(lastPacket, packetTime) >= 0)
                     goto L_1;
-
-                lastPacket = packetTime;
 
                 PacketType packetID = (PacketType)int.Parse(packet.Substring(17, 4));
 
                 switch (packetID)
                 {
+                    case PacketType.None:
+                        Console.WriteLine("[SERVER] " + packet);
+                        break;
+
                     case PacketType.playerID:
                         break;
 
@@ -81,18 +75,31 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                     case PacketType.otherPlayerWorldMapPosition:
                         break;
 
+                    case PacketType.playerOneWorldMapPosition:
+
+                        int x = (int.Parse(GetData(packet).Split("/")[0]));
+                        int y = (int.Parse(GetData(packet).Split("/")[1]));
+
+                        Server.SendWorldMapPositionPlayer(x, y);
+
+                        break;
+
                     case PacketType.firstMsgForPortPlayer: 
                         
                         string data = GetData(packet);
                         int clientID = int.Parse(data);
 
-                        Server.clients[clientID - 1].endPoint = result.RemoteEndPoint;
+                        Server.clients[clientID - 1].endPoint = result;
+
+                        Console.WriteLine("[SERVER] Player " + clientID + "UDP : " + result);
 
                         break;
 
                 }
 
             L_1:;
+
+                lastPacket = packetTime;
 
             }
 

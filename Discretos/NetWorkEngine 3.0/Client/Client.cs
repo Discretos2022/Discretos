@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Plateform_2D_v9.NetWorkEngine_3._0.Server;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 {
@@ -26,7 +28,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
         public static PlayerID playerID = PlayerID.PLayerOne;
 
         public static string IPserver;
-        public static int IPport;
+        public static int PortServer;
 
         public async static void Connect(string IP, int port = 7777)
         {
@@ -34,10 +36,13 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             try
             {
 
-                udpClient = new UdpClient();
-                ip = new IPEndPoint(IPAddress.Parse("192.168.1.25"), port);
-                udpClient.Connect(ip);
-                RecepterUDP();
+                IPserver = IP;
+                PortServer = port;
+
+                ip = new IPEndPoint(IPAddress.Parse(IPserver), PortServer);
+
+                udpClient = new UdpClient(new IPEndPoint(IPAddress.Any, port + 1));
+                udpClient.BeginReceive(ReceiveCallback, null);
 
                 client = new TcpClient();
                 isTimeOut = false;
@@ -95,29 +100,21 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
         }
 
-        public async static void RecepterUDP()
+        private static void ReceiveCallback(IAsyncResult _result)
         {
             try
             {
-                while (true)
-                {
+                IPEndPoint sender = null;
+                byte[] _data = udpClient.EndReceive(_result, ref sender);
+                udpClient.BeginReceive(ReceiveCallback, null);
+                string msg = Encoding.UTF8.GetString(_data);
 
-                    UdpReceiveResult result = await udpClient.ReceiveAsync();
-                    byte[] bytes = result.Buffer;
-                    string msg = Encoding.UTF8.GetString(bytes);
+                ClientReader.UDP.ReadPacket(msg);
 
-                    Console.WriteLine(msg);
-
-                    if (msg != null)
-                    {
-                        /// Lecture de messages UDP
-                    }
-
-                }
             }
-            catch (SocketException e)
+            catch (Exception)
             {
-
+                //Disconnect();
             }
         }
 
@@ -182,10 +179,21 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             await writer.WriteLineAsync(data);
         }
 
-        private async static void SendUDP(string data)
+        public static void SendUDP(string data)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
-            await udpClient.SendAsync(bytes, bytes.Length);
+            try
+            {
+                if (udpClient != null)
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
+                    udpClient.BeginSend(bytes, bytes.Length, ip, null, null);
+                }
+
+            }
+            catch (Exception _ex)
+            {
+                Console.WriteLine($"Error sending data to server via UDP: {_ex}");
+            }
         }
 
 
@@ -209,11 +217,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
             Send(segment);
 
-        }
-
-        public static void SendWorldMapPosition(int x, int y)
-        {
-            SendPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
         }
 
         #endregion
@@ -248,6 +251,11 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
         public static void SendID()
         {
             SendUDPPacket(PacketType.firstMsgForPortPlayer, (int)playerID + "");
+        }
+
+        public static void SendWorldMapPosition(int x, int y)
+        {
+            SendUDPPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
         }
 
         #endregion

@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using static Plateform_2D_v9.NetWorkEngine_3._0.Client.Client;
 using static Plateform_2D_v9.NetWorkEngine_3._0.NetPlay;
 
@@ -46,7 +47,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
             localEP = new IPEndPoint(IPAddress.Any, 7777);
             udpListener = new UdpClient(7777);
-            RecepterUDP();
 
             // GetPublicIP()
             Console.WriteLine("Server started ! | Public IP : " + "***.***.***.***" + " | Private IP : " + GetPrivateIP());
@@ -68,7 +68,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                         Console.WriteLine("[SERVER] Une connection accepté : " + clients[numOfClient].GetIP());
                         AddPlayer(numOfClient + 1);
                         clients[numOfClient].RecepterTCP();
-                        RecepterUDP();
+                        udpListener.BeginReceive(ReceiveCallback, null);
                         numOfClient += 1;
                     }
                     tcpListener.Stop();
@@ -135,36 +135,44 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             clients[clientID].SendTCP(data);
         }
 
-        private async  static void RecepterUDP()
+        private static void ReceiveCallback(IAsyncResult _result)
         {
             try
             {
-                while (true)
-                {
-                    UdpReceiveResult result = await udpListener.ReceiveAsync();
-                    byte[] bytes = result.Buffer;
-                    string msg = Encoding.UTF8.GetString(bytes);
+                IPEndPoint sender = null;
+                byte[] _data = udpListener.EndReceive(_result, ref sender);
+                udpListener.BeginReceive(ReceiveCallback, null);
+                string msg = Encoding.UTF8.GetString(_data);
 
-                    if(msg != null)
-                    {
-                        ServerReader.UDP.ReadPacket(msg, result);
-                    }
+                ServerReader.UDP.ReadPacket(msg, sender);
 
-                }
             }
-            catch (SocketException e)
+            catch (Exception)
             {
-                //Console.WriteLine(e);
+                //Disconnect();
             }
         }
 
-
-        private async static void SendUDP(string data, int clientID)
+        public static void SendUDP(string data, int playerID)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
-            IPEndPoint ip = clients[clientID - 1].endPoint;
+            try
+            {
+                if (udpListener != null)
+                {
 
-            await udpListener.SendAsync(bytes, bytes.Length, ip);
+                    byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
+                    IPEndPoint ip = new IPEndPoint(clients[playerID - 1].endPoint.Address, 7777 + 1);
+
+                    //Console.WriteLine("PACKETS SEND TO : " + ip);
+
+                    udpListener.BeginSend(bytes, bytes.Length, ip, null, null);
+                }
+
+            }
+            catch (Exception _ex)
+            {
+                Console.WriteLine($"Error sending data to server via UDP: {_ex}");
+            }
         }
 
 
@@ -317,11 +325,10 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             SendPacket(PacketType.disconnectedPlayer, disconnectedPlayer.ToString() + "/" + newID.ToString(), clientID);
         }
 
-        public static void SendWorldMapPositionPlayer(int x, int y)
+        public static void SendLevelStated(int level)
         {
             for (int i = 2; i <= numOfClient; i++)
-                SendPacket(PacketType.otherPlayerWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
-
+                SendPacket(PacketType.levelStated, level + "", i);
         }
 
         #endregion
@@ -345,6 +352,22 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             segment += data;
 
             SendUDP(segment, clientID);
+
+        }
+
+        public static void SendTest(int clientID)
+        {
+            if (clients[clientID - 1] != null)
+                SendUDPPacket(PacketType.None, "Salut !", clientID);
+        }
+
+        public static void SendWorldMapPositionPlayer(int x, int y)
+        {
+            for (int i = 2; i <= numOfClient; i++)
+            {
+                //Console.WriteLine("SEND POS ! " + clients[i - 1].endPoint);
+                SendUDPPacket(PacketType.otherPlayerWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
+            }
 
         }
 
