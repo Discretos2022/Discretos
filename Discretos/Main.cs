@@ -29,6 +29,7 @@ namespace Plateform_2D_v9
         public static Texture2D[] SpriteSheetItem;
         public static Texture2D[] Enemy;
         public static Texture2D[] BackgroundTexture;
+        public static Texture2D[] Screens;
 
         public static Texture2D Bounds;
 
@@ -40,7 +41,6 @@ namespace Plateform_2D_v9
 
         public static Texture2D BlackBar;
         public static Texture2D Banner;
-        public static Texture2D Screen1;
         public static Texture2D Mouse_Icon_1;
         public static Texture2D Cadenas;
 
@@ -236,6 +236,7 @@ namespace Plateform_2D_v9
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3];
             BackgroundTexture = new Texture2D[20];
+            Screens = new Texture2D[2 + 1];
 
 
             SolidTile[0] = false; // vide
@@ -323,12 +324,14 @@ namespace Plateform_2D_v9
                 if (File.Exists("Content" + Path.DirectorySeparatorChar + "Images" + Path.DirectorySeparatorChar + "Background" + Path.DirectorySeparatorChar + $"Background_{i}.xnb"))
                     BackgroundTexture[i] = Content.Load<Texture2D>($"Images\\Background\\Background_{i}");
 
+            for (int i = 1; i < Screens.Length; i++)
+                Screens[i] = Content.Load<Texture2D>("Images\\Screen\\Screen_" + i);
+
             Bounds = Content.Load<Texture2D>("Images\\Enemy\\Bounds");
 
 
             BlackBar = Content.Load<Texture2D>("Images\\BlackBar");
             Banner = Content.Load<Texture2D>("Images\\Banner");
-            Screen1 = Content.Load<Texture2D>("Images\\Screen\\Screen_1");
             Mouse_Icon_1 = Content.Load<Texture2D>("Images\\Mouse_icon_1");
             Cadenas = Content.Load<Texture2D>("Images\\Object\\Cadenas");
 

@@ -150,7 +150,7 @@ namespace Plateform_2D_v9
         {
 
             spriteBatch.Draw(Main.Banner, new Vector2(1920 / 2 - Main.Banner.Width * 8 / 2, 25), null, Color.White, 0f, new Vector2(0, 0), 8f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(Main.Screen1, new Vector2(0, 0), null, Color.White, 0f, new Vector2(0, 0), 4f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Main.Screens[1], new Vector2(0, 0), null, Color.White, 0f, new Vector2(0, 0), 4f, SpriteEffects.None, 0f);
 
             Writer.DrawText(Main.UltimateFont, "version " + Main.Version + " build " + Main.Build + " " + Main.State + " " + Main.Platform, new Vector2(10, 1040), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
             Writer.DrawText(Main.UltimateFont, "ip : " + Main.IP, new Vector2(1640, 1040), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
