@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Plateform_2D_v9.NetWorkEngine_3._0;
 using Plateform_2D_v9.NetWorkEngine_3._0.Client;
+using Plateform_2D_v9.NetWorkEngine_3._0.Server;
 using System;
 using System.Threading;
 
@@ -13,7 +14,7 @@ namespace Plateform_2D_v9
         private Main main;
         private Handler handler;
 
-        private ParticleEffect SnowEffect;
+        public ParticleEffect SnowEffect;
 
         private ButtonV2 Level_3;
         private ButtonV1 Level_5;
@@ -190,6 +191,9 @@ namespace Plateform_2D_v9
                 if (Main.LevelPlaying != 5)
                     Wind = Vector2.Zero;
 
+                if (Client.playerID != Client.PlayerID.PLayerOne)
+                    Client.SendPlayerPosition((int)Handler.playersV2[(int)Client.playerID].Position.X, (int)Handler.playersV2[(int)Client.playerID].Position.Y, Handler.playersV2[(int)Client.playerID].isRight.ToString());
+
             }
 
             if (Main.inWorldMap && !Main.inLevel)
@@ -273,6 +277,14 @@ namespace Plateform_2D_v9
                         if (Handler.Level[i, j].getType() > 0)
                             Handler.Level[i, j].Update(gameTime);
 
+
+                if (Client.playerID == Client.PlayerID.PLayerOne)
+                {
+
+                    if (NetPlay.IsMultiplaying)
+                        Server.SendPositionPlayer((int)Handler.playersV2[1].Position.X, (int)Handler.playersV2[1].Position.Y, Handler.playersV2[1].isRight.ToString(), 1);
+                }
+
             }
 
         }
@@ -297,7 +309,7 @@ namespace Plateform_2D_v9
                 WorldMap.Update(gameTime);
 
                 if(NetPlay.IsMultiplaying)
-                    Client.SendWorldMapPosition((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
+                    Server.SendWorldMapPositionPlayer((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
             }
                 
 

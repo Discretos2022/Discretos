@@ -140,6 +140,11 @@ namespace Plateform_2D_v9
         public override void Update(GameTime gameTime)
         {
 
+            if((int)Client.playerID == ID)
+            {
+
+            
+
             //GamePad.SetVibration(PlayerIndex.One, 1f, 1f);
 
             if (isOnGround)
@@ -389,6 +394,8 @@ namespace Plateform_2D_v9
 
             if (light != null)
                 light.Position = Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2);
+
+            }
 
         }
 

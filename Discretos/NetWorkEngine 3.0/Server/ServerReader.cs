@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -72,18 +73,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                     case PacketType.disconnectedPlayer:
                         break;
 
-                    case PacketType.otherPlayerWorldMapPosition:
-                        break;
-
-                    case PacketType.playerOneWorldMapPosition:
-
-                        int x = (int.Parse(GetData(packet).Split("/")[0]));
-                        int y = (int.Parse(GetData(packet).Split("/")[1]));
-
-                        Server.SendWorldMapPositionPlayer(x, y);
-
-                        break;
-
                     case PacketType.firstMsgForPortPlayer: 
                         
                         string data = GetData(packet);
@@ -92,6 +81,26 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                         Server.clients[clientID - 1].endPoint = result;
 
                         Console.WriteLine("[SERVER] Player " + clientID + "UDP : " + result);
+
+                        break;
+
+                    case PacketType.playerPosition:
+
+                        string[] dataString = GetData(packet).Split(";");
+
+                        int x = (int.Parse(dataString[0].Split("/")[0]));
+                        int y = (int.Parse(dataString[0].Split("/")[1]));
+
+                        string sens = dataString[1];
+
+                        int id = GetPlayerNumData(packet);
+
+                        Handler.playersV2[id].Position = new Vector2(x, y);
+                        Handler.playersV2[id].isRight = bool.Parse(sens);
+
+
+                        Handler.playersV2[id].Position = new Vector2(x, y);
+
 
                         break;
 
@@ -107,6 +116,12 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             {
                 return packet.Substring(24, packet.Length - 24);
             }
+
+            private static int GetPlayerNumData(string packet)
+            {
+                return int.Parse(packet.Substring(22, 1));
+            }
+
         }
 
 

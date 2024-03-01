@@ -41,6 +41,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0
             otherPlayerWorldMapPosition = 6,
             firstMsgForPortPlayer = 7,
             levelStated = 8,
+            playerPosition = 9,
         }
 
     }

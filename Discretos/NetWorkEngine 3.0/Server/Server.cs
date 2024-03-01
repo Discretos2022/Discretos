@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -22,7 +23,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
         public static ServerClient[] clients;
 
-        public static int numOfClient = 0;
+        public static int numOfClient = 1;
 
         private static TcpListener tcpListener;
         private static UdpClient udpListener;
@@ -44,6 +45,8 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
             Console.WriteLine("Starting server...");
 
             tcpListener = new TcpListener(IPAddress.Any, _port);
+            NetPlay.IsMultiplaying = true;
+            AddPlayer(1);
 
             localEP = new IPEndPoint(IPAddress.Any, 7777);
             udpListener = new UdpClient(7777);
@@ -163,8 +166,6 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
                     byte[] bytes = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy:HH:mm:ss.ff") + "-" + data);
                     IPEndPoint ip = new IPEndPoint(clients[playerID - 1].endPoint.Address, 7777 + 1);
 
-                    //Console.WriteLine("PACKETS SEND TO : " + ip);
-
                     udpListener.BeginSend(bytes, bytes.Length, ip, null, null);
                 }
 
@@ -221,27 +222,21 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         public static void AddPlayer(int ID)
         {
             Console.WriteLine("[SERVER] Un nouveau joueur avec l'ID : " + ID);
-            //Handler.AddPlayerV2(ID);
+            Handler.AddPlayerV2(ID);
             SendID(ID, ID);
-            if (ID == 2)
-                SendOtherPlayer(2, 1);
-            else if (ID == 3)
-            {
-                SendOtherPlayer(3, 1);
+            if (ID == 3)
                 SendOtherPlayer(3, 2);
-            }
             else if(ID == 4)
             {
-                SendOtherPlayer(4, 1);
                 SendOtherPlayer(4, 2);
                 SendOtherPlayer(4, 3);
             }
 
-            Console.WriteLine("");
-            for (int i = 0; i < clients.Length; i++)
-            {
-                Console.WriteLine(i + " : " + clients[i]);
-            }
+            //Console.WriteLine("");
+            //for (int i = 0; i < clients.Length; i++)
+            //{
+            //    Console.WriteLine(i + " : " + clients[i]);
+            //}
 
         }
 
@@ -305,13 +300,13 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
 
         public static void SendID(int playerID, int clientID)
         {
-            SendPacket(PacketType.playerID, playerID.ToString(), clientID);
+            if(playerID != 1) SendPacket(PacketType.playerID, playerID.ToString(), clientID);
         }
 
         public static void SendGameStarted()
         {
 
-            for (int i = 1; i <= numOfClient; i++)
+            for (int i = 2; i <= numOfClient; i++)
                 SendPacket(PacketType.gameStarted, "", i);
         }
 
@@ -365,11 +360,20 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Server
         {
             for (int i = 2; i <= numOfClient; i++)
             {
-                //Console.WriteLine("SEND POS ! " + clients[i - 1].endPoint);
-                SendUDPPacket(PacketType.otherPlayerWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
+                SendUDPPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString(), i);
             }
 
         }
+
+        public static void SendPositionPlayer(int x, int y, string sens, int player)
+        {
+            for (int i = 2; i <= numOfClient; i++)
+            {
+                SendUDPPacket(PacketType.playerPosition, x.ToString() + "/" + y.ToString() + ";" + sens + ";" + player, i);
+            }
+
+        }
+
 
         #endregion
 

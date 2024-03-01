@@ -93,8 +93,11 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
 
                 state = ClientState.Disconnected;
                 isTimeOut = true;
+                client.Close();
+                client.Dispose();
+                udpClient.Close();
                 client = null;
-                Console.WriteLine("Connection failed !");
+                Console.WriteLine("Connection failed !" + e);
 
             }
 
@@ -112,9 +115,9 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                 ClientReader.UDP.ReadPacket(msg);
 
             }
-            catch (Exception)
+            catch (ObjectDisposedException)
             {
-                //Disconnect();
+                udpClient = null;
             }
         }
 
@@ -244,7 +247,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
         }
 
         public static void SendTest()
-        {
+        { 
             SendUDPPacket(PacketType.None, "12.12 vous me recevé ?");
         }
 
@@ -253,10 +256,11 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
             SendUDPPacket(PacketType.firstMsgForPortPlayer, (int)playerID + "");
         }
 
-        public static void SendWorldMapPosition(int x, int y)
+        public static void SendPlayerPosition(int x, int y, string sens)
         {
-            SendUDPPacket(PacketType.playerOneWorldMapPosition, x.ToString() + "/" + y.ToString());
+            SendUDPPacket(PacketType.playerPosition, x + "/" + y + ";" + sens);
         }
+
 
         #endregion
 
