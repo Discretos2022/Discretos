@@ -379,16 +379,39 @@ namespace Plateform_2D_v9
         {
             spriteBatch.Draw(Main.BlackBar, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            for(int i = 0; i < Handler.playersV2[(int)Client.playerID].PV; i++)
+            //for(int i = 0; i < Handler.playersV2[(int)Client.playerID].PV; i++)
+            //{
+            //    if (i > 9)
+            //        spriteBatch.Draw(Main.Object[2], new Rectangle(500 + (i - 10) * 60, 60, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
+            //    else
+            //        spriteBatch.Draw(Main.ObjectInterface, new Rectangle(500 + i * 60, 8, 15 * 4, 14 * 4), new Rectangle(15, 0, 15, 15), Color.White);
+            //}
+
+            for (int i = 0; i < 6; i++)
             {
-                if (i > 9)
-                    spriteBatch.Draw(Main.Object[2], new Rectangle(500 + (i - 10) * 60, 60, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
-                else
-                    spriteBatch.Draw(Main.Object[2], new Rectangle(500 + i * 60, 0, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
+                if(i < Handler.playersV2[(int)Client.playerID].PV)
+                    spriteBatch.Draw(Main.ObjectInterface, new Rectangle(1920 / 2 + i * 60 - 15 * 12, 8, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
+                else 
+                    spriteBatch.Draw(Main.ObjectInterface, new Rectangle(1920 / 2 + i * 60 - 15 * 12, 8, 15 * 4, 14 * 4), new Rectangle(15, 0, 15, 15), Color.White);
             }
 
-            Writer.DrawText(Main.UltimateFont, "money : " + Main.Money + " $ ", new Vector2(1, 1), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
-            Writer.DrawText(Main.UltimateFont, "debug :  " + Main.PlayerPos + " $ ", new Vector2(1, 45), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
+
+
+            //Writer.DrawText(Main.UltimateFont, "money : " + Main.Money + " $ ", new Vector2(1, 1), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
+
+            spriteBatch.Draw(Main.ObjectInterface, new Rectangle(10, 10, 15 * 4, 14 * 4), new Rectangle(30, 0, 15, 15), Color.White);
+            Writer.DrawText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(80, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
+
+
+
+            ///Writer.DrawSuperText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(0, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
+
+            
+            //Writer.DrawText(Main.ScoreFont, "" + (Main.Money + 1), new Vector2(15, 90/*57*/), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 4f, spriteBatch);
+
+
+
+            //Writer.DrawText(Main.UltimateFont, "debug :  " + Main.PlayerPos + " $ ", new Vector2(1, 45), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
 
 
             if (Main.Debug)

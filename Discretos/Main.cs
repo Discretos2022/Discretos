@@ -47,6 +47,8 @@ namespace Plateform_2D_v9
         public static Texture2D PortBox;
         public static Texture2D IPBox;
 
+        public static Texture2D ObjectInterface;
+
         public static Texture2D SnowParticle;
 
         public static Texture2D TileMap;
@@ -120,6 +122,9 @@ namespace Plateform_2D_v9
         List<Rectangle> croppingList = new List<Rectangle>();
         List<char> charList = new List<char>();
         List<Vector3> Vector3List = new List<Vector3>();
+
+        public static SpriteFont ScoreFont = null;
+        Texture2D ScoreF;
 
         public static string Version = "0.0.0.9";
         public static string Build = "8";
@@ -216,13 +221,13 @@ namespace Plateform_2D_v9
 
             graphics.ApplyChanges();
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            screen = new Screen(this, 1920, 1080);             //1024, 768);
-            render = new Render(this);
-            camera = new Camera(screen);
-
             ScreenWidth = 1920;
             ScreenHeight = 1080;
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            screen = new Screen(this, ScreenWidth, ScreenHeight);             //1024, 768);
+            render = new Render(this);
+            camera = new Camera(screen);
 
             //ScreenRatio = GraphicsDevice.DisplayMode.AspectRatio;
             ScreenRatioComparedWith1080p = 1920f / GraphicsDevice.DisplayMode.Width;
@@ -254,6 +259,8 @@ namespace Plateform_2D_v9
             LoadImg();
 
             InitFont();
+
+            ScoreFont = FontManager.InitFont(FontManager.Font.ScoreFont, ScoreF);
 
             ButtonManager.InitButtonManager();
 
@@ -338,12 +345,16 @@ namespace Plateform_2D_v9
             PortBox = Content.Load<Texture2D>("Images\\Interface\\PortBox");
             IPBox = Content.Load<Texture2D>("Images\\Interface\\IPBox");
 
+            ObjectInterface = Content.Load<Texture2D>("Images\\Interface\\Object_Interface");
+
             SnowParticle = Content.Load<Texture2D>("Images\\Snow_Effect");
 
             TileMap = Content.Load<Texture2D>("Images\\Map\\TileMap");
             WorldMapImg = Content.Load<Texture2D>("Images\\Map\\WorldMap");
 
             SuperFont = Content.Load<Texture2D>("Images\\SuperFont");
+
+            ScoreF = Content.Load<Texture2D>("Images\\ScoreFont");
 
 
             //TileMap = new Texture2D(GraphicsDevice, 10, 20);
@@ -361,6 +372,8 @@ namespace Plateform_2D_v9
 
         protected override void Update(GameTime gameTime)
         {
+
+            ScoreFont = FontManager.InitFont(FontManager.Font.ScoreFont, ScoreF);
 
             if (gameState == GameState.Menu && KeyInput.getKeyState().IsKeyDown(Keys.F5) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F5))
                 LevelData.CreateLevelData();
@@ -483,7 +496,32 @@ namespace Plateform_2D_v9
             //Screen.LightMaskShader = Render.ShaderEffect.LightMask;
 
             //if (KeyInput.isSimpleClick(Keys.L))
-                //Render.AddLight();
+            //Render.AddLight();
+
+
+            //if (KeyInput.getKeyState().IsKeyDown(Keys.F6) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F6))
+            //{
+            //    if (ScreenHeight == 1080)
+            //    {
+            //        screen.SetResolution(1920, 1200);
+            //        ScreenWidth = 1920;
+            //        ScreenHeight = 1200;
+            //    }
+            //    else if (ScreenHeight == 1200 && ScreenWidth == 1920)
+            //    {
+            //        screen.SetResolution(1600, 1200); // 1856×1392
+            //        ScreenWidth = 1600;
+            //        ScreenHeight = 1200;
+            //    }
+            //    else
+            //    {
+            //        screen.SetResolution(1920, 1080);
+            //        ScreenWidth = 1920;
+            //        ScreenHeight = 1080;
+            //    }
+
+            //}
+
 
             base.Update(gameTime);
 
@@ -661,9 +699,9 @@ namespace Plateform_2D_v9
             timer--;
 
             if (gameTime.IsRunningSlowly)
-                spriteBatch.Draw(Bounds, new Rectangle(1800, 0 + 25, 50, 50), Color.Red);
+                spriteBatch.Draw(Bounds, new Rectangle(1800, 0 + 13, 50, 50), Color.Red);
             else
-                spriteBatch.Draw(Bounds, new Rectangle(1800, 0 + 25, 50, 50), Color.Green);
+                spriteBatch.Draw(Bounds, new Rectangle(1800, 0 + 13, 50, 50), Color.Green);
 
             ///Writer.DrawSuperText(UltimateFont, "test", new Vector2(200, 200), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 4f, spriteBatch);
 

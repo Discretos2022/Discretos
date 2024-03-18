@@ -265,6 +265,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Interface/IPBox.png
 
+#begin Images/Interface/Object_Interface.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Interface/Object_Interface.png
+
 #begin Images/Interface/PortBox.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -553,7 +565,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/Player/Squish_Player.png
 
-#begin Images/Screen/Screen_1.png
+#begin Images/ScoreFont.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -563,7 +575,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/Screen/Screen_1.png
+/build:Images/ScoreFont.png
 
 #begin Images/Screen/Screen_1.png
 /importer:TextureImporter

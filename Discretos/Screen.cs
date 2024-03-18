@@ -56,6 +56,24 @@ namespace Plateform_2D_v9
         }
 
 
+        public void SetResolution(int width, int height)
+        {
+
+            width = Util.Clamp(width, Screen.MinDim, Screen.MaxDim);
+            height = Util.Clamp(height, Screen.MinDim, Screen.MaxDim);
+
+            this.game = game ?? throw new ArgumentNullException("game");
+
+            LevelTarget = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            BackTarget = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            FontTarget = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+
+            LightMaskLevel = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            LightMaskBackground = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+
+        }
+
+
         public void Dispose()
         {
 
