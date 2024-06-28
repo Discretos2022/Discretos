@@ -132,7 +132,7 @@ namespace Plateform_2D_v9
 
         public void InitLight()
         {
-            light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 50f, Color.White);
+            light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 120f, Color.White); // 50f
             LightManager.lights.Add(light);
         }
 
@@ -403,6 +403,72 @@ namespace Plateform_2D_v9
         {
             //if (clientID == ID)
             DrawPlayer(spriteBatch, gameTime);
+
+
+            ///*****************************************************************************************************
+
+            /*
+            Render.DrawRectangleV1_1(Main.Bounds, GetRectangle(), spriteBatch, Color.Red, 1);
+
+
+            Vector2 Point1 = new Vector2(GetRectangle().X - 16 * 4, GetRectangle().Y - 16*4);
+            Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width + 16 * 4, GetRectangle().Y - 16 * 4);
+            Vector2 Point3 = new Vector2(GetRectangle().X - 16 * 4, GetRectangle().Y + GetRectangle().Height + 16 * 4);
+
+            //Render.DrawLineV1_1(Main.Bounds, Point1, Point2, spriteBatch, Color.Blue, 1);
+            //Render.DrawLineV1_1(Main.Bounds, Point1, Point3, spriteBatch, Color.Blue, 1);
+
+            int xMin = (int)Point1.X / 16;
+            int xMax = (int)Point2.X / 16;
+
+            int yMin = (int)Point1.Y / 16;
+            int yMax = (int)Point3.Y / 16;
+
+            if (xMin < 0)
+                xMin = 0;
+            if (xMax > Handler.Level.GetLength(0) - 1)
+                xMax = Handler.Level.GetLength(0) - 1;
+            if (yMin < 0)
+                yMin = 0;
+            if (yMax >= Handler.Level.GetLength(1))
+                yMax = Handler.Level.GetLength(1) - 1;
+
+            for (int j = yMin; j <= yMax; j++)
+            {
+                for (int i = xMin; i <= xMax; i++)
+                {
+
+                    //if(Handler.Level[i, j].type != 0)
+                    //Render.DrawRectangleV1_1(Main.Bounds, Handler.Level[i, j].GetRectangle(), spriteBatch, Color.Orange, 1);
+
+                    if (Handler.Level[i, j].type != 0)
+                    {
+
+                        if(j > 0 && Handler.Level[i, j - 1].type == 0)
+                        {
+                            Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition(), spriteBatch, Color.Blue, 1);
+                            Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(16, 0), spriteBatch, Color.Blue, 1);
+                        }
+
+                        if (j < Handler.Level.GetLength(1) - 1 && Handler.Level[i, j + 1].type == 0)
+                        {
+                            Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(0, 16), spriteBatch, Color.Yellow, 1);
+                            Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(16, 16), spriteBatch, Color.Yellow, 1);
+                        }   
+
+                        //Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition(), spriteBatch, Color.Blue, 1);
+                        //Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(16, 0), spriteBatch, Color.Blue, 1);
+                        //Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(0, 16), spriteBatch, Color.Blue, 1);
+                        //Render.DrawLineV1_1(Main.Bounds, Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), Handler.Level[i, j].GetPosition() + new Vector2(16, 16), spriteBatch, Color.Blue, 1);
+                    }
+
+
+
+
+                }
+            }*/
+
+            ///*****************************************************************************************************
 
         }
 

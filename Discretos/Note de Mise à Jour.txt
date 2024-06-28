@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:9
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:13
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -20,7 +20,9 @@ Game Interface
 	* New Button - Settings (build 3)
 	* New Title Bar Icon - Forest Icon (build 7)
 	* New Menu Screen - SnowLand (build 8)
+	* New Font - ScoreFont (build 8)
 	* Menu Screen improved - GrassLand (build 8)
+	* Game Bar improved (build 8)
 
 Camera
 
@@ -51,6 +53,7 @@ Level
 	* New Level 9 (build 5)
 	* New Particle Effect - SnowFall (build 1)
 	* New Effect - SnowStorm (build 3)
+	* New Effect - Rain (build 8)
 	* New Shader Effect - Heat Distortion (build 1) (Shaders Not Fonctionnal, Experimental)
 	* New Shader Effect - Heat Distortion (build 7) (Shaders Fonctionnal, Experimental)
 	* New Shader Effect - Light And Shadow (build 7, 8) (Shaders Fonctionnal, Experimental)
@@ -96,6 +99,7 @@ System
 	* Migrating to Monogame 3.8.1.303 (build 8)
 	* Migrating to .NET 6 (build 8)
 	* Git adaptation (build 8)
+	* Particle Effect Updated (build 8)
 
 
 Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------

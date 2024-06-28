@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace Plateform_2D_v9
 {
@@ -165,11 +165,14 @@ namespace Plateform_2D_v9
             spriteBatch.End();
         }
 
-
         public void DrawRenderTarget(Texture2D texture, Rectangle destinationRectangle, Color color, GameTime gameTime, SpriteBatch spriteBatch, Rectangle sourceRectangle = default, ShaderEffect shader = ShaderEffect.None)
         {
+
             
+            //GetLightProcess(texture, ref test, gameTime, spriteBatch);
+
             Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+
 
             switch (shader)
             {
@@ -315,8 +318,9 @@ namespace Plateform_2D_v9
             }
 
 
-
             spriteBatch.Draw(texture, destinationRectangle, null, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(test, destinationRectangle, null, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            //test = null;
 
             Main.refractionEffect.CurrentTechnique = null;
 
@@ -423,6 +427,154 @@ namespace Plateform_2D_v9
 
 
         }
+
+
+        public void GetLightProcess(Texture2D texture, Texture2D lightMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        {
+
+            game.GraphicsDevice.SetRenderTarget(textureOUT);
+            Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+            game.GraphicsDevice.Clear(Color.Transparent);
+
+            Main.LightEffect.Parameters["lightMask"].SetValue(lightMask);            
+            //Main.LightEffect.Parameters["random"].SetValue(Util.NextFloat(0.1f, 2f));
+            //Main.LightEffect.Parameters["positionXY"].SetValue(new Vector2(MouseInput.GetPos().X, -MouseInput.GetPos().Y)); // new Vector2(MouseInput.GetLevelPos(false, Main.camera).X * 2*3, -MouseInput.GetLevelPos(false, Main.camera).Y*2*3)
+            //Main.LightEffect.Parameters["shadow"].SetValue(Screen.LevelTarget);
+            Main.LightEffect.CurrentTechnique.Passes[5].Apply();
+
+
+            spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+
+
+            End(spriteBatch);
+            game.GraphicsDevice.SetRenderTarget(null);
+
+        }
+
+
+        public void GetLightAndHullProcess(Texture2D texture, Texture2D lightMask, Texture2D hullMash, Texture2D colorMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        {
+
+            game.GraphicsDevice.SetRenderTarget(textureOUT);
+            Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+            game.GraphicsDevice.Clear(Color.Transparent);
+
+            Main.LightEffect.Parameters["lightMask"].SetValue(lightMask);
+            Main.LightEffect.Parameters["hullMask"].SetValue(hullMash);
+            Main.LightEffect.Parameters["DEBUG"].SetValue(Main.Debug);
+            //Main.LightEffect.Parameters["colorMask"].SetValue(colorMask);
+            Main.LightEffect.CurrentTechnique.Passes[6].Apply();
+
+
+            spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+
+
+            End(spriteBatch);
+            game.GraphicsDevice.SetRenderTarget(null);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        #region 1.1
+
+        public static void DrawLineV1_1(Texture2D texture, Vector2 pos1, Vector2 pos2, SpriteBatch spriteBatch, Color color, int epaisseur = 1, LineType lineType = LineType.Center)
+        {
+
+            float distance = Vector2.Distance(pos1, pos2);
+
+            float distanceX = pos2.X - pos1.X;
+            float distanceY = pos2.Y - pos1.Y;
+
+            float rotation = (float)Math.Atan2(distanceY, distanceX);
+
+            float centerOfPointOneOfLine = 0f;
+            if (lineType == LineType.Center)
+                centerOfPointOneOfLine = 0.5f;
+            else if (lineType == LineType.Exterior)
+                centerOfPointOneOfLine = 1f;
+            else if (lineType == LineType.Interior)
+                centerOfPointOneOfLine = 0f;
+
+            spriteBatch.Draw(texture, new Rectangle(Util.UpperInteger(pos1.X), Util.UpperInteger(pos1.Y), Util.UpperInteger(distance), epaisseur), null, color, rotation, new Vector2(0, centerOfPointOneOfLine), SpriteEffects.None, 0f);
+
+        }
+
+        public static void DrawRectangleV1_1(Texture2D texture, Rectangle rectangle, SpriteBatch spriteBatch, Color color, int epaisseur = 1)
+        {
+            int correctionBog = 0;
+            if (!Util.IsMultiple((int)epaisseur, 2))
+                correctionBog = 1;
+
+            /// LineType = Center       Fonctionnel
+            DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y), spriteBatch, color, epaisseur); // - up
+            DrawLineV1_1(texture, new Vector2(rectangle.X + correctionBog, rectangle.Y), new Vector2(rectangle.X + correctionBog, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur); // | ?
+
+            DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur); // - down
+            DrawLineV1_1(texture, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur); // |  ?
+            ///
+
+            /// LineType = Interior     Fonctionnel
+            //DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), spriteBatch, color, epaisseur, LineType.Interior); // - up
+            //DrawLineV1_1(texture, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Interior); // | ?
+
+            //DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Interior); // - down
+            //DrawLineV1_1(texture, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Interior); // |  ?
+            ///
+
+            /// LineType = Exterior     Not Fonctionnel
+            //DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y), spriteBatch, color, epaisseur, LineType.Exterior); // - up
+            //DrawLineV1_1(texture, new Vector2(rectangle.X + correctionBog, rectangle.Y), new Vector2(rectangle.X + correctionBog, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Exterior); // | ?
+
+            //DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Exterior); // - down
+            //DrawLineV1_1(texture, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), spriteBatch, color, epaisseur, LineType.Exterior); // |  ?
+            ///
+
+
+        }
+
+
+        public static void DrawRectangleV1_1(Texture2D texture, Rectangle rectangle, SpriteBatch spriteBatch, Color color1, Color color2, Color color3, Color color4, int epaisseur = 1)
+        {
+
+            int correctionBog = 0;
+            if (!Util.IsMultiple((int)epaisseur, 2))
+                correctionBog = 1;
+
+            DrawLineV1_1(texture, new Vector2(rectangle.X + correctionBog, rectangle.Y), new Vector2(rectangle.X + correctionBog, rectangle.Y + rectangle.Height), spriteBatch, color2, epaisseur); // |  left
+            DrawLineV1_1(texture, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), spriteBatch, color4, epaisseur); // |  right
+
+            DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y), spriteBatch, color1, epaisseur); // - up
+            DrawLineV1_1(texture, new Vector2(rectangle.X - epaisseur / 2, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width + epaisseur / 2, rectangle.Y + rectangle.Height), spriteBatch, color3, epaisseur); // - down
+
+        }
+
+
+        public enum LineType
+        {
+            Center = 0,
+            Interior = 1,
+            Exterior = 2,
+        };
+
+        #endregion
+
+
+
+
+
+
+
+
 
     }
 }

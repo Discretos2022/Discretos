@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Plateform_2D_v9
 {
@@ -19,6 +20,9 @@ namespace Plateform_2D_v9
         public static RenderTarget2D FontTarget;
 
         public static RenderTarget2D LightMaskLevel;
+        public static RenderTarget2D HullMaskLevel;
+        public static RenderTarget2D ColorMaskLevel;
+
         public static RenderTarget2D LightMaskBackground;
 
         private bool isSet;
@@ -26,6 +30,11 @@ namespace Plateform_2D_v9
         public static Render.ShaderEffect BackgroundShader = Render.ShaderEffect.None;
         public static Render.ShaderEffect LevelShader = Render.ShaderEffect.None;
         public static Render.ShaderEffect UIShader = Render.ShaderEffect.None;
+
+
+        RenderTarget2D test = null;
+        RenderTarget2D test2 = null;
+
 
         public int Width
         {
@@ -49,7 +58,12 @@ namespace Plateform_2D_v9
             FontTarget = new RenderTarget2D(this.game.GraphicsDevice, width, height);
 
             LightMaskLevel = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            HullMaskLevel = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            ColorMaskLevel = new RenderTarget2D(this.game.GraphicsDevice, width, height);
             LightMaskBackground = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+
+            test = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
+            test2 = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
 
             this.isSet = false;
 
@@ -118,15 +132,29 @@ namespace Plateform_2D_v9
         public void Present(Render render, GameTime gameTime, SpriteBatch spriteBatch)
         {
 
+            /// Image processing
+            render.GetLightAndHullProcess(LevelTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref test, gameTime, spriteBatch);
+            render.GetLightAndHullProcess(BackTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref test2, gameTime, spriteBatch);
+
+
             Rectangle destinationRectangle = CalculateDestinationRectangle();
 
 
-            render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, BackgroundShader);
-            render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, LevelShader);
+            //render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, BackgroundShader);
+            render.DrawRenderTarget(test2, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+
+
+
+            render.DrawRenderTarget(test, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+            //render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+
 
             //render.DrawRenderTarget(LightMask, destinationRectangle, Color.White, gameTime, spriteBatch, default, LightMaskShader);
 
+
             render.DrawRenderTarget(FontTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+            //render.DrawRenderTarget(test, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+
 
             /* Multiplayer // Horizontale splitscreen
             render.Draw(BackTarget, new Rectangle(CalculateDestinationRectangle().X, CalculateDestinationRectangle().Y + this.game.GraphicsDevice.PresentationParameters.Bounds.Height/2, CalculateDestinationRectangle().Width, CalculateDestinationRectangle().Height), Color.White, time, false);

@@ -8,27 +8,27 @@ using System.Threading;
 
 namespace Plateform_2D_v9
 {
-    public class ParticleEffect
+    public static class ParticleEffectV2
     {
 
-        private int type;
-        public float wind;
-        private int intensity;
-        private float scale;
+        public static int type;
+        public static float wind;
+        private static int intensity;
+        private static float scale;
 
-        private float timer;
+        private static float timer;
 
-        public static List<Particle> particles;
+        public static List<ParticleV2> particles = new List<ParticleV2>();
 
-        private int PlayerID = 1;
+        private static int PlayerID = 1;
 
-        public bool Actived = false;
+        public static bool Actived = false;
 
-        private int MaxParticle = 10000;
+        private static int MaxParticle = 10000;
 
-        public Random randomGenerator = new Random();
+        public static Random randomGenerator = new Random();
 
-        public List<int> randomList;
+        public static List<int> randomList = new List<int>();
 
         private static int i = 0;
 
@@ -39,20 +39,8 @@ namespace Plateform_2D_v9
         /// <param name="wind"> Max = +-6 </param>
         /// <param name="intensity"></param>
         /// <param name="scale"></param>
-        public ParticleEffect(int type, int wind, int intensity, float scale)
-        {
-            this.type = type;
-            this.wind = wind;
-            this.intensity = intensity;
-            this.scale = scale;
 
-            randomList = new List<int>();
-
-            particles = new List<Particle>();
-
-        }
-
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
 
             for (i = 0; i < particles.Count; i++)
@@ -64,7 +52,7 @@ namespace Plateform_2D_v9
         }
 
 
-        public void Draw(SpriteBatch spriteBatch)
+        public static void Draw(SpriteBatch spriteBatch)
         {
             for(i = 0; i < particles.Count; i++)
             {
@@ -74,7 +62,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public void Generate(object data)
+        public static void Generate(object data)
         {
 
             if (Client.instance != null)
@@ -138,20 +126,20 @@ namespace Plateform_2D_v9
                             if(type == 1)
                             {
                                 if (wind < 0)
-                                    particles.Add(new SnowParticle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new SnowParticleV2(type, wind, new Vector2(randomX, -20), scale));
                                 else if (wind > 0)
-                                    particles.Add(new SnowParticle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new SnowParticleV2(type, wind, new Vector2(randomX, -20), scale));
                                 else
-                                    particles.Add(new SnowParticle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new SnowParticleV2(type, wind, new Vector2(randomX, -20), scale));
                             }
                             else if (type == 2)
                             {
                                 if (wind < 0)
-                                    particles.Add(new Particle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new RainParticleV2(type, wind, new Vector2(randomX, -20), scale));
                                 else if (wind > 0)
-                                    particles.Add(new Particle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new RainParticleV2(type, wind, new Vector2(randomX, -20), scale));
                                 else
-                                    particles.Add(new Particle(type, wind, new Vector2(randomX, -20), scale, this));
+                                    particles.Add(new RainParticleV2(type, wind, new Vector2(randomX, -20), scale));
                             }
 
                         }
@@ -166,30 +154,30 @@ namespace Plateform_2D_v9
         }
 
 
-        public void RestartRandom()
+        public static void RestartRandom()
         {
             randomList = new List<int>();
             randomGenerator = new Random();
         }
         
 
-        public void SetScale(float scale)
+        public static void SetScale(float newScale)
         {
-            this.scale = scale;
+            scale = newScale;
         }
 
 
-        public void setWind(int wind)
+        public static void setWind(int newWind)
         {
-            this.wind = wind;
+            wind = newWind;
         }
 
-        public void setIntensity(int intensity)
+        public static void setIntensity(int newIntensity)
         {
-            this.intensity = intensity;
+            intensity = newIntensity;
         }
 
-        public static void RemoveParticle(Particle p)
+        public static void RemoveParticle(ParticleV2 p)
         {
             particles.Remove(p);
             i--;
@@ -198,7 +186,7 @@ namespace Plateform_2D_v9
 
     }
 
-    public class Particle
+    public class ParticleV2
     {
 
         protected int type;
@@ -209,23 +197,18 @@ namespace Plateform_2D_v9
         protected Rectangle sourceRectangle;
         protected Vector2 Velocity;
 
-        private readonly ParticleEffect generator;
-
         private int PlayerID = 1;
 
-        public Particle(int type, float wind, Vector2 pos, float scale, ParticleEffect generator)
+        public ParticleV2(int type, float wind, Vector2 pos, float scale)
         {
             this.type = type;
             this.wind = wind;
             this.pos = pos;
             this.scale = scale;
-            this.generator = generator;
-
-            //rotation = Util.NextFloat(0.0f, (float)(Math.PI * 2));
 
             sourceRectangle = new Rectangle(Util.random.Next(0, 4) * 4, 0, 3, 3);
 
-            Velocity = new Vector2((generator.randomGenerator.Next(1, 2) + (float)generator.randomGenerator.NextDouble()), (float)generator.randomGenerator.NextDouble() + generator.randomGenerator.Next(1, 2));
+            Velocity = new Vector2((Random.Shared.Next(1, 2) + (float)Random.Shared.NextDouble()), (float)Random.Shared.NextDouble() + Random.Shared.Next(1, 2));
 
         }
 
@@ -263,14 +246,14 @@ namespace Plateform_2D_v9
     }
 
 
-    public class SnowParticle : Particle
+    public class SnowParticleV2 : ParticleV2
     {
-        public SnowParticle(int type, float wind, Vector2 pos, float scale, ParticleEffect generator) : base(type, wind, pos, scale, generator)
+        public SnowParticleV2(int type, float wind, Vector2 pos, float scale) : base(type, wind, pos, scale)
         {
 
             sourceRectangle = new Rectangle(Util.random.Next(0, 4) * 4, 0, 3, 3);
 
-            Velocity = new Vector2((generator.randomGenerator.Next(1, 2) + (float)generator.randomGenerator.NextDouble()), (float)generator.randomGenerator.NextDouble() + generator.randomGenerator.Next(1, 2));
+            Velocity = new Vector2((Random.Shared.Next(1, 2) + (float)Random.Shared.NextDouble()), (float)Random.Shared.NextDouble() + Random.Shared.Next(1, 2));
 
         }
 
@@ -281,7 +264,7 @@ namespace Plateform_2D_v9
             pos.Y += Velocity.Y;
 
             if (isUnderScreen())
-                ParticleEffect.RemoveParticle(this);
+                ParticleEffectV2.RemoveParticle(this);
 
         }
 
@@ -290,6 +273,39 @@ namespace Plateform_2D_v9
             if (pos.X > Main.camera.Position.X - 1920 / 8 - 5 && pos.X < Main.camera.Position.X + 1920 / 8 + 5)
                 if (pos.Y > Main.camera.Position.Y - 1080 / 8 - 5 && pos.Y < Main.camera.Position.Y + 1080 / 8 + 5)
                     spriteBatch.Draw(Main.SnowParticle, new Vector2(pos.X, pos.Y), sourceRectangle, Color.White, rotation, new Vector2(1.5f, 1.5f), scale, SpriteEffects.None, 0f);
+
+        }
+
+    }
+
+    public class RainParticleV2 : ParticleV2
+    {
+        public RainParticleV2(int type, float wind, Vector2 pos, float scale) : base(type, wind, pos, scale)
+        {
+
+            int size = Util.random.Next(0, 4);
+            sourceRectangle = new Rectangle(size * 4, 0, 4, 12);
+
+            Velocity = new Vector2(2, Random.Shared.Next(3, 5) + 4-size);
+
+        }
+
+
+        public override void Update(float wind)
+        {
+            pos.X += Velocity.X * wind;
+            pos.Y += Velocity.Y;
+
+            if (isUnderScreen())
+                ParticleEffectV2.RemoveParticle(this);
+
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (pos.X > Main.camera.Position.X - 1920 / 8 - 5 && pos.X < Main.camera.Position.X + 1920 / 8 + 5)
+                if (pos.Y > Main.camera.Position.Y - 1080 / 8 - 5 && pos.Y < Main.camera.Position.Y + 1080 / 8 + 5)
+                    spriteBatch.Draw(Main.RainParticle, new Vector2(pos.X, pos.Y), sourceRectangle, Color.White, rotation, new Vector2(1.5f, 1.5f), scale, SpriteEffects.None, 0f);
 
         }
 

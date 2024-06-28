@@ -78,6 +78,8 @@ float4 RDT(VertexShaderOutput input) : COLOR
 
 	return col;
 
+
+
 }
 
 
@@ -290,62 +292,19 @@ sampler2D s0;
 Texture2D lightMask;
 sampler2D lightSampler = sampler_state { Texture = <lightMask>; };
 
+
 float sature;
 
-//float2 ambianteLightR;
-//float2 ambianteLightG;
-//float2 ambianteLightB;
 
-
-float4 LightMask(VertexShaderOutput input, float2 coords: TEXCOORD0, float4 pos: SV_Position, float4 col: COLOR0) : COLOR
+float4 LightMask(VertexShaderOutput input, float2 coords: TEXCOORD0) : COLOR
 {
 
 	float4 color = tex2D(s0, coords);
 	float4 lightColor = tex2D(lightSampler, coords);
-	
-    lightColor.a = 1;
-	
-    return color * lightColor;
 
+	lightColor.a = 1;
 
-}
-
-
-Texture2D hullMask;
-sampler2D hullSampler = sampler_state { Texture = <hullMask>; };
-
-Texture2D colorMask;
-sampler2D colorSampler = sampler_state { Texture = <colorMask>; };
-
-
-bool DEBUG;
-
-
-float4 LightAndHullMask(VertexShaderOutput input, float2 coords : TEXCOORD0, float4 pos : SV_Position, float4 col : COLOR0) : COLOR
-{
-	
-    float4 ambiant = tex2D(lightSampler, float2(0, 0));
-
-    float4 pixel = tex2D(s0, coords);
-    float4 light = tex2D(lightSampler, coords);
-    float4 lightColor = tex2D(colorSampler, coords);
-    float4 hull = tex2D(hullSampler, coords);
-
-    if (hull.a != 0)
-    {	
-		//
-        ambiant.a = 1;
-		
-        if (DEBUG)
-            return hull;
-            
-        //return float4(0, 0, 0, 1);
-		return pixel * ambiant;
-
-    }
-
-    light.a = 1;
-    return pixel * light;
+	return color * lightColor;
 
 
 }
@@ -382,10 +341,5 @@ technique SpriteDrawing
 	{
 		PixelShader = compile PS_SHADERMODEL LightMask();
 	}
-
-    pass P6
-    {
-        PixelShader = compile PS_SHADERMODEL LightAndHullMask();
-    }
 
 };

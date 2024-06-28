@@ -14,7 +14,7 @@ namespace Plateform_2D_v9
         private Main main;
         private Handler handler;
 
-        public ParticleEffect SnowEffect;
+        //public ParticleEffect SnowEffect;
 
         private ButtonV2 Level_3;
         private ButtonV1 Level_5;
@@ -32,10 +32,15 @@ namespace Plateform_2D_v9
         {
             this.main = main;
             this.handler = handler;
-                                                 //9
-            SnowEffect = new ParticleEffect(1, -1, 50, 1f);   //new ParticleEffect(1, 0, 8, 1f);
+            //9
+            //SnowEffect = new ParticleEffect(1, -1, 50, 1f);   //new ParticleEffect(1, 0, 8, 1f);
 
-            SnowEffect.Actived = true;
+            //SnowEffect.Actived = true;
+            ParticleEffectV2.Actived = true;
+            ParticleEffectV2.setIntensity(50);
+            ParticleEffectV2.type = 1;
+            ParticleEffectV2.SetScale(1f);
+            ParticleEffectV2.setWind(-1);
 
             Level_3 = new ButtonV2(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "lv3");
             Level_5 = new ButtonV1(Vector2.Zero, new Rectangle(0, 0, 0, 0), Color.White, Color.Black, Main.UltimateFont, null, "lv5");
@@ -110,8 +115,13 @@ namespace Plateform_2D_v9
                             Camera.Zoom = 4f;
                             Main.gameState = GameState.Playing;
 
-                            SnowEffect.Actived = false;
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(SnowEffect.Generate), 1);
+                            //SnowEffect.Actived = false;
+                            //ThreadPool.QueueUserWorkItem(new WaitCallback(SnowEffect.Generate), 1);
+                            ParticleEffectV2.SetScale(1f);
+                            ParticleEffectV2.type = 1;
+                            ParticleEffectV2.Actived = false;
+                            ParticleEffectV2.particles.Clear();
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
 
                         }
 
@@ -137,6 +147,12 @@ namespace Plateform_2D_v9
                         Main.inLevel = true;
                         Camera.Zoom = 4f;
                         Main.gameState = GameState.Playing;
+
+                        ParticleEffectV2.type = 2;
+                        ParticleEffectV2.Actived = false;
+                        ParticleEffectV2.particles.Clear();
+                        ParticleEffectV2.SetScale(0.5f);
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
 
                     }
 
@@ -176,14 +192,14 @@ namespace Plateform_2D_v9
 
                 handler.Draw(spriteBatch, gameTime);
 
-                if (Main.LevelPlaying == 5)
-                    SnowEffect.Draw(spriteBatch);
+                if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
+                    ParticleEffectV2.Draw(spriteBatch); //SnowEffect.Draw(spriteBatch);
 
                 if(Main.Money > 100 && Main.LevelPlaying == 5)
                 {
-                    SnowEffect.SetScale(1f);
-                    SnowEffect.setWind(Util.UpperInteger(Wind.X) * 4);
-                    SnowEffect.setIntensity(100); // 2000
+                    ParticleEffectV2.SetScale(1f); //SnowEffect.SetScale(1f);
+                    ParticleEffectV2.setWind(Util.UpperInteger(Wind.X) * 4);  //SnowEffect.setWind(Util.UpperInteger(Wind.X) * 4);
+                    //SnowEffect.setIntensity(100); // 2000
                     Wind = new Vector2(-1f, 0);           /// Take multiple of 2 for bug of tile
 
                 }
@@ -241,8 +257,8 @@ namespace Plateform_2D_v9
             if (Main.MapLoaded && !Main.isPaused)
             {
 
-                if (Main.LevelPlaying == 5)
-                    SnowEffect.Update(gameTime);
+                if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
+                    ParticleEffectV2.Update(gameTime); //SnowEffect.Update(gameTime);
 
                 if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
                     Background.SetBackground(3);
@@ -291,6 +307,7 @@ namespace Plateform_2D_v9
 
         public void UpdateWorldMap(GameTime gameTime, Screen screen)
         {
+            ParticleEffectV2.Actived = false;
 
             if (KeyInput.getKeyState().IsKeyDown(Keys.M) && !KeyInput.getOldKeyState().IsKeyDown(Keys.M))
             {
@@ -379,14 +396,6 @@ namespace Plateform_2D_v9
         {
             spriteBatch.Draw(Main.BlackBar, new Vector2(0, 0), null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            //for(int i = 0; i < Handler.playersV2[(int)Client.playerID].PV; i++)
-            //{
-            //    if (i > 9)
-            //        spriteBatch.Draw(Main.Object[2], new Rectangle(500 + (i - 10) * 60, 60, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
-            //    else
-            //        spriteBatch.Draw(Main.ObjectInterface, new Rectangle(500 + i * 60, 8, 15 * 4, 14 * 4), new Rectangle(15, 0, 15, 15), Color.White);
-            //}
-
             for (int i = 0; i < 6; i++)
             {
                 if(i < Handler.playersV2[(int)Client.playerID].PV)
@@ -395,27 +404,14 @@ namespace Plateform_2D_v9
                     spriteBatch.Draw(Main.ObjectInterface, new Rectangle(1920 / 2 + i * 60 - 15 * 12, 8, 15 * 4, 14 * 4), new Rectangle(15, 0, 15, 15), Color.White);
             }
 
-
-
-            //Writer.DrawText(Main.UltimateFont, "money : " + Main.Money + " $ ", new Vector2(1, 1), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
-
             spriteBatch.Draw(Main.ObjectInterface, new Rectangle(10, 10, 15 * 4, 14 * 4), new Rectangle(30, 0, 15, 15), Color.White);
             Writer.DrawText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(80, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
 
-
-
             ///Writer.DrawSuperText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(0, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
-
-            
-            //Writer.DrawText(Main.ScoreFont, "" + (Main.Money + 1), new Vector2(15, 90/*57*/), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 4f, spriteBatch);
-
-
-
-            //Writer.DrawText(Main.UltimateFont, "debug :  " + Main.PlayerPos + " $ ", new Vector2(1, 45), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
 
 
             if (Main.Debug)
-                Writer.DrawText(Main.UltimateFont, "dust : " + ParticleEffect.particles.Count, new Vector2(1000, 1), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
+                Writer.DrawText(Main.UltimateFont, "dust : " + ParticleEffectV2.particles.Count, new Vector2(1500, 1), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch);
 
             if (Main.isPaused && Main.inLevel)
             {
