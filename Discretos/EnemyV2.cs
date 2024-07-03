@@ -538,6 +538,10 @@ namespace Plateform_2D_v9
                                 //isJump = false;
                                 isOnGround = true;
 
+                                /// Break Block if Player is on and is on solid block in the left
+                                if (Position.X > tile.Position.X && Handler.Level[xMax, yMax].isBreakable && !tile.isBreakable)
+                                    Handler.Level[xMax, yMax].Break();
+
                                 //Console.WriteLine("Down");
                             }
                         }

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Penumbra;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Plateform_2D_v9
 {
@@ -16,11 +16,40 @@ namespace Plateform_2D_v9
         public static Color AmbianteLightG;
         public static Color AmbianteLightB;
 
+        //BasicEffect for rendering
+        public static BasicEffect basicEffect;
+
+        public static VertexBuffer vertexBuffer; // 65535
+        public static IndexBuffer indexBuffer;
+
+        public static VertexPositionColor[] vertex = new VertexPositionColor[65535];
+        public static ushort[] indices = new ushort[65535];
+
+        public static byte VertexIndex = 0;
+
+        public static int vertexCount = 0;
+        public static int indexCount = 0;
+        public static int triangle_count = 0;
+
 
         public static void Init()
         {
             lights = new List<Light>();
         } 
+
+        public static void InitHullSystem(Game game)
+        {
+            //BasicEffect
+            basicEffect = new BasicEffect(game.GraphicsDevice);
+            basicEffect.Alpha = 1f;
+
+            basicEffect.VertexColorEnabled = true;
+            basicEffect.LightingEnabled = false;
+
+            vertexBuffer = new VertexBuffer(game.GraphicsDevice, typeof(VertexPositionColor), 65535, BufferUsage.WriteOnly);
+            indexBuffer = new IndexBuffer(game.GraphicsDevice, typeof(ushort), 65535, BufferUsage.WriteOnly);
+
+        }
 
         public static void Update()
         {
@@ -41,25 +70,27 @@ namespace Plateform_2D_v9
         }
 
 
-        public static void DrawHull(SpriteBatch spriteBatch, Game game, Main main, Screen screen)
+        public static void DrawHull(Game game, Screen screen)
         {
 
-            //spriteBatch.Draw(Screen.LevelTarget, new Rectangle(0, 0, 1920, 1080), Color.Black);
+            vertex = new VertexPositionColor[65535];
+            vertexCount = 0;
+            triangle_count = 0;
 
             for (int i = 0; i < lights.Count; i++)
             {
 
-                if (lights[i].Radius > 30)
+                if (lights[i].Radius > 40)
                 {
 
-                    int factor = 8;
+                    int factor = 100;
+                    //Vector2 Point1 = new Vector2(lights[i].Position.X - 16 * factor, lights[i].Position.Y - 16 * factor);
+                    //Vector2 Point2 = new Vector2(lights[i].Position.X + 16 * factor, lights[i].Position.Y - 16 * factor);
+                    //Vector2 Point3 = new Vector2(lights[i].Position.X - 16 * factor, lights[i].Position.Y + 16 * factor);
 
-                    Vector2 Point1 = new Vector2(lights[i].Position.X - 16 * factor, lights[i].Position.Y - 16 * factor);
-                    Vector2 Point2 = new Vector2(lights[i].Position.X + 16 * factor, lights[i].Position.Y - 16 * factor);
-                    Vector2 Point3 = new Vector2(lights[i].Position.X - 16 * factor, lights[i].Position.Y + 16 * factor);
-
-                    //Render.DrawLineV1_1(Main.Bounds, Point1, Point2, spriteBatch, Color.Black, 1);
-                    //Render.DrawLineV1_1(Main.Bounds, Point1, Point3, spriteBatch, Color.Black, 1);
+                    Vector2 Point1 = new Vector2(lights[i].Position.X - lights[i].Radius * factor, lights[i].Position.Y - lights[i].Radius * factor);
+                    Vector2 Point2 = new Vector2(lights[i].Position.X + lights[i].Radius * factor, lights[i].Position.Y - lights[i].Radius * factor);
+                    Vector2 Point3 = new Vector2(lights[i].Position.X - lights[i].Radius * factor, lights[i].Position.Y + lights[i].Radius * factor);
 
                     int xMin = (int)Point1.X / 16;
                     int xMax = (int)Point2.X / 16;
@@ -83,286 +114,165 @@ namespace Plateform_2D_v9
 
                             TileV2 b = Handler.Level[x, y];  // 8, 6
 
-                            /*if (b != null && b.type != 0 && b.type != 2 && GetIfBlockIsSolid(x, y - 1) && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4 && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
+                            if (b != null)
                             {
-                                Vector2 p11 = new Vector2(b.Position.X * 2 + 32 - 4, b.Position.Y * 2 - 28 - 0);
-                                Vector2 p33 = new Vector2(b.Position.X * 2 + 32 - 4, b.Position.Y * 2 + 32 - 4);
-                                Vector2 p22 = p33 + new Vector2(p33.X / 2 - lights[0].Position.X, (p33.Y / 2 - lights[0].Position.Y)) * 200; // 4   8
+
+                                /// Diagonale  \
+                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) //  && ((lights[0].Position.X < b.Position.X + 32 && lights[0].Position.Y > b.Position.Y + 32) || b.Position.Y < 100)
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
+
+                                }
 
 
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
+                                /// Down __
+                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) // (lights[i].Position.Y > b.Position.Y || b.Position.Y < 100)
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
 
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
 
-                                p11.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                                p22.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                                p33.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
 
-                                p11.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                                p22.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                                p33.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
 
-
-                                Main.CreateVertexTriangle(p11, p22, p33, game, main, Color.Yellow);
-                            }*/
-
-                            /*if (b != null && b.type != 0 && b.type != 2 && GetIfBlockIsSolid(x + 1, y) && lights[0].Position.X < b.Position.X + 4 && lights[0].Position.Y > b.Position.Y + 32 - 4 && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p11 = new Vector2(b.Position.X * 2 + 4 + 28 + 32, b.Position.Y * 2);
-                                Vector2 p33 = new Vector2(b.Position.X * 2 + 4, b.Position.Y * 2 + 4);
-                                Vector2 p22 = p33 + new Vector2(p33.X / 2 - lights[0].Position.X, (p33.Y / 2 - lights[0].Position.Y)) * 8; // 4
-
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-                                p11.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                                p22.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                                p33.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-
-                                p11.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                                p22.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                                p33.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
+                                }
 
 
-                                Main.CreateVertexTriangle(p22, p11, p33, game, main, Color.Red);
+                                /// Left |_
+                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x - 1, y)) // /*&& lights[0].Position.X < b.Position.X * 2*/
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
 
-                            }*/
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
 
-                            /// Diagonale  \
-                            if (b != null && b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1) && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4 && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
-                                Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
 
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
 
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-                                /*if (GetIfBlockIsSolid(x + 1, y))
-                                    p1.X += 4;*/
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                }
 
 
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
+                                /// Diagonale  /
+                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) //  && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
 
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
+
+                                }
+
+
+                                /// Up --
+                                if (b != null && b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y - 1)) // lights[0].Position.Y < b.Position.Y + 32
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
+
+                                }
+
+
+                                /// Right _|
+                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x + 1, y)) //  /*&& lights[0].Position.X > b.Position.X * 2*/
+                                {
+                                    Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32);
+                                    Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
+                                    Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+                                    Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 60; // 4   8
+
+                                    p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+                                    p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
+
+                                    p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+                                    p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
+
+                                    CreateVertexTriangle(p1, p2, p3, Color.Yellow);
+                                    CreateVertexTriangle(p1, p4, p2, Color.Red);
+
+                                }
 
                             }
-
-
-                            /// Down __
-                            if (b != null && b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1) && lights[0].Position.Y > b.Position.Y && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
-                                Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-                                Console.WriteLine(game.GraphicsDevice.PresentationParameters.Bounds);
-
-
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
-
-
-                            }
-
-                            /// Left |_
-                            if (b != null && b.type != 0 && b.type != 2 /*&& !GetIfBlockIsSolid(x - 1, y)*/ /*&& lights[0].Position.X < b.Position.X * 2*/ && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
-                                Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
-
-
-                            }
-
-                            /// Diagonale  /
-                            if (b != null && b.type != 0 && b.type != 2 /*&& !GetIfBlockIsSolid(x, y + 1)*/ && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4 && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
-                                Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
-
-
-                            }
-
-                            /// Up --
-                            if (b != null && b.type != 0 && b.type != 2 /*&& !GetIfBlockIsSolid(x, y + 1)*/ && lights[0].Position.Y < b.Position.Y + 32 && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2);
-                                Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
-
-
-                            }
-
-                            /// Right _|
-                            if (b != null && b.type != 0 && b.type != 2 /*&& !GetIfBlockIsSolid(x - 1, y)*/ /*&& lights[0].Position.X > b.Position.X * 2*/ && KeyInput.getKeyState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
-                            {
-                                Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32);
-                                Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
-                                Vector2 p2 = p3 + new Vector2(p3.X / 2 - lights[0].Position.X, (p3.Y / 2 - lights[0].Position.Y)) * 8; // 4   8
-                                Vector2 p4 = p1 + new Vector2(p1.X / 2 - lights[0].Position.X, (p1.Y / 2 - lights[0].Position.Y)) * 6; // 4   8
-
-                                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-
-                                p1.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p2.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p3.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-                                p4.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-
-                                p1.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p2.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p3.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-                                p4.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-
-                                Main.CreateVertexTriangle(p1, p2, p3, game, main, Color.Yellow);
-                                Main.CreateVertexTriangle(p1, p4, p2, game, main, Color.Red);
-
-
-                            }
-
-
 
                         }
                     }
 
                 }
 
-                
-
-              
-
-                /**Vector2 p11 = new Vector2(128*2 + 32, 96);
-                Vector2 p33 = new Vector2(128*2 + 32 - 4, 96 + 128 - 4);
-                Vector2 p22 = p33 + new Vector2(p33.X/2 - lights[0].Position.X, (p33.Y/2 - lights[0].Position.Y)) * 4;
-
-
-                //Render.DrawLineV1_1(Main.Bounds, p33/2, p22/2, spriteBatch, Color.Red, 1);
-
-                //Render.DrawLineV1_1(Main.Bounds, p1, p1 + new Vector2(10,10), spriteBatch, Color.Red, 4);
-
-                p11.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                p22.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-                p33.X *= game.GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2);
-
-                p11.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                p22.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-                p33.Y *= game.GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2);
-
-
-                Main.DrawVertexTriangle(p11, p22, p33, game, main);**/
-
-
-
             }
 
-            Main.DrawVertex(main, game);
+            game.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            game.GraphicsDevice.Indices = indexBuffer;
 
-            Main.vertex = new VertexPositionColor[65535];
-            Main.vertexCount = 0;
-            Main.triangle_count = 0;
+            DrawVertex(game);
 
         }
 
@@ -373,7 +283,7 @@ namespace Plateform_2D_v9
             if (x <= 0 || y <= 0 || x == Handler.Level.GetLength(0) || y == Handler.Level.GetLength(1))
                 return true;
 
-            if (Handler.Level[x, y] != null && Handler.Level[x, y].type != 0)
+            if (Handler.Level[x, y] != null && Handler.Level[x, y].type != 0 && Handler.Level[x, y].type != 2)
                 return true;
 
             return false;
@@ -381,40 +291,37 @@ namespace Plateform_2D_v9
 
         }
 
-        public static Rectangle CalculateDestinationRectangle(Game game)
+
+
+        public static void CreateVertexTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Color color)
         {
-            Rectangle backbufferBounds = game.GraphicsDevice.PresentationParameters.Bounds;
-            float backbufferAspectRatio = (float)backbufferBounds.Width / backbufferBounds.Height;
-            float screenAspectRatio = (float)(1920/2) / (1080/2);
 
-            float rx = 0f;
-            float ry = 0f;
-            float rw = backbufferBounds.Width;
-            float rh = backbufferBounds.Height;
+            vertex[vertexCount] = new VertexPositionColor(new Vector3(p1, 0), color);
+            vertexCount += 1;
+            vertex[vertexCount] = new VertexPositionColor(new Vector3(p2, 0), color);
+            vertexCount += 1;
+            vertex[vertexCount] = new VertexPositionColor(new Vector3(p3, 0), color);
+            vertexCount += 1;
 
-
-            if (backbufferAspectRatio > screenAspectRatio)
-            {
-
-                rw = rh * screenAspectRatio;
-                rx = ((float)backbufferBounds.Width - rw) / 2f;
-
-            }
-            else if (backbufferAspectRatio < screenAspectRatio)
-            {
-
-                rh = rw / screenAspectRatio;
-                ry = ((float)backbufferBounds.Height - rh) / 2f;
-
-            }
-
-
-            Rectangle result = new Rectangle((int)rx, (int)ry, (int)rw / 1, (int)rh / 1);
-            return result;
-
+            triangle_count += 1;
 
         }
 
+        public static void DrawVertex(Game game)
+        {
+
+            vertexBuffer = new VertexBuffer(game.GraphicsDevice, VertexPositionColor.VertexDeclaration, 65535, BufferUsage.None);
+            vertexBuffer.SetData(vertex);
+
+            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                if (triangle_count > 0)
+                    game.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangle_count);
+            }
+        }
 
     }
+
+
 }

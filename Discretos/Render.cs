@@ -429,29 +429,6 @@ namespace Plateform_2D_v9
         }
 
 
-        public void GetLightProcess(Texture2D texture, Texture2D lightMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
-        {
-
-            game.GraphicsDevice.SetRenderTarget(textureOUT);
-            Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
-            game.GraphicsDevice.Clear(Color.Transparent);
-
-            Main.LightEffect.Parameters["lightMask"].SetValue(lightMask);            
-            //Main.LightEffect.Parameters["random"].SetValue(Util.NextFloat(0.1f, 2f));
-            //Main.LightEffect.Parameters["positionXY"].SetValue(new Vector2(MouseInput.GetPos().X, -MouseInput.GetPos().Y)); // new Vector2(MouseInput.GetLevelPos(false, Main.camera).X * 2*3, -MouseInput.GetLevelPos(false, Main.camera).Y*2*3)
-            //Main.LightEffect.Parameters["shadow"].SetValue(Screen.LevelTarget);
-            Main.LightEffect.CurrentTechnique.Passes[5].Apply();
-
-
-            spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-
-
-            End(spriteBatch);
-            game.GraphicsDevice.SetRenderTarget(null);
-
-        }
-
-
         public void GetLightAndHullProcess(Texture2D texture, Texture2D lightMask, Texture2D hullMash, Texture2D colorMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
         {
 
@@ -465,6 +442,42 @@ namespace Plateform_2D_v9
             //Main.LightEffect.Parameters["colorMask"].SetValue(colorMask);
             Main.LightEffect.CurrentTechnique.Passes[6].Apply();
 
+
+            spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+
+
+            End(spriteBatch);
+            game.GraphicsDevice.SetRenderTarget(null);
+
+        }
+
+        public void GetDistorsionProcess(Texture2D texture, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        {
+
+            game.GraphicsDevice.SetRenderTarget(textureOUT);
+            Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+            game.GraphicsDevice.Clear(Color.Transparent);
+
+            #region Distorsion
+
+            Vector2 displacement;
+            double time = gameTime.TotalGameTime.TotalSeconds * 0.02f;
+
+            displacement = new Vector2((float)Math.Cos(time), (float)Math.Sin(time));
+
+            Main.refractionEffect.Parameters["DisplacementTexture"].SetValue(Main.effect);
+            Main.refractionEffect.Parameters["DisplacementMotionVector"].SetValue(displacement);
+            Main.refractionEffect.Parameters["SampleWavelength"].SetValue(0.6f);                        /// 0.5f
+            Main.refractionEffect.Parameters["Frequency"].SetValue(0.006f);                               /// 0.1f
+            Main.refractionEffect.Parameters["RefractiveIndex"].SetValue(0.4f);                         /// 0.5f
+            // for the very last little test.
+            Main.refractionEffect.Parameters["RefractionVector"].SetValue(new Vector2(0.1f, 0.1f));     ///new Vector2(0.2f, 0.5f)
+            Main.refractionEffect.Parameters["RefractionVectorRange"].SetValue(0.1f);                   ///0.5f
+
+            Main.refractionEffect.CurrentTechnique = Main.refractionEffect.Techniques["RefractAntiRefractionArea"];
+            Main.refractionEffect.CurrentTechnique.Passes[0].Apply();
+
+            #endregion
 
             spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 

@@ -32,8 +32,11 @@ namespace Plateform_2D_v9
         public static Render.ShaderEffect UIShader = Render.ShaderEffect.None;
 
 
-        RenderTarget2D test = null;
-        RenderTarget2D test2 = null;
+        RenderTarget2D LevelTargetLight = null;
+        RenderTarget2D LevelTargetDistorsion = null;
+
+        RenderTarget2D BackTargetLight = null;
+        RenderTarget2D BackTargetDistorsion = null;
 
 
         public int Width
@@ -62,8 +65,11 @@ namespace Plateform_2D_v9
             ColorMaskLevel = new RenderTarget2D(this.game.GraphicsDevice, width, height);
             LightMaskBackground = new RenderTarget2D(this.game.GraphicsDevice, width, height);
 
-            test = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
-            test2 = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
+            LevelTargetLight = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
+            LevelTargetDistorsion = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
+
+            BackTargetLight = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
+            BackTargetDistorsion = new RenderTarget2D(game.GraphicsDevice, 1920, 1080);
 
             this.isSet = false;
 
@@ -133,27 +139,40 @@ namespace Plateform_2D_v9
         {
 
             /// Image processing
-            render.GetLightAndHullProcess(LevelTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref test, gameTime, spriteBatch);
-            render.GetLightAndHullProcess(BackTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref test2, gameTime, spriteBatch);
+            if (Main.LevelPlaying == 3)
+            {
+                render.GetLightAndHullProcess(BackTarget, LightMaskBackground, LightMaskBackground, LightMaskBackground, ref BackTargetLight, gameTime, spriteBatch); // LightMaskLevel, HullMaskLevel, ColorMaskLevel
+                render.GetLightAndHullProcess(LevelTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref LevelTargetLight, gameTime, spriteBatch);
+            }
+            else if (Main.LevelPlaying == 4)
+            {
+                render.GetDistorsionProcess(BackTarget, ref BackTargetDistorsion, gameTime, spriteBatch);
+                render.GetDistorsionProcess(LevelTarget, ref LevelTargetDistorsion, gameTime, spriteBatch);
+                
+            }
+                
 
-
+            /// Image Drawing
             Rectangle destinationRectangle = CalculateDestinationRectangle();
 
-
-            //render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, BackgroundShader);
-            render.DrawRenderTarget(test2, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-
-
-
-            render.DrawRenderTarget(test, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-            //render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-
-
-            //render.DrawRenderTarget(LightMask, destinationRectangle, Color.White, gameTime, spriteBatch, default, LightMaskShader);
+            if (Main.LevelPlaying == 3)
+            {
+                render.DrawRenderTarget(BackTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+                render.DrawRenderTarget(LevelTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+            }
+            else if (Main.LevelPlaying == 4)
+            {
+                render.DrawRenderTarget(BackTargetDistorsion, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+                render.DrawRenderTarget(LevelTargetDistorsion, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+            }
+            else
+            {
+                render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+                render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
+            }
 
 
             render.DrawRenderTarget(FontTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-            //render.DrawRenderTarget(test, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
 
 
             /* Multiplayer // Horizontale splitscreen

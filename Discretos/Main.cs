@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Penumbra;
 using Plateform_2D_v9.NetWorkEngine_3._0;
 using System;
 using System.Collections.Generic;
@@ -181,45 +180,11 @@ namespace Plateform_2D_v9
         /// </summary>
         public static bool PixelPerfect = true;
 
+        Vector3 HullCameraPosition = new Vector3(0f, 0f, 1f);
+        Vector3 HullCameraLookAt = new Vector3(0, 0, 0);
 
         public Stopwatch UpdateTime;
         public float elapsedTime;
-
-
-
-
-
-
-        //Camera
-        Vector3 camTarget;
-        Matrix projectionMatrix;
-        Matrix viewMatrix;
-        Matrix worldMatrix;
-
-        //BasicEffect for rendering
-        BasicEffect basicEffect;
-
-        public VertexBuffer vertexBuffer; // 65535
-        public IndexBuffer indexBuffer;
-
-        public static VertexPositionColor[] vertex = new VertexPositionColor[65535];
-        public ushort[] indices = new ushort[65535];
-
-        public byte VertexIndex = 0;
-
-        public static int vertexCount = 0;
-        public int indexCount = 0;
-        public static int triangle_count = 0;
-
-        public int vbuf_start = 0;
-        public int ibuf_start = 0;
-
-        public ushort vbytes = sizeof(float) * 8;
-        public ushort ibytes = sizeof(ushort) * 8;
-
-        Vector3 camera2DScrollPosition = new Vector3(0f, 0f, 1f);
-        Vector3 camera2DScrollLookAt = new Vector3(0, 0, 0);
-        float camera2DrotationZ = 0f;
 
 
         public Main()
@@ -320,6 +285,7 @@ namespace Plateform_2D_v9
 
 
             LightManager.Init();
+            LightManager.InitHullSystem(this);
             Handler.InitPlayersList();
 
             WorldMap.CreateWorldMapData();
@@ -331,35 +297,6 @@ namespace Plateform_2D_v9
 
 
             UpdateTime = new Stopwatch();
-
-
-
-            //Setup Camera
-            worldMatrix = Matrix.CreateWorld(new Vector3(0, 0, 0), Vector3.Forward, Vector3.Up);
-
-            //BasicEffect
-            basicEffect = new BasicEffect(GraphicsDevice);
-            basicEffect.Alpha = 1f;
-
-            basicEffect.VertexColorEnabled = true;
-            basicEffect.LightingEnabled = false;
-
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.05f, 600);
-            viewMatrix = Matrix.CreateLookAt(new Vector3(0, 0, -100), new Vector3(0,0,0), Vector3.Up);
-
-            vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 65535, BufferUsage.WriteOnly);
-            indexBuffer = new IndexBuffer(GraphicsDevice, typeof(ushort), 65535, BufferUsage.WriteOnly);
-
-            vertexBuffer.SetData<VertexPositionColor>(vertex);
-            indexBuffer.SetData<ushort>(indices);
-
-            AddVertex(0, 0, 0, Vector3.Zero, 10, 10);
-            AddVertex(0, 1000, 0, Vector3.Zero, 10, 10);
-            AddVertex(0, 0, 1000, Vector3.Zero, 10, 10);
-            AddTriangle(1000, 1000, 1000, 1000);
-            triangle_count++;
-
-
 
             base.Initialize();
         }
@@ -600,12 +537,7 @@ namespace Plateform_2D_v9
             UpdateTime.Start();
 
 
-
-
-
-
-
-
+            #region Vertex System
 
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
@@ -614,35 +546,14 @@ namespace Plateform_2D_v9
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            basicEffect.Alpha = 1f;
-            basicEffect.VertexColorEnabled = true;
+            LightManager.basicEffect.Alpha = 1f;
+            LightManager.basicEffect.VertexColorEnabled = true;
 
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
 
-            GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            GraphicsDevice.Indices = indexBuffer;
-
-            #region //[Reminder_To_Set_Lighting_Draw_Params_Later for custom lighting class and effect]
-            // TO DO (later): 
-            // if (DrawDepth)        light.SetDepthParams(ob.transform);           // for drawing to a depth shader
-            // else if (DrawShadows) light.SetShadowParams(ob.transform, cam);     // for drawing shadows (using depth shader results) 
-            // else                  light.SetDrawParams(ob.transform,cam,ob.tex); // regular drawing
-            #endregion
-            // SET SHADER PARAMETERS:
-
-            /*AddVertex(10, 10, 10, Vector3.Up, 10, 10);
-            AddVertex(10, 10, 0, Vector3.Up, 10, 10);
-            AddVertex(10, 10, 10, Vector3.Up, 10, 10);
-            AddTriangle(1000, 1000, 1000, 1000);
-            triangle_count++;*/
-
-            //SetCameraPosition2D(-1, -1);
-
             Viewport viewport = GraphicsDevice.Viewport;
-            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
-            Matrix World = Matrix.Identity;
-            Matrix View = Matrix.CreateLookAt(camera2DScrollPosition, camera2DScrollLookAt, Vector3.Up);
+            Matrix View = Matrix.CreateLookAt(HullCameraPosition, HullCameraLookAt, Vector3.Up);
 
             // **************************************************************************************************************
             Vector2 Translation;
@@ -656,38 +567,15 @@ namespace Plateform_2D_v9
             // **************************************************************************************************************
 
             View *= Matrix.CreateTranslation(Translation.X, Translation.Y, 0);
-            // Non-fonctionnel : View *= Matrix.CreateTranslation((GraphicsDevice.PresentationParameters.BackBufferWidth / 2) - camera.Position.X * (2 * GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2)), (GraphicsDevice.PresentationParameters.BackBufferHeight / 2) - camera.Position.Y * (2 * GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2)), 0);
-            ///View *= Matrix.CreateTranslation(-(LightManager.CalculateDestinationRectangle(this).X * ((float)screen.Width / GraphicsDevice.PresentationParameters.BackBufferWidth)) / 2f, -(LightManager.CalculateDestinationRectangle(this).Y)/2f, 0);
-
-            //View *= Matrix.CreateScale(2f);
-
             View *= Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, 1, Camera.MinZ, Camera.MaxZ);
 
-            // We can set up the matrices this way to get the expected rotation but it is improper the view is the camera.
-            //Matrix World = Matrix.Identity * Matrix.CreateRotationZ(camera2DrotationZ);
-            //Matrix View = Matrix.CreateLookAt(camera2DScrollPosition, camera2DScrollLookAt, new Vector3(0, -1, 0));
             Matrix Projection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.PresentationParameters.BackBufferWidth, viewport.Height, 0, 0, 1); // nans // Matrix.CreateScale(1, 1, 1) * 
 
-            //Matrix wvp = World * View * Projection;
+            LightManager.basicEffect.View = View; // View
+            LightManager.basicEffect.Projection = Projection;
+            LightManager.basicEffect.World = Matrix.Identity;
 
-            //projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.05f, 600);
-            //viewMatrix = Matrix.CreateLookAt(new Vector3(0, 0, -10), new Vector3(0, 0, 0), Vector3.Down);
-
-            /*basicEffect.View = View;
-            basicEffect.Projection = Projection;
-            basicEffect.World = World;*/
-
-            basicEffect.View = View; // View
-            basicEffect.Projection = Projection;
-            basicEffect.World = Matrix.Identity;
-
-            Vector2 p1 = new Vector2(7 * 32, 5 * 32);
-            Vector2 p3 = new Vector2(7 * 32 + 32, 5 * 32);
-            Vector2 p2 = new Vector2(7 * 32 + 32, 5 * 32 + 32);
-            
-
-
-
+            #endregion
 
 
             //ScreenRatioComparedWith1080p = 1920f / GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -732,17 +620,12 @@ namespace Plateform_2D_v9
 
             screen.Set(Screen.LevelTarget);
             render.Begin5(false, gameTime, spriteBatch, camera);
-            //penumbra.BeginDraw();
             GraphicsDevice.Clear(new Color(0,0,0,0));
-
-            //this.Transform = Matrix.CreateScale(2.5f, 2.5f, 1f) * Matrix.CreateRotationZ(0f) * Matrix.CreateTranslation(new Vector3(0f, 0f, 0f));
 
             DEBUG.DebugCollision(new Rectangle((int)camera.Position.X - 1920/4/2, (int)camera.Position.Y - 1080/4/2, 1920/4, 1080/4), Color.RoyalBlue, spriteBatch);
 
             state.DrawInCamera(spriteBatch, gameState, gameTime);
 
-            //DrawVertexRectangle(new Rectangle(0, 0, 160 * GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width/2), 160 * GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height/2)));
-            //DrawVertexRectangle(new Rectangle(200, 200, 200, 200));
 
             render.End(spriteBatch);
             screen.UnSet();
@@ -756,13 +639,13 @@ namespace Plateform_2D_v9
             GraphicsDevice.Clear(new Color(0,0,0,0f));
 
             
-            LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+            /*LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
             LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
-            LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
+            LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);*/
 
-            /*LightManager.AmbianteLightR = new Color(0, 0, 0, 0.1f);
+            LightManager.AmbianteLightR = new Color(0, 0, 0, 0.1f);
             LightManager.AmbianteLightG = new Color(0, 0, 0, 0.1f);
-            LightManager.AmbianteLightB = new Color(0, 0, 0, 0.4f);*/
+            LightManager.AmbianteLightB = new Color(0, 0, 0, 0.4f);
 
 
             //if (LightManager.lights.Count < 1)
@@ -775,16 +658,6 @@ namespace Plateform_2D_v9
 
             LightManager.Draw(spriteBatch);
 
-            //DrawVertexRectangle(new Rectangle(0, 0, 160 * GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2), 160 * GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2)));
-
-
-            //spriteBatch.Draw(Main.Bounds, new Rectangle(0,0, 2000, 2000), Color.Red);
-
-
-            //DrawVertexRectangle(new Rectangle(0, 0, 200, 200));
-            //DrawVertexRectangle(new Rectangle(200, 200, 200, 200));
-
-
             render.End(spriteBatch);
             screen.UnSet();
 
@@ -794,33 +667,8 @@ namespace Plateform_2D_v9
             render.Begin5(false, gameTime, spriteBatch, camera);
             GraphicsDevice.Clear(new Color(0, 0, 0, 0f));
 
-
-
-
-            /*p1.X *= GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-            p2.X *= GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-            p3.X *= GraphicsDevice.PresentationParameters.BackBufferWidth / (screen.Width / 2.0f);
-            p1.Y *= GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-            p2.Y *= GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-            p3.Y *= GraphicsDevice.PresentationParameters.BackBufferHeight / (screen.Height / 2.0f);
-
-
-            Main.CreateVertexTriangle(p1, p3, p2, this, this, Color.Red);
-            Main.DrawVertex(this, this);
-            Main.vertex = new VertexPositionColor[65535];
-            Main.vertexCount = 0;
-            Main.triangle_count = 0;*/
-
-
-
-            LightManager.DrawHull(spriteBatch, this, this, screen);
-
-
-            
-            
-            
-
-
+            if (KeyInput.getKeyState().IsKeyDown(Keys.F8))
+                LightManager.DrawHull(this, screen);
 
             render.End(spriteBatch);
             screen.UnSet();
@@ -831,23 +679,10 @@ namespace Plateform_2D_v9
             render.BeginAdditive(false, gameTime, spriteBatch, camera);
             GraphicsDevice.Clear(new Color(0, 0, 0, 0f));
 
+            // Ambiante Light
             spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 1920 / 2, 1080 / 2), new Color(1, 0, 0, 0.0f));
             spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 1920 / 2, 1080 / 2), new Color(0, 1, 0, 0.0f));
             spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 1920 / 2, 1080 / 2), new Color(0, 0, 1, 0.2f));
-
-
-            //if (LightManager.lights.Count < 1)
-            //    LightManager.lights.Add(new Light(new Vector2(Util.random.Next(0, 2000), Util.random.Next(0, 200)), 1f, Util.NextFloat(5f, 100f), new Color(Util.NextFloat(0f, 10f), Util.NextFloat(0f, 100f), Util.NextFloat(0f, 10f))));
-
-            //if (Handler.playersV2.Count != 0)
-            //    LightManager.lights[0].Position = Handler.playersV2[1].Position + new Vector2(Handler.playersV2[1].GetRectangle().Width / 2, Handler.playersV2[1].GetRectangle().Height / 2);
-
-            //LightManager.lights[0].Radius = 50f;
-
-            //for (int i = 0; i < LightManager.lights.Count; i++)
-            //{
-            //    LightManager.lights[i].Draw(spriteBatch);
-            //}
 
             render.End(spriteBatch);
             screen.UnSet();
@@ -877,16 +712,6 @@ namespace Plateform_2D_v9
 
             if(DebugTime)
                 spriteBatch.DrawString(UltimateFont, "general draw : " + elapsedTime + "ms", new Vector2(10, 200), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-
-
-
-            //spriteBatch.DrawString(UltimateFont, "p1 : " + p1.ToString().ToLower(), new Vector2(10, 300), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-            //spriteBatch.DrawString(UltimateFont, "p2 : " + p2.ToString().ToLower(), new Vector2(10, 350), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-            //spriteBatch.DrawString(UltimateFont, "p3 : " + p3.ToString().ToLower(), new Vector2(10, 400), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-
-            //spriteBatch.DrawString(UltimateFont, "matrix : " + Translation.ToString().ToLower(), new Vector2(10, 450), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-
-
 
 
             //render.DrawLine(Bounds, new Vector2(MouseInput.GetRectangle(screen).X - 150, MouseInput.GetRectangle(screen).Y), new Vector2(MouseInput.GetRectangle(screen).X, MouseInput.GetRectangle(screen).Y), spriteBatch, Color.Yellow   * 0.5f, 10);
@@ -950,20 +775,6 @@ namespace Plateform_2D_v9
             //Screen.HullMaskLevel.SaveAsPng(new StreamWriter("hull_test.png").BaseStream, 1920, 1080);
 
             screen.Present(render, gameTime, spriteBatch);
-
-
-
-            /*foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertex, 0, 10);
-            }*/
-
-
-            //DrawVertexRectangle(new Rectangle(-0, -0, 200, 200));
-            ///DrawVertexRectangle(new Rectangle(-0, -0, 200, 200));
-            ///DrawVertexRectangle(new Rectangle(200, 200, 200, 200));
-
 
             UpdateTime.Stop();
 
@@ -1125,161 +936,6 @@ namespace Plateform_2D_v9
             }
             spriteBatch.End();
         }
-
-
-
-
-
-
-
-        public void AddVertex(float x, float y, float z, Vector3 norm, float u, float v)
-        {
-            if ((vbuf_start + vertexCount) >= 65535) { Console.WriteLine("MAX VERTEX !"); return; }
-            vertex[vertexCount] = new VertexPositionColor(new Vector3(x, y, z), Color.Red);
-            vertexCount += 1;
-
-        }
-
-        public void AddTriangle(ushort a, ushort b, ushort c, ushort _offset)
-        {
-            if (indexCount + 3 > 65535) { Console.WriteLine("MAX TRIANGLE"); return; }
-            ushort offset = (ushort)((ushort)vertexCount - 24 + _offset);
-            a += offset; b += offset; c += offset;
-
-            indices[indexCount] = a; indexCount++;
-            indices[indexCount] = b; indexCount++;
-            indices[indexCount] = c; indexCount++;
-
-
-        }
-
-        public static void DrawVertexRectangle(Rectangle r, Game game, Main main)
-        {
-            VertexPositionColorTexture[] quad = new VertexPositionColorTexture[6];
-            //
-            if (game.GraphicsDevice.RasterizerState == RasterizerState.CullClockwise)
-            {
-                quad[0] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.Black, new Vector2(0f, 0f));  // p1
-                quad[1] = new VertexPositionColorTexture(new Vector3(r.Left, r.Bottom, 0f), Color.Black, new Vector2(0f, 1f)); // p0
-                quad[2] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Black, new Vector2(1f, 1f));// p3
-
-                quad[3] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Black, new Vector2(1f, 1f));// p3
-                quad[4] = new VertexPositionColorTexture(new Vector3(r.Right, r.Top, 0f), Color.Black, new Vector2(1f, 0f));// p2
-                quad[5] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.Black, new Vector2(0f, 0f)); // p1
-            }
-            else
-            {
-                quad[0] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.Black, new Vector2(0f, 0f));  // p1
-                quad[2] = new VertexPositionColorTexture(new Vector3(r.Left, r.Bottom, 0f), Color.Black, new Vector2(0f, 1f)); // p0
-                quad[1] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Black, new Vector2(1f, 1f));// p3
-
-                quad[4] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Red, new Vector2(1f, 1f));// p3
-                quad[3] = new VertexPositionColorTexture(new Vector3(r.Right, r.Top, 0f), Color.Red, new Vector2(1f, 0f));// p2
-                quad[5] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.Red, new Vector2(0f, 0f)); // p1
-            }
-
-            foreach (EffectPass pass in main.basicEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, quad, 0, 2);
-            }
-        }
-
-        public static void CreateVertexTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Game game, Main main, Color color)
-        {
-            VertexPositionColor[] quad = new VertexPositionColor[6];
-            //
-
-            //quad[0] = new VertexPositionColor(new Vector3(p1.X, p1.Y, 0f), Color.Black);  // p1
-            //quad[2] = new VertexPositionColor(new Vector3(p2.X, p2.Y, 0f), Color.Black); // p0
-            //quad[1] = new VertexPositionColor(new Vector3(p3.X, p3.Y, 0f), Color.Black);// p3
-
-            //quad[4] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Red, new Vector2(1f, 1f));// p3
-            //quad[3] = new VertexPositionColorTexture(new Vector3(r.Right, r.Top, 0f), Color.Red, new Vector2(1f, 0f));// p2
-            //quad[5] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.Red, new Vector2(0f, 0f)); // p1
-
-
-            /*var vertices = new VertexPosition[]
-            {
-                new VertexPosition(new Vector3(p1, 0)),
-                new VertexPosition(new Vector3(p2, 0)),
-                new VertexPosition(new Vector3(p3, 0)),
-            };*/
-
-            vertex[vertexCount] = new VertexPositionColor(new Vector3(p1, 0), color);
-            vertexCount += 1;
-            vertex[vertexCount] = new VertexPositionColor(new Vector3(p2, 0), color);
-            vertexCount += 1;
-            vertex[vertexCount] = new VertexPositionColor(new Vector3(p3, 0), color);
-            vertexCount += 1;
-
-            triangle_count += 1;
-
-        }
-
-        public static void DrawVertex(Main main, Game game)
-        {
-
-            main.vertexBuffer = new VertexBuffer(game.GraphicsDevice, VertexPositionColor.VertexDeclaration, 65535, BufferUsage.None);
-            main.vertexBuffer.SetData(vertex);
-
-            foreach (EffectPass pass in main.basicEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                if(triangle_count > 0)
-                    game.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangle_count);
-            }
-        }
-
-
-        /*public void DrawVertexRectangle(Rectangle r)
-        {
-            VertexPositionColorTexture[] quad = new VertexPositionColorTexture[6];
-            //
-            if (GraphicsDevice.RasterizerState == RasterizerState.CullClockwise)
-            {
-                quad[0] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.White, new Vector2(0f, 0f));  // p1
-                quad[1] = new VertexPositionColorTexture(new Vector3(r.Left, r.Bottom, 0f), Color.Red, new Vector2(0f, 1f)); // p0
-                quad[2] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Green, new Vector2(1f, 1f));// p3
-
-                quad[3] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Green, new Vector2(1f, 1f));// p3
-                quad[4] = new VertexPositionColorTexture(new Vector3(r.Right, r.Top, 0f), Color.Blue, new Vector2(1f, 0f));// p2
-                quad[5] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.White, new Vector2(0f, 0f)); // p1
-            }
-            else
-            {
-                quad[0] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.White, new Vector2(0f, 0f));  // p1
-                quad[2] = new VertexPositionColorTexture(new Vector3(r.Left, r.Bottom, 0f), Color.Red, new Vector2(0f, 1f)); // p0
-                quad[1] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Green, new Vector2(1f, 1f));// p3
-
-                quad[4] = new VertexPositionColorTexture(new Vector3(r.Right, r.Bottom, 0f), Color.Green, new Vector2(1f, 1f));// p3
-                quad[3] = new VertexPositionColorTexture(new Vector3(r.Right, r.Top, 0f), Color.Blue, new Vector2(1f, 0f));// p2
-                quad[5] = new VertexPositionColorTexture(new Vector3(r.Left, r.Top, 0f), Color.White, new Vector2(0f, 0f)); // p1
-            }
-
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, quad, 0, 2);
-            }
-        }*/
-
-        public void SetCameraPosition2D(int x, int y)
-        {
-            camera2DScrollPosition.X = x;
-            camera2DScrollPosition.Y = y;
-            camera2DScrollPosition.Z = -1;
-            camera2DScrollLookAt.X = x;
-            camera2DScrollLookAt.Y = y;
-            camera2DScrollLookAt.Z = 0;
-        }
-
-
-
-
-
-
-
 
     }
 

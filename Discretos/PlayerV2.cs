@@ -132,7 +132,7 @@ namespace Plateform_2D_v9
 
         public void InitLight()
         {
-            light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 120f, Color.White); // 50f
+            light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 50f, Color.White); // 50f
             LightManager.lights.Add(light);
         }
 
@@ -856,6 +856,10 @@ namespace Plateform_2D_v9
                                 isJump = false;
                                 isOnGround = true;
                                 OnLadder = false;
+
+                                /// Break Block if Player is on and is on solid block in the left
+                                if (Position.X > tile.Position.X && Handler.Level[xMax, yMax].isBreakable && !tile.isBreakable)
+                                    Handler.Level[xMax, yMax].Break();
 
                                 //Console.WriteLine(tile.Position.X/16);
 

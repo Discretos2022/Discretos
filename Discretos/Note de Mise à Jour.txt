@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:13
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:16
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -56,7 +56,8 @@ Level
 	* New Effect - Rain (build 8)
 	* New Shader Effect - Heat Distortion (build 1) (Shaders Not Fonctionnal, Experimental)
 	* New Shader Effect - Heat Distortion (build 7) (Shaders Fonctionnal, Experimental)
-	* New Shader Effect - Light And Shadow (build 7, 8) (Shaders Fonctionnal, Experimental)
+	* New Shader Effect - Light (build 7, 8) (Shaders Fonctionnal, Experimental)
+	* Light Shader Updated - Shadow (build 8) (Shaders almost Fonctionnal, Experimental)
 	* New Background - SnowForest (build 2)
 	* New Background - Desert (build 2)
 	* New Background - Mountains (build 3)
@@ -78,7 +79,7 @@ Level
 
 Collision
 
-	* Collision improved (build 1, 2, 3, 4, 5, 6, 7)
+	* Collision improved (build 1, 2, 3, 4, 5, 6, 7, 8)
 	* New Collision System (implemented) (build 4)
 	* New Collision System (build 5)
 
@@ -100,6 +101,7 @@ System
 	* Migrating to .NET 6 (build 8)
 	* Git adaptation (build 8)
 	* Particle Effect Updated (build 8)
+	* Shader System Updated (build 8)
 
 
 Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------

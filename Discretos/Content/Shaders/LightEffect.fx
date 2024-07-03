@@ -317,7 +317,6 @@ sampler2D hullSampler = sampler_state { Texture = <hullMask>; };
 Texture2D colorMask;
 sampler2D colorSampler = sampler_state { Texture = <colorMask>; };
 
-
 bool DEBUG;
 
 
@@ -330,17 +329,30 @@ float4 LightAndHullMask(VertexShaderOutput input, float2 coords : TEXCOORD0, flo
     float4 light = tex2D(lightSampler, coords);
     float4 lightColor = tex2D(colorSampler, coords);
     float4 hull = tex2D(hullSampler, coords);
+	
+
+    /*float1 average;
+	
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            average += tex2D(hullSampler, pos.xy + float2(i, j)).a;
+        }
+    }*/
+	
 
     if (hull.a != 0)
-    {	
-		//
+    {
+		
         ambiant.a = 1;
 		
         if (DEBUG)
-            return hull;
+            return hull; // * (average / 25.0f);
             
-        //return float4(0, 0, 0, 1);
-		return pixel * ambiant;
+		//return float4(0, 0, 0, 1);
+		
+        return pixel * ambiant;
 
     }
 
