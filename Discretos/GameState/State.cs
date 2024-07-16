@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Plateform_2D_v9
@@ -17,9 +16,8 @@ namespace Plateform_2D_v9
         private MultiplayerMode multiplayerMode;
         private CreateServer createServer;
         private ConnectServer connectServer;
-        private Multiplay multiplay;
 
-        public State(SpriteBatch spriteBatch, Menu menu, Settings settings, Play play, MultiplayerMode multiplayerMode, CreateServer createServer, ConnectServer connectServer, Multiplay multiplay, Main game)
+        public State(SpriteBatch spriteBatch, Menu menu, Settings settings, Play play, MultiplayerMode multiplayerMode, CreateServer createServer, ConnectServer connectServer, Main game)
         {
             this.spriteBatch = spriteBatch;
             this.main = game;
@@ -29,7 +27,6 @@ namespace Plateform_2D_v9
             this.multiplayerMode = multiplayerMode;
             this.createServer = createServer;
             this.connectServer = connectServer;
-            this.multiplay = multiplay;
         }
 
 
@@ -45,9 +42,6 @@ namespace Plateform_2D_v9
                     break;
                 case GameState.Playing:
                     play.Update(state, gameTime, screen);
-                    break;
-                case GameState.Multiplaying:
-                    multiplay.Update(state, gameTime, screen);
                     break;
                 case GameState.MultiplayerMode:
                     multiplayerMode.Update(state, gameTime, screen);
@@ -76,9 +70,6 @@ namespace Plateform_2D_v9
                 case GameState.Playing:
                     play.Draw(spriteBatch, gameTime);
                     break;
-                case GameState.Multiplaying:
-                    multiplay.Draw(spriteBatch, gameTime);
-                    break;
                 case GameState.MultiplayerMode:
                     multiplayerMode.Draw(spriteBatch, gameTime);
                     break;
@@ -105,9 +96,6 @@ namespace Plateform_2D_v9
                 case GameState.Playing:
                     play.DrawInCamera(spriteBatch, gameTime);
                     break;
-                case GameState.Multiplaying:
-                    multiplay.DrawInCamera(spriteBatch, gameTime);
-                    break;
                 case GameState.MultiplayerMode:
                     break;
                 case GameState.CreateServer:
@@ -121,7 +109,7 @@ namespace Plateform_2D_v9
 
     }
 
-    public enum GameState { Menu, Settings, Playing, MultiplayerMode, CreateServer, ConnectToServer, Multiplaying }
+    public enum GameState { Menu, Settings, Playing, MultiplayerMode, CreateServer, ConnectToServer }
 
     public enum PlayState { InWorldMap, InLevel }
 

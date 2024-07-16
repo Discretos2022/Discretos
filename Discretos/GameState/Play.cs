@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using NetworkEngine_5._0.Client;
 using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.NetCore;
-//using Plateform_2D_v9.NetWorkEngine_3._0;
-//using Plateform_2D_v9.NetWorkEngine_3._0.Client;
-//using Plateform_2D_v9.NetWorkEngine_3._0.Server;
 using System;
 using System.Threading;
 
@@ -13,10 +11,7 @@ namespace Plateform_2D_v9
 {
     class Play
     {
-        private Main main;
         private Handler handler;
-
-        //public ParticleEffect SnowEffect;
 
         private ButtonV2 Level_3;
         private ButtonV1 Level_5;
@@ -32,12 +27,8 @@ namespace Plateform_2D_v9
 
         public Play(Handler handler, Main main)
         {
-            this.main = main;
             this.handler = handler;
-            //9
-            //SnowEffect = new ParticleEffect(1, -1, 50, 1f);   //new ParticleEffect(1, 0, 8, 1f);
 
-            //SnowEffect.Actived = true;
             ParticleEffectV2.Actived = true;
             ParticleEffectV2.setIntensity(50);
             ParticleEffectV2.type = 1;
@@ -62,22 +53,19 @@ namespace Plateform_2D_v9
             {
                 Main.isPaused = false;
                 if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
-                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+                    ServerSender.SendGamePaused(Main.isPaused);
             }
             else if (KeyInput.getKeyState().IsKeyDown(Keys.P) && !KeyInput.getOldKeyState().IsKeyDown(Keys.P) && !Main.isPaused)
             {
                 Main.isPaused = true;
                 if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
-                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+                    ServerSender.SendGamePaused(Main.isPaused);
             }
 
             if (NetPlay.IsMultiplaying)
             {
-                if (NetworkEngine_5._0.Client.Client.IsLostConnection())
+                if (Client.IsLostConnection())
                 {
-                    //stateTextColor = Color.Red;
-                    //stateText = "connection lost";
-                    //clientState = State.Connection;
                     Main.gameState = GameState.ConnectToServer;
                     NetPlay.IsMultiplaying = false;
                 }
@@ -111,43 +99,8 @@ namespace Plateform_2D_v9
                 if (Main.inWorldMap)
                     if (Level_5.IsCliqued())
                     {
-
-                        if (NetPlay.IsMultiplaying)
-                        {
-
-
-                            //if (NetPlay.serversock.client != null)
-                            //{
-                            //    Main.MapLoaded = false;
-                            //    Main.LevelSelector(5);
-                            //    Main.inWorldMap = false;
-                            //    Main.inLevel = true;
-                            //    Camera.Zoom = 4f;
-                            //    Main.gameState = GameState.Playing;
-
-                            //    NetPlay.serversock.Send(Main.LevelPlaying);
-                            //}
-                        }
-                        else
-                        {
-                            Main.MapLoaded = false;
-                            Main.LevelSelector(5);
-                            Main.inWorldMap = false;
-                            Main.inLevel = true;
-                            Camera.Zoom = 4f;
-                            Main.gameState = GameState.Playing;
-
-                            //SnowEffect.Actived = false;
-                            //ThreadPool.QueueUserWorkItem(new WaitCallback(SnowEffect.Generate), 1);
-                            ParticleEffectV2.SetScale(1f);
-                            ParticleEffectV2.type = 1;
-                            ParticleEffectV2.Actived = false;
-                            ParticleEffectV2.particles.Clear();
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
-
-                        }
-
-
+                        Main.StartLevel(5);
+                        Main.gameState = GameState.Playing;
                     }
 
                 Level_7.Update(screen);
@@ -163,19 +116,8 @@ namespace Plateform_2D_v9
                 if (Main.inWorldMap)
                     if (Level_7.IsCliqued())
                     {
-                        Main.MapLoaded = false;
-                        Main.LevelSelector(7);
-                        Main.inWorldMap = false;
-                        Main.inLevel = true;
-                        Camera.Zoom = 4f;
+                        Main.StartLevel(7);
                         Main.gameState = GameState.Playing;
-
-                        ParticleEffectV2.type = 2;
-                        ParticleEffectV2.Actived = false;
-                        ParticleEffectV2.particles.Clear();
-                        ParticleEffectV2.SetScale(0.5f);
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
-
                     }
 
                 Level_3.Update(screen);
@@ -191,13 +133,8 @@ namespace Plateform_2D_v9
                 if (Main.inWorldMap)
                     if (Level_3.IsCliqued())
                     {
-                        Main.MapLoaded = false;
-                        Main.LevelSelector(3);
-                        Main.inWorldMap = false;
-                        Main.inLevel = true;
-                        Camera.Zoom = 4f;
+                        Main.StartLevel(3);
                         Main.gameState = GameState.Playing;
-
                     }
 
                 #endregion
@@ -215,13 +152,12 @@ namespace Plateform_2D_v9
                 handler.Draw(spriteBatch, gameTime);
 
                 if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
-                    ParticleEffectV2.Draw(spriteBatch); //SnowEffect.Draw(spriteBatch);
+                    ParticleEffectV2.Draw(spriteBatch);
 
                 if(Main.Money > 100 && Main.LevelPlaying == 5)
                 {
-                    ParticleEffectV2.SetScale(1f); //SnowEffect.SetScale(1f);
-                    ParticleEffectV2.setWind(Util.UpperInteger(Wind.X) * 4);  //SnowEffect.setWind(Util.UpperInteger(Wind.X) * 4);
-                    //SnowEffect.setIntensity(100); // 2000
+                    ParticleEffectV2.SetScale(1f);
+                    ParticleEffectV2.setWind(Util.UpperInteger(Wind.X) * 4);
                     Wind = new Vector2(-1f, 0);           /// Take multiple of 2 for bug of tile
 
                 }
@@ -277,7 +213,7 @@ namespace Plateform_2D_v9
             {
 
                 if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
-                    ParticleEffectV2.Update(gameTime); //SnowEffect.Update(gameTime);
+                    ParticleEffectV2.Update(gameTime);
 
                 if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
                     Background.SetBackground(3);
@@ -317,12 +253,12 @@ namespace Plateform_2D_v9
                 {
                     if (NetPlay.MyPlayerID() == 1)
                     {
-                        NetworkEngine_5._0.Server.ServerSender.SendPositionPlayer(1, Handler.playersV2[1].Position.X, Handler.playersV2[1].Position.Y, Handler.playersV2[1].isRight);
+                        ServerSender.SendPositionPlayer(1, Handler.playersV2[1].Position.X, Handler.playersV2[1].Position.Y, Handler.playersV2[1].isRight);
                     }
 
                     if (NetPlay.MyPlayerID() != 1) 
                     {
-                        NetworkEngine_5._0.Client.ClientSender.SendPositionPlayer(NetPlay.MyPlayerID(), Handler.playersV2[NetPlay.MyPlayerID()].Position.X, Handler.playersV2[NetPlay.MyPlayerID()].Position.Y, Handler.playersV2[NetPlay.MyPlayerID()].isRight);
+                        ClientSender.SendPositionPlayer(NetPlay.MyPlayerID(), Handler.playersV2[NetPlay.MyPlayerID()].Position.X, Handler.playersV2[NetPlay.MyPlayerID()].Position.Y, Handler.playersV2[NetPlay.MyPlayerID()].isRight);
                     }
 
                 }
@@ -354,7 +290,7 @@ namespace Plateform_2D_v9
             {
 
                 if(NetPlay.IsMultiplaying)
-                    NetworkEngine_5._0.Server.ServerSender.SendWorldMapPositionPlayer((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
+                    ServerSender.SendWorldMapPositionPlayer((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
             }
                 
 
@@ -376,7 +312,7 @@ namespace Plateform_2D_v9
             {
                 Main.isPaused = false;
                 if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
-                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+                    ServerSender.SendGamePaused(Main.isPaused);
             }
                 
 
@@ -506,9 +442,6 @@ namespace Plateform_2D_v9
             QuitLevel.SetAroundButton(Restart);
             QuitLevel.SetPosition(0, 100, ButtonV3.Position.centerXY);
 
-
         }
-
-
     }
 }

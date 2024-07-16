@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.NetCore;
-//using Plateform_2D_v9.NetWorkEngine_3._0.Server;
-//using Plateform_2D_v9.NetWorkEngine_3._0;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace Plateform_2D_v9
 {
@@ -50,9 +46,7 @@ namespace Plateform_2D_v9
                 int Level = MapLogic[X, Y].LevelNum;
 
                 if (NetPlay.IsMultiplaying)
-                    NetworkEngine_5._0.Server.ServerSender.SendLevelStarted(Level);
-
-                //Thread.Sleep(10000);
+                    ServerSender.SendLevelStarted(Level);
 
                 Main.StartLevel(Level);
 

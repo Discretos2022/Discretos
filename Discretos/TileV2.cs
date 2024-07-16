@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -188,11 +187,6 @@ namespace Plateform_2D_v9
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
-            int PlayerID = 1;
-
-            if (Client.instance != null)
-                PlayerID = Client.instance.myId;
 
             //if (Position.X >= Handler.playersV2[PlayerID].Position.X - 500 && Position.X <= Handler.playersV2[PlayerID].Position.X + 500 && Position.Y >= Handler.playersV2[PlayerID].Position.Y - 400 && Position.Y <= Handler.playersV2[PlayerID].Position.Y + 400)
             //{

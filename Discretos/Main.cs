@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Plateform_2D_v9.NetWorkEngine_3._0;
+using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -114,7 +114,6 @@ namespace Plateform_2D_v9
         private MultiplayerMode multiplayer;
         private CreateServer createServer;
         private ConnectServer connectServer;
-        private Multiplay multiplay;
         public static bool isPaused;
 
         public static SpriteFont UltimateFont = null;
@@ -275,8 +274,7 @@ namespace Plateform_2D_v9
             multiplayer = new MultiplayerMode();
             createServer = new CreateServer();
             connectServer = new ConnectServer();
-            multiplay = new Multiplay(handler, this);
-            state = new State(spriteBatch, menu, settings, play, multiplayer, createServer, connectServer, multiplay, this);
+            state = new State(spriteBatch, menu, settings, play, multiplayer, createServer, connectServer, this);
 
             gameState = GameState.Menu;
 
@@ -390,9 +388,6 @@ namespace Plateform_2D_v9
 
             camera.UpdateBackground();
             Background.Update();
-
-            ShaderManager.Update(gameState);
-            
 
             KeyInput.Update();
             MouseInput.Update(screen);
@@ -845,11 +840,31 @@ namespace Plateform_2D_v9
 
         public static void StartLevel(int level)
         {
-            Main.MapLoaded = false;
-            Main.LevelSelector(level);
-            Main.inWorldMap = false;
-            Main.inLevel = true;
+            MapLoaded = false;
+            LevelSelector(level);
+            inWorldMap = false;
+            inLevel = true;
             Camera.Zoom = 4f;
+
+            ParticleEffectV2.particles.Clear();
+
+            switch (level)
+            {
+                case 5:
+                    ParticleEffectV2.SetScale(1f);
+                    ParticleEffectV2.type = 1;
+                    ParticleEffectV2.Actived = false;
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
+                    break;
+
+                case 7:
+                    ParticleEffectV2.type = 2;
+                    ParticleEffectV2.Actived = false;
+                    ParticleEffectV2.SetScale(0.5f);
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
+                    break;
+            }
+
         }
 
 

@@ -33,6 +33,7 @@ namespace NetworkEngine_5._0.Server
         public static List<int> usedID = new List<int>();
 
         public static bool serverLog = true;
+        public static bool udpLog = false;
 
         private static bool acceptConnection = true;
 
@@ -314,7 +315,8 @@ namespace NetworkEngine_5._0.Server
 
                     if (msg.Split(" ")[0] != "#CONNECTION")
                     {
-                        //print($"New UDP Message : " + msg, ConsoleColor.Cyan);
+                        if(udpLog)
+                            print($"New UDP Message : " + msg, ConsoleColor.Cyan);
                         ServerReader.ReadUDPPacket(msg);
                     }
 

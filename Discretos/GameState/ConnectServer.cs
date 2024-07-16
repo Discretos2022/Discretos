@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NetworkEngine_5._0.Client;
 using NetworkEngine_5._0.Error;
 using Plateform_2D_v9.NetCore;
-//using Plateform_2D_v9.NetWorkEngine_3._0;
-//using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -77,21 +76,21 @@ namespace Plateform_2D_v9
                 else
                     Connect.SetColor(Color.White, Color.Black);
 
-                if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connecting) //|| Client.state == Client.ClientState.Connecting)
+                if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || Client.GetState() == Client.ClientState.Connecting)
                     Connect.SetColor(Color.DarkGray, Color.Gray);  // 0.6f       0.2f
 
-                if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()) && NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Disconnected)
+                if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()) && Client.GetState() == Client.ClientState.Disconnected)
                     if (Connect.IsCliqued())
                     {
 
                         if (textBoxPort.GetText() == "")
-                            Connection(textBoxIP.GetText(), int.Parse("7777")); //Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
+                            Connection(textBoxIP.GetText(), int.Parse("7777")); 
                         else
-                            Connection(textBoxIP.GetText(), int.Parse(textBoxPort.GetText())); //Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
+                            Connection(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
 
                     }
 
-                if (NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connected)        //Client.IsConnected())
+                if (Client.GetState() == Client.ClientState.Connected)
                 {
                     clientState = State.WaitPlayer;
                     NetPlay.IsMultiplaying = true;
@@ -181,7 +180,7 @@ namespace Plateform_2D_v9
             }
             else if(clientState == State.WaitPlayer)
             {
-                if (NetworkEngine_5._0.Client.Client.IsLostConnection())
+                if (Client.IsLostConnection())
                 {
                     stateTextColor = Color.Red;
                     stateText = "connection lost";
@@ -213,7 +212,7 @@ namespace Plateform_2D_v9
 
                 textBoxPort.Draw(spriteBatch);
 
-                if (NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connecting) // Client.state == Client.ClientState.Connecting
+                if (Client.GetState() == Client.ClientState.Connecting)
                 {
 
                     stateTextColor = Color.White;
@@ -230,8 +229,6 @@ namespace Plateform_2D_v9
                     else if (animTime >= 40 && animTime < 60)
                         stateText = "connecting...";
 
-                    //Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-
                 }
 
                 Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, stateTextColor, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
@@ -242,19 +239,11 @@ namespace Plateform_2D_v9
             {
 
                 Writer.DrawText(Main.UltimateFont, "waiting for players", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
-                Writer.DrawText(Main.UltimateFont, "player " + NetCore.NetPlay.MyPlayerID(), new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 70), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
+                Writer.DrawText(Main.UltimateFont, "player " + NetPlay.MyPlayerID(), new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("player " + NetPlay.MyPlayerID()).X * 4f + 9 * 4f) / 2, 200), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 2f, spriteBatch, Color.Black, false);
 
-
-                /*for (int i = 1; i <= Handler.playersV2.Count; i++)
+                for (int i = 0; i < NetPlay.usedPlayerID.Count; i++)
                 {
-                    if (Handler.playersV2.ContainsKey(i))
-                        Writer.DrawText(Main.UltimateFont, $"player {i} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                }*/
-
-
-                for (int i = 0; i < NetCore.NetPlay.usedPlayerID.Count; i++)
-                {
-                    Writer.DrawText(Main.UltimateFont, $"player {NetCore.NetPlay.usedPlayerID[i]} is connected", new Vector2(20, 600 + (NetCore.NetPlay.usedPlayerID[i]) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                    Writer.DrawText(Main.UltimateFont, $"player {NetPlay.usedPlayerID[i]} is connected", new Vector2(20, 600 + (NetPlay.usedPlayerID[i]) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
                 }
                     
 
@@ -377,7 +366,7 @@ namespace Plateform_2D_v9
         {
             try
             {
-                await NetworkEngine_5._0.Client.Client.Connect(IP, port);
+                await Client.Connect(IP, port);
             }
             catch (ConnectionError)
             {

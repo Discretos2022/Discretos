@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Plateform_2D_v9.NetCore;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -57,11 +56,6 @@ namespace Plateform_2D_v9
         {
 
             #region Tiles and Walls Optimization
-
-            int PlayerID = 1;
-
-            if (Client.instance != null)
-                PlayerID = Client.instance.myId;
 
             int xMin = ((int)Main.camera.Position.X - 1920 / 8) / 16 - 2;
             int xMax = ((int)Main.camera.Position.X + 1920 / 8) / 16 + 2;

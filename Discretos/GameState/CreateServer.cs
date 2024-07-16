@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
-
-//using Plateform_2D_v9.NetWorkEngine_3._0.Server;
-//using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 
 namespace Plateform_2D_v9
 {
@@ -86,23 +84,19 @@ namespace Plateform_2D_v9
                 else
                     LaunchServer.SetColor(Color.White, Color.Black);
 
-                if (port > Main.MaxPort || NetworkEngine_5._0.Server.Server.GetStatus() == NetworkEngine_5._0.Server.Server.ServerStatus.Starting)
+                if (port > Main.MaxPort || Server.GetStatus() == Server.ServerStatus.Starting)
                     LaunchServer.SetColor(Color.DarkGray, Color.Gray);
 
-                if (LaunchServer.IsCliqued() && NetworkEngine_5._0.Server.Server.GetStatus() == NetworkEngine_5._0.Server.Server.ServerStatus.Offline) //  && !Server.IsLaunched()
+                if (LaunchServer.IsCliqued() && Server.GetStatus() == Server.ServerStatus.Offline) //  && !Server.IsLaunched()
                 {
 
                     if (port > Main.MaxPort)
                         textBoxPort.SetColor(Color.Red, Color.Black);
                     else
                     {
-                        //Server.Start(4, port); // Le server est compté dedans !
-                        //Client.playerID = Client.PlayerID.PLayerOne;
-
-                        NetworkEngine_5._0.Server.Server.Start(port, 4, true);
+                        Server.Start(port, 4, true);
                         NetPlay.usedPlayerID.Clear();
-                        NetworkEngine_5._0.Server.Server.SetAcceptConnection(true);
-                        //NetPlay.IsMultiplaying = true;
+                        Server.SetAcceptConnection(true);
 
                         textBoxPort.SetColor(Color.White, Color.Black);
 
@@ -161,7 +155,7 @@ namespace Plateform_2D_v9
                 }
 
 
-                if(NetworkEngine_5._0.Server.Server.GetStatus() == NetworkEngine_5._0.Server.Server.ServerStatus.Online)
+                if(Server.GetStatus() == Server.ServerStatus.Online)
                 {
                     stateText = string.Empty;
                     serverState = State.WaitPlayer;
@@ -185,7 +179,7 @@ namespace Plateform_2D_v9
 
                 if (Cancel.IsCliqued())
                 {
-                    NetworkEngine_5._0.Server.Server.StopServer();
+                    Server.StopServer();
                     serverState = State.SelectePort;
                     NetPlay.IsMultiplaying = false;
                 }
@@ -201,15 +195,15 @@ namespace Plateform_2D_v9
                 else
                     Play.SetColor(Color.White, Color.Black);
 
-                if(NetworkEngine_5._0.Server.Server.GetClients().Count == 1)   //Server.numOfClient == 1)
+                if(Server.GetClients().Count == 1)
                     Play.SetColor(Color.DarkGray, Color.Gray);
 
                 if (Play.IsCliqued())
                 {
-                    if (NetworkEngine_5._0.Server.Server.GetClients().Count >= 2) /// 2
+                    if (Server.GetClients().Count >= 2)
                     {
-                        NetworkEngine_5._0.Server.Server.SetAcceptConnection(false);
-                        NetworkEngine_5._0.Server.ServerSender.SendGameStarted();
+                        Server.SetAcceptConnection(false);
+                        ServerSender.SendGameStarted();
                     }
 
                 }
@@ -217,15 +211,15 @@ namespace Plateform_2D_v9
                 #endregion
 
 
-                if(NetworkEngine_5._0.Server.Server.GetClients().Count != oldNumberOfPLayer)
+                if(Server.GetClients().Count != oldNumberOfPLayer)
                 {
-                    for (int i = 0; i < NetworkEngine_5._0.Server.Server.GetClients().Count; i++)
+                    for (int i = 0; i < Server.GetClients().Count; i++)
                     {
-                        NetworkEngine_5._0.Server.ServerSender.SendOtherPlayerID(NetworkEngine_5._0.Server.Server.GetClients()[i].GetID() + 1);
+                        ServerSender.SendOtherPlayerID(Server.GetClients()[i].GetID() + 1);
                     }
                 }
 
-                oldNumberOfPLayer = NetworkEngine_5._0.Server.Server.GetClients().Count;
+                oldNumberOfPLayer = Server.GetClients().Count;
 
             }
 
@@ -255,7 +249,7 @@ namespace Plateform_2D_v9
                 Writer.DrawText(Main.UltimateFont, "info : " + serverInfo, new Vector2(20, 900), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
 
 
-                if (NetworkEngine_5._0.Server.Server.GetStatus() == NetworkEngine_5._0.Server.Server.ServerStatus.Starting) // Client.state == Client.ClientState.Connecting
+                if (Server.GetStatus() == Server.ServerStatus.Starting)
                 {
 
                     stateTextColor = Color.White;
@@ -272,8 +266,6 @@ namespace Plateform_2D_v9
                     else if (animTime >= 40 && animTime < 60)
                         stateText = "starting...";
 
-                    //Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-
                 }
 
                 Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, stateTextColor, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
@@ -284,7 +276,7 @@ namespace Plateform_2D_v9
             {
 
                 Writer.DrawText(Main.UltimateFont, "waiting for players", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
-                Writer.DrawText(Main.UltimateFont, "player " + NetCore.NetPlay.MyPlayerID(), new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("player " + NetCore.NetPlay.MyPlayerID()).X * 4f + 9 * 4f) / 2, 200), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 2f, spriteBatch, Color.Black, false);
+                Writer.DrawText(Main.UltimateFont, "player " + NetPlay.MyPlayerID(), new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("player " + NetPlay.MyPlayerID()).X * 4f + 9 * 4f) / 2, 200), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 2f, spriteBatch, Color.Black, false);
 
 
                 for (int i = 0; i < waitingPlayersButtons.Count; i++)
@@ -292,14 +284,9 @@ namespace Plateform_2D_v9
                     waitingPlayersButtons[i].Draw(spriteBatch);
                 }
 
-                /*for (int i = 0; i < NetworkEngine_5._0.Server.Server.GetClients().Count; i++)
+                for (int i = 0; i < NetPlay.usedPlayerID.Count; i++)
                 {
-                    Writer.DrawText(Main.UltimateFont, $"player {NetworkEngine_5._0.Server.Server.GetClients()[i].GetID() + 1} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
-                }*/
-
-                for (int i = 0; i < NetCore.NetPlay.usedPlayerID.Count; i++)
-                {
-                    Writer.DrawText(Main.UltimateFont, $"player {NetCore.NetPlay.usedPlayerID[i]} is connected", new Vector2(20, 600 + (NetCore.NetPlay.usedPlayerID[i]) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                    Writer.DrawText(Main.UltimateFont, $"player {NetPlay.usedPlayerID[i]} is connected", new Vector2(20, 600 + (NetPlay.usedPlayerID[i]) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
                 }
 
 
@@ -364,11 +351,6 @@ namespace Plateform_2D_v9
             Cancel.SetAroundButton(LaunchServer, LaunchServer);
             Cancel.SetPosition(0, 800, ButtonV3.Position.centerX);
 
-            
-
-
         }
-
-
     }
 }

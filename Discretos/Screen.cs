@@ -27,9 +27,9 @@ namespace Plateform_2D_v9
 
         private bool isSet;
 
-        public static Render.ShaderEffect BackgroundShader = Render.ShaderEffect.None;
-        public static Render.ShaderEffect LevelShader = Render.ShaderEffect.None;
-        public static Render.ShaderEffect UIShader = Render.ShaderEffect.None;
+        //public static Render.ShaderEffect BackgroundShader = Render.ShaderEffect.None;
+        //public static Render.ShaderEffect LevelShader = Render.ShaderEffect.None;
+        //public static Render.ShaderEffect UIShader = Render.ShaderEffect.None;
 
 
         RenderTarget2D LevelTargetLight = null;
@@ -178,26 +178,6 @@ namespace Plateform_2D_v9
 
             render.End(spriteBatch);
 
-            /*
-             if (Main.LevelPlaying == 3)
-            {
-                render.DrawRenderTarget(BackTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-                render.DrawRenderTarget(LevelTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-            }
-            else if (Main.LevelPlaying == 4)
-            {
-                render.DrawRenderTarget(BackTargetDistorsion, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-                render.DrawRenderTarget(LevelTargetDistorsion, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-            }
-            else
-            {
-                render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-                render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
-            }
-             */
-
-
-
             /* Multiplayer // Horizontale splitscreen
             render.Draw(BackTarget, new Rectangle(CalculateDestinationRectangle().X, CalculateDestinationRectangle().Y + this.game.GraphicsDevice.PresentationParameters.Bounds.Height/2, CalculateDestinationRectangle().Width, CalculateDestinationRectangle().Height), Color.White, time, false);
             render.Draw(target, new Rectangle(CalculateDestinationRectangle().X, CalculateDestinationRectangle().Y + this.game.GraphicsDevice.PresentationParameters.Bounds.Height / 2, CalculateDestinationRectangle().Width, CalculateDestinationRectangle().Height), Color.White, time, false);
@@ -250,8 +230,6 @@ namespace Plateform_2D_v9
             Rectangle result = new Rectangle((int)rx, (int)ry, (int)rw/1, (int)rh/1);
             return result;
 
-
         }
-
     }
 }

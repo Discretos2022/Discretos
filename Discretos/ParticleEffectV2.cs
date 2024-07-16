@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine_2._0.Client;
+using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,8 +19,6 @@ namespace Plateform_2D_v9
         private static float timer;
 
         public static List<ParticleV2> particles = new List<ParticleV2>();
-
-        private static int PlayerID = 1;
 
         public static bool Actived = false;
 
@@ -65,9 +63,6 @@ namespace Plateform_2D_v9
         public static void Generate(object data)
         {
 
-            if (Client.instance != null)
-                PlayerID = Client.instance.myId;
-
             Actived = true;
 
             while (Actived)
@@ -80,8 +75,8 @@ namespace Plateform_2D_v9
 
                     int Multiplier = 60;
 
-                    GeneratorBorderMinX = (int)Handler.playersV2[PlayerID].GetRectangle().X - 1920 / 2;
-                    GeneratorBorderMaxX = (int)Handler.playersV2[PlayerID].GetRectangle().X + 1920 / 2;
+                    GeneratorBorderMinX = (int)Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().X - 1920 / 2;
+                    GeneratorBorderMaxX = (int)Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().X + 1920 / 2;
 
                     if (wind > 0)
                         GeneratorBorderMinX *= (int)(Util.PositiveOf(wind) * Multiplier);
@@ -197,8 +192,6 @@ namespace Plateform_2D_v9
         protected Rectangle sourceRectangle;
         protected Vector2 Velocity;
 
-        private int PlayerID = 1;
-
         public ParticleV2(int type, float wind, Vector2 pos, float scale)
         {
             this.type = type;
@@ -220,10 +213,8 @@ namespace Plateform_2D_v9
 
         public bool isUnderScreen()
         {
-            if (Client.instance != null)
-                PlayerID = Client.instance.myId;
 
-            if (pos.Y > Handler.playersV2[PlayerID].GetRectangle().Y + 600 || pos.Y > Handler.Level.GetLength(1) * 16 + 5)
+            if (pos.Y > Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().Y + 600 || pos.Y > Handler.Level.GetLength(1) * 16 + 5)
                 return true;
 
             if (Velocity.X * wind > 0 && pos.X > Handler.Level.GetLength(0) * 16 + 5 * Util.PositiveOf(wind) * 60)
@@ -232,10 +223,10 @@ namespace Plateform_2D_v9
             if (Velocity.X * wind < 0 && pos.X < -5 * Util.PositiveOf(wind) * 60)
                 return true;
 
-            if (pos.X < Handler.playersV2[PlayerID].GetRectangle().X - 1920 / 2 - 5 * Util.PositiveOf(wind) * 60)
+            if (pos.X < Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().X - 1920 / 2 - 5 * Util.PositiveOf(wind) * 60)
                 return true;
 
-            if (pos.X > Handler.playersV2[PlayerID].GetRectangle().X + 1920 / 2 + 5 * Util.PositiveOf(wind) * 60)
+            if (pos.X > Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().X + 1920 / 2 + 5 * Util.PositiveOf(wind) * 60)
                 return true;
 
             return false;

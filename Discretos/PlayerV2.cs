@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Plateform_2D_v9.NetCore;
-using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
