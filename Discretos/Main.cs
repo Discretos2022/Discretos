@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 /// <summary>
 /// Les Aventures De Discretos
@@ -842,6 +841,15 @@ namespace Plateform_2D_v9
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(Level.LoadLevel), 1);
 
+        }
+
+        public static void StartLevel(int level)
+        {
+            Main.MapLoaded = false;
+            Main.LevelSelector(level);
+            Main.inWorldMap = false;
+            Main.inLevel = true;
+            Camera.Zoom = 4f;
         }
 
 

@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Plateform_2D_v9.NetWorkEngine_3._0.Server;
-using Plateform_2D_v9.NetWorkEngine_3._0;
+using Plateform_2D_v9.NetCore;
+//using Plateform_2D_v9.NetWorkEngine_3._0.Server;
+//using Plateform_2D_v9.NetWorkEngine_3._0;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,16 +49,12 @@ namespace Plateform_2D_v9
             {
                 int Level = MapLogic[X, Y].LevelNum;
 
-                Main.MapLoaded = false;
-                Main.LevelSelector(Level);
-                Main.inWorldMap = false;
-                Main.inLevel = true;
-                Camera.Zoom = 4f;
-                Main.gameState = GameState.Playing;
-
                 if (NetPlay.IsMultiplaying)
-                    Server.SendLevelStated(Level);
+                    NetworkEngine_5._0.Server.ServerSender.SendLevelStarted(Level);
 
+                //Thread.Sleep(10000);
+
+                Main.StartLevel(Level);
 
             }
 

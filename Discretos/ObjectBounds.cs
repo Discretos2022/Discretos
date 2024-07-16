@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Plateform_2D_v9
 {
-    class ObjectBounds : Solid
+    public class ObjectBounds : Solid
     {
 
         private Vector2 Position;

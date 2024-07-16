@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.NetCore;
 using Plateform_2D_v9.NetWorkEngine_2._0.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace Plateform_2D_v9
@@ -114,6 +116,44 @@ namespace Plateform_2D_v9
         {
             if(!playersV2.ContainsKey(ID))
                 playersV2.Add(ID, new PlayerV2(Vector2.Zero, ID));
+        }
+
+        /// <summary>
+        /// For multiplayer
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="_myPlayerID"></param>
+        /// <param name="_clientID"></param>
+        public static void AddPlayerV2(int ID, int _myPlayerID)
+        {
+            if (!playersV2.ContainsKey(ID))
+                playersV2.Add(ID, new PlayerV2(Vector2.Zero, ID, _myPlayerID));
+        }
+
+
+        public static void RemoveActor(Actor actor)
+        {
+
+            if (NetPlay.IsMultiplaying)
+            {
+                if (NetPlay.MyPlayerID() == 1)
+                {
+                    if (actor.actorType == Actor.ActorType.Object && actor.GetID() == 5)
+                        NetworkEngine_5._0.Server.ServerSender.SendCollectedKey(actors.IndexOf(actor), NetPlay.MyPlayerID());
+                    else
+                        NetworkEngine_5._0.Server.ServerSender.SendDistroyedObject(actors.IndexOf(actor));
+                }
+                else
+                {
+                    if (actor.actorType == Actor.ActorType.Object && actor.GetID() == 5)
+                        NetworkEngine_5._0.Client.ClientSender.SendCollectedKey(actors.IndexOf(actor), NetPlay.MyPlayerID());
+                    else
+                        NetworkEngine_5._0.Client.ClientSender.SendDistroyedObject(actors.IndexOf(actor));
+                }
+            }
+
+            actors.Remove(actor);
+
         }
 
 

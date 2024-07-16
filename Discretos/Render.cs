@@ -171,7 +171,7 @@ namespace Plateform_2D_v9
             
             //GetLightProcess(texture, ref test, gameTime, spriteBatch);
 
-            Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+            Begin5(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
 
 
             switch (shader)

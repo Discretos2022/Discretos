@@ -155,7 +155,31 @@ namespace Plateform_2D_v9
             /// Image Drawing
             Rectangle destinationRectangle = CalculateDestinationRectangle();
 
+            render.Begin5(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
+
             if (Main.LevelPlaying == 3)
+            {
+                spriteBatch.Draw(BackTargetLight, destinationRectangle, Color.White);
+                spriteBatch.Draw(LevelTargetLight, destinationRectangle, Color.White);
+            }
+            else if (Main.LevelPlaying == 4)
+            {
+                spriteBatch.Draw(BackTargetDistorsion, destinationRectangle, Color.White);
+                spriteBatch.Draw(LevelTargetDistorsion, destinationRectangle, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(BackTarget, destinationRectangle, Color.White);
+                spriteBatch.Draw(LevelTarget, destinationRectangle, Color.White);
+            }
+
+
+            spriteBatch.Draw(FontTarget, destinationRectangle, Color.White);
+
+            render.End(spriteBatch);
+
+            /*
+             if (Main.LevelPlaying == 3)
             {
                 render.DrawRenderTarget(BackTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
                 render.DrawRenderTarget(LevelTargetLight, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
@@ -170,9 +194,8 @@ namespace Plateform_2D_v9
                 render.DrawRenderTarget(BackTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
                 render.DrawRenderTarget(LevelTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
             }
+             */
 
-
-            render.DrawRenderTarget(FontTarget, destinationRectangle, Color.White, gameTime, spriteBatch, default, UIShader);
 
 
             /* Multiplayer // Horizontale splitscreen

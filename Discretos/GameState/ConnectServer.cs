@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Plateform_2D_v9.NetWorkEngine_3._0;
-using Plateform_2D_v9.NetWorkEngine_3._0.Client;
+using NetworkEngine_5._0.Error;
+using Plateform_2D_v9.NetCore;
+//using Plateform_2D_v9.NetWorkEngine_3._0;
+//using Plateform_2D_v9.NetWorkEngine_3._0.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,6 +32,8 @@ namespace Plateform_2D_v9
         public bool connection = false;
 
         private int animTime = 0;
+        private string stateText = "";
+        private Color stateTextColor = Color.White;
 
         public ConnectServer()
         {
@@ -73,30 +77,24 @@ namespace Plateform_2D_v9
                 else
                     Connect.SetColor(Color.White, Color.Black);
 
-                if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || Client.state == Client.ClientState.Connecting)
+                if (!IsValidIP(textBoxIP.GetText()) || !IsValidPort(textBoxPort.GetText()) || NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connecting) //|| Client.state == Client.ClientState.Connecting)
                     Connect.SetColor(Color.DarkGray, Color.Gray);  // 0.6f       0.2f
 
-                if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()))
+                if (IsValidIP(textBoxIP.GetText()) && IsValidPort(textBoxPort.GetText()) && NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Disconnected)
                     if (Connect.IsCliqued())
                     {
 
-                        if (Client.state == Client.ClientState.Disconnected)
-                        {
-
-                            if (textBoxPort.GetText() == "")
-                                Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
-                            else
-                                Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
-
-                        }
+                        if (textBoxPort.GetText() == "")
+                            Connection(textBoxIP.GetText(), int.Parse("7777")); //Client.Connect(textBoxIP.GetText(), int.Parse("7777"));
                         else
-                            Console.WriteLine("You already connected ! ©");
+                            Connection(textBoxIP.GetText(), int.Parse(textBoxPort.GetText())); //Client.Connect(textBoxIP.GetText(), int.Parse(textBoxPort.GetText()));
 
                     }
 
-                if (Client.IsConnected())
+                if (NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connected)        //Client.IsConnected())
                 {
                     clientState = State.WaitPlayer;
+                    NetPlay.IsMultiplaying = true;
                 }
 
                 #endregion
@@ -181,6 +179,16 @@ namespace Plateform_2D_v9
                 else
                     textBoxIP.SetColor(Color.White, Color.Black);
             }
+            else if(clientState == State.WaitPlayer)
+            {
+                if (NetworkEngine_5._0.Client.Client.IsLostConnection())
+                {
+                    stateTextColor = Color.Red;
+                    stateText = "connection lost";
+                    clientState = State.Connection;
+                    NetPlay.IsMultiplaying = false;
+                }
+            }
 
         }
 
@@ -205,44 +213,50 @@ namespace Plateform_2D_v9
 
                 textBoxPort.Draw(spriteBatch);
 
-                if (Client.state == Client.ClientState.Connecting)
+                if (NetworkEngine_5._0.Client.Client.GetState() == NetworkEngine_5._0.Client.Client.ClientState.Connecting) // Client.state == Client.ClientState.Connecting
                 {
 
-                    animTime += 1;
+                    stateTextColor = Color.White;
 
-                    string connecting = "";
+                    animTime += 1;
 
                     if (animTime == 60)
                         animTime = 0;
 
                     if (animTime >= 0 && animTime < 20)
-                        connecting = "connecting.";
+                        stateText = "connecting.";
                     else if (animTime >= 20 && animTime < 40)
-                        connecting = "connecting..";
+                        stateText = "connecting..";
                     else if (animTime >= 40 && animTime < 60)
-                        connecting = "connecting...";
+                        stateText = "connecting...";
 
-                    Writer.DrawText(Main.UltimateFont, connecting, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+                    //Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
 
                 }
-                else
-                {
-                    if (Client.IsTimeOut())
-                        Writer.DrawText(Main.UltimateFont, "connection failed", new Vector2(10, 5), Color.Black, Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
-                }
+
+                Writer.DrawText(Main.UltimateFont, stateText, new Vector2(10, 5), Color.Black, stateTextColor, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f, 2f, spriteBatch);
+
             }
 
             else if (clientState == State.WaitPlayer)
             {
 
                 Writer.DrawText(Main.UltimateFont, "waiting for players", new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 25 - 15), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
+                Writer.DrawText(Main.UltimateFont, "player " + NetCore.NetPlay.MyPlayerID(), new Vector2((1920 / 2) - (Main.UltimateFont.MeasureString("waiting for players").X * 8f + 9 * 8f) / 2, 70), new Color(60, 60, 60), Color.LightGray, 0f, Vector2.Zero, 8f, SpriteEffects.None, 0f, 6f, spriteBatch, Color.Black, false);
 
 
-                for (int i = 1; i <= Handler.playersV2.Count; i++)
+                /*for (int i = 1; i <= Handler.playersV2.Count; i++)
                 {
                     if (Handler.playersV2.ContainsKey(i))
                         Writer.DrawText(Main.UltimateFont, $"player {i} is connected", new Vector2(20, 600 + (i - 1) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
+                }*/
+
+
+                for (int i = 0; i < NetCore.NetPlay.usedPlayerID.Count; i++)
+                {
+                    Writer.DrawText(Main.UltimateFont, $"player {NetCore.NetPlay.usedPlayerID[i]} is connected", new Vector2(20, 600 + (NetCore.NetPlay.usedPlayerID[i]) * 50), Color.Black, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f, 3f, spriteBatch, true);
                 }
+                    
 
             }
 
@@ -348,6 +362,38 @@ namespace Plateform_2D_v9
             Back.SetFrontThickness(4);
             Back.SetAroundButton(Connect, Connect);
             Back.SetPosition(0, 700, ButtonV3.Position.centerX);
+
+
+
+        }
+
+
+        /// <summary>
+        /// Sous-tache async pour récup l'erreur !
+        /// </summary>
+        /// <param name="IP"></param>
+        /// <param name="port"></param>
+        public async void Connection(string IP, int port)
+        {
+            try
+            {
+                await NetworkEngine_5._0.Client.Client.Connect(IP, port);
+            }
+            catch (ConnectionError)
+            {
+                stateTextColor = Color.Red;
+                stateText = "connection failed";
+            }
+            catch (FullError)
+            {
+                stateTextColor = Color.Red;
+                stateText = "max player is reached";
+            }
+            catch (RefuseError)
+            {
+                stateTextColor = Color.Red;
+                stateText = "game was already started";
+            }
 
 
 

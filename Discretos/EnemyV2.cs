@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,7 +68,7 @@ namespace Plateform_2D_v9
             HorizontaleCollision();
             HorizontaleCollision();
 
-            if (PV <= 0 || IsSquish())
+            /*if (PV <= 0 || IsSquish())
             {
                 Handler.actors.Remove(this);
 
@@ -76,7 +77,7 @@ namespace Plateform_2D_v9
                 Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
                 Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
 
-            }
+            }*/
 
 
             OldPosition.Y = Position.Y;
@@ -104,12 +105,50 @@ namespace Plateform_2D_v9
 
             if (PV <= 0 || IsSquish())
             {
-                Handler.actors.Remove(this);
 
-                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
+                Vector2 pos = new Vector2(Position.X, Position.Y);
+                int id1 = Util.random.Next(1, 7);
+                int id2 = Util.random.Next(1, 7);
+                int id3 = Util.random.Next(1, 7);
+                int id4 = Util.random.Next(1, 7);
+                Vector2 v1 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
+                Vector2 v2 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
+                Vector2 v3 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
+                Vector2 v4 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
+
+                /*Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
                 Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
                 Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
+                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));*/
+
+                Handler.actors.Add(new ItemV2(pos, id1, v1));
+                Handler.actors.Add(new ItemV2(pos, id2, v2));
+                Handler.actors.Add(new ItemV2(pos, id3, v3));
+                Handler.actors.Add(new ItemV2(pos, id4, v4));
+
+                if (NetPlay.IsMultiplaying)
+                {
+
+                    if(NetPlay.MyPlayerID() == 1)
+                    {
+                        NetworkEngine_5._0.Server.ServerSender.SendCreatedItem(pos.X, pos.Y, id1, v1.X, v1.Y);
+                        NetworkEngine_5._0.Server.ServerSender.SendCreatedItem(pos.X, pos.Y, id2, v2.X, v2.Y);
+                        NetworkEngine_5._0.Server.ServerSender.SendCreatedItem(pos.X, pos.Y, id3, v3.X, v3.Y);
+                        NetworkEngine_5._0.Server.ServerSender.SendCreatedItem(pos.X, pos.Y, id4, v4.X, v4.Y);
+                    }
+                    else
+                    {
+                        NetworkEngine_5._0.Client.ClientSender.SendCreatedItem(pos.X, pos.Y, id1, v1.X, v1.Y);
+                        NetworkEngine_5._0.Client.ClientSender.SendCreatedItem(pos.X, pos.Y, id2, v2.X, v2.Y);
+                        NetworkEngine_5._0.Client.ClientSender.SendCreatedItem(pos.X, pos.Y, id3, v3.X, v3.Y);
+                        NetworkEngine_5._0.Client.ClientSender.SendCreatedItem(pos.X, pos.Y, id4, v4.X, v4.Y);
+                    }
+
+                }
+
+                //Handler.actors.Remove(this);
+
+                Handler.RemoveActor(this);
 
             }
 

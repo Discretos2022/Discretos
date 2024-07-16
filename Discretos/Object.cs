@@ -12,7 +12,7 @@ namespace Plateform_2D_v9
     /// <param name="r1"></param>
     /// <param name="r2"></param>
     /// <returns></returns>
-    class Object : Actor
+    public class Object : Actor
     {
 
         public bool Right = false;

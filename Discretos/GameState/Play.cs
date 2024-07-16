@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Plateform_2D_v9.NetWorkEngine_3._0;
-using Plateform_2D_v9.NetWorkEngine_3._0.Client;
-using Plateform_2D_v9.NetWorkEngine_3._0.Server;
+using NetworkEngine_5._0.Server;
+using Plateform_2D_v9.NetCore;
+//using Plateform_2D_v9.NetWorkEngine_3._0;
+//using Plateform_2D_v9.NetWorkEngine_3._0.Client;
+//using Plateform_2D_v9.NetWorkEngine_3._0.Server;
 using System;
 using System.Threading;
 
@@ -57,9 +59,29 @@ namespace Plateform_2D_v9
         public void Update(GameState state, GameTime gameTime, Screen screen)
         {
             if (KeyInput.getKeyState().IsKeyDown(Keys.P) && !KeyInput.getOldKeyState().IsKeyDown(Keys.P) && Main.isPaused)
+            {
                 Main.isPaused = false;
+                if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
+                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+            }
             else if (KeyInput.getKeyState().IsKeyDown(Keys.P) && !KeyInput.getOldKeyState().IsKeyDown(Keys.P) && !Main.isPaused)
+            {
                 Main.isPaused = true;
+                if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
+                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+            }
+
+            if (NetPlay.IsMultiplaying)
+            {
+                if (NetworkEngine_5._0.Client.Client.IsLostConnection())
+                {
+                    //stateTextColor = Color.Red;
+                    //stateText = "connection lost";
+                    //clientState = State.Connection;
+                    Main.gameState = GameState.ConnectToServer;
+                    NetPlay.IsMultiplaying = false;
+                }
+            }
 
             if (Main.inLevel)
             {
@@ -72,7 +94,7 @@ namespace Plateform_2D_v9
             if (Main.inWorldMap)
                 UpdateWorldMap(gameTime, screen);
 
-            if (Client.playerID == Client.PlayerID.PLayerOne)
+            if (NetPlay.MyPlayerID() == 1)
             {
                 #region Button
 
@@ -207,9 +229,6 @@ namespace Plateform_2D_v9
                 if (Main.LevelPlaying != 5)
                     Wind = Vector2.Zero;
 
-                if (Client.playerID != Client.PlayerID.PLayerOne)
-                    Client.SendPlayerPosition((int)Handler.playersV2[(int)Client.playerID].Position.X, (int)Handler.playersV2[(int)Client.playerID].Position.Y, Handler.playersV2[(int)Client.playerID].isRight.ToString());
-
             }
 
             if (Main.inWorldMap && !Main.inLevel)
@@ -224,7 +243,7 @@ namespace Plateform_2D_v9
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
-            if (Main.inWorldMap && Client.playerID == Client.PlayerID.PLayerOne)
+            if (Main.inWorldMap && NetPlay.MyPlayerID() == 1)
             {
                 Level_3.setPos(ButtonV2.Position.centerX, y: 200);
                 Level_3.Draw(Main.UltimateFont, 4f, spriteBatch, false, 8 * 5 - 4);
@@ -286,7 +305,7 @@ namespace Plateform_2D_v9
 
                 handler.Update(gameTime);
 
-                Main.camera.FollowObject(new Vector2(Handler.playersV2[(int)Client.playerID].GetPosForCamera().X + Handler.playersV2[(int)Client.playerID].GetRectangle().Width / 2, Handler.playersV2[(int)Client.playerID].GetPosForCamera().Y + Handler.playersV2[(int)Client.playerID].GetRectangle().Height / 2));
+                Main.camera.FollowObject(new Vector2(Handler.playersV2[NetPlay.MyPlayerID()].GetPosForCamera().X + Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().Width / 2, Handler.playersV2[NetPlay.MyPlayerID()].GetPosForCamera().Y + Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().Height / 2));
 
                 for (int j = 0; j < Handler.Level.GetLength(1); j++)
                     for (int i = 0; i < Handler.Level.GetLength(0); i++)
@@ -294,12 +313,20 @@ namespace Plateform_2D_v9
                             Handler.Level[i, j].Update(gameTime);
 
 
-                if (Client.playerID == Client.PlayerID.PLayerOne)
+                if (NetPlay.IsMultiplaying)
                 {
+                    if (NetPlay.MyPlayerID() == 1)
+                    {
+                        NetworkEngine_5._0.Server.ServerSender.SendPositionPlayer(1, Handler.playersV2[1].Position.X, Handler.playersV2[1].Position.Y, Handler.playersV2[1].isRight);
+                    }
 
-                    if (NetPlay.IsMultiplaying)
-                        Server.SendPositionPlayer((int)Handler.playersV2[1].Position.X, (int)Handler.playersV2[1].Position.Y, Handler.playersV2[1].isRight.ToString(), 1);
+                    if (NetPlay.MyPlayerID() != 1) 
+                    {
+                        NetworkEngine_5._0.Client.ClientSender.SendPositionPlayer(NetPlay.MyPlayerID(), Handler.playersV2[NetPlay.MyPlayerID()].Position.X, Handler.playersV2[NetPlay.MyPlayerID()].Position.Y, Handler.playersV2[NetPlay.MyPlayerID()].isRight);
+                    }
+
                 }
+
 
             }
 
@@ -321,12 +348,13 @@ namespace Plateform_2D_v9
 
             Main.camera.FollowObjectInWorldMap(new Vector2(WorldMap.GetLevelSelectorPos().X, WorldMap.GetLevelSelectorPos().Y));
 
-            if(Client.playerID == Client.PlayerID.PLayerOne)
+            WorldMap.Update(gameTime);
+
+            if (NetPlay.MyPlayerID() == 1)
             {
-                WorldMap.Update(gameTime);
 
                 if(NetPlay.IsMultiplaying)
-                    Server.SendWorldMapPositionPlayer((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
+                    NetworkEngine_5._0.Server.ServerSender.SendWorldMapPositionPlayer((int)WorldMap.GetLevelSelectorPos().X, (int)WorldMap.GetLevelSelectorPos().Y);
             }
                 
 
@@ -345,7 +373,12 @@ namespace Plateform_2D_v9
                 Resume.SetColor(Color.White, Color.Black);
 
             if (Resume.IsCliqued())
+            {
                 Main.isPaused = false;
+                if (NetPlay.IsMultiplaying && NetPlay.MyPlayerID() == 1)
+                    NetworkEngine_5._0.Server.ServerSender.SendGamePaused(Main.isPaused);
+            }
+                
 
             #endregion
 
@@ -398,7 +431,7 @@ namespace Plateform_2D_v9
 
             for (int i = 0; i < 6; i++)
             {
-                if(i < Handler.playersV2[(int)Client.playerID].PV)
+                if(i < Handler.playersV2[NetPlay.MyPlayerID()].PV)
                     spriteBatch.Draw(Main.ObjectInterface, new Rectangle(1920 / 2 + i * 60 - 15 * 12, 8, 15 * 4, 14 * 4), new Rectangle(0, 0, 15, 15), Color.White);
                 else 
                     spriteBatch.Draw(Main.ObjectInterface, new Rectangle(1920 / 2 + i * 60 - 15 * 12, 8, 15 * 4, 14 * 4), new Rectangle(15, 0, 15, 15), Color.White);

@@ -55,7 +55,7 @@ namespace Plateform_2D_v9.NetWorkEngine_3._0.Client
                         }
 
                         Handler.playersV2[newID].ID = newID;
-                        Handler.playersV2[newID].clientID = newID;
+                        Handler.playersV2[newID].myPlayerID = newID;
 
                         Handler.playersV2.Remove(Handler.playersV2.Count);
 
