@@ -34,6 +34,7 @@ namespace NetworkEngine_5._0.Server
 
                         ServerSender.SendDistroyedObject(index, sender);
 
+                        LightManager.lights.Remove(Handler.actors[index].light);
                         Handler.actors.RemoveAt(index);
                     }
 

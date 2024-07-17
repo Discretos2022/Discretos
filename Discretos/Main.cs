@@ -826,8 +826,9 @@ namespace Plateform_2D_v9
 
             LightManager.Init();
 
-            for(int i = 1; i <= NetPlay.usedPlayerID.Count; i++)
-                Handler.playersV2[i].InitLight();
+            for(int i = 1; i <= 4; i++)
+                if(Handler.playersV2.ContainsKey(i))
+                    Handler.playersV2[i].InitLight();
 
             Handler.Level = null;
             Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
