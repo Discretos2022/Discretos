@@ -76,6 +76,7 @@ namespace NetworkEngine_5._0.Client
                             if (Handler.actors[index].ID == 1)
                                 Main.Money += 1;
 
+                        LightManager.lights.Remove(Handler.actors[index].light);
                         Handler.actors.RemoveAt(index);
                     }
                         

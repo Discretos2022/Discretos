@@ -394,12 +394,14 @@ namespace Plateform_2D_v9
                 else
                     infiniJump = false;
 
-                if (light != null)
-                    light.Position = Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2);
+                
 
             }
 
             UpdateCollectedObject(gameTime);
+
+            if (light != null)
+                light.Position = Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2);
 
         }
 

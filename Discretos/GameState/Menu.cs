@@ -64,6 +64,7 @@ namespace Plateform_2D_v9
                 Main.inLevel = false;
                 Camera.Zoom = 1f;
                 Main.gameState = GameState.Playing;
+                NetPlay.IsMultiplaying = false;
 
             }
 
@@ -142,7 +143,7 @@ namespace Plateform_2D_v9
             L_2:;
             }
 
-            NetPlay.IsMultiplaying = false;
+            //NetPlay.IsMultiplaying = false;
 
         }
 

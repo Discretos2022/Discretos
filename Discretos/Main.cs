@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading;
 
 /// <summary>
-/// Les Aventures De Discretos
+/// Les Aventures De Discretos 𝕯𝖎𝖘𝖈𝖗𝖊𝖙𝖔𝖘
 /// Version : 0.0.0.9
 /// Build : 8
 /// SIEDEL Joshua © 2022-2024
@@ -826,7 +826,8 @@ namespace Plateform_2D_v9
 
             LightManager.Init();
 
-            Handler.playersV2[1].InitLight();
+            for(int i = 1; i <= NetPlay.usedPlayerID.Count; i++)
+                Handler.playersV2[i].InitLight();
 
             Handler.Level = null;
             Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
