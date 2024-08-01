@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -90,7 +91,7 @@ namespace Plateform_2D_v9
 
                 case 4:
                     Door = new ObjectBounds(Position + new Vector2(6, 0), 1, 4, 32);
-                    Handler.solids.Add(Door);
+                    //Handler.solids.Add(Door);
                     break;
 
                 case 5:
@@ -156,7 +157,7 @@ namespace Plateform_2D_v9
             PlayerAndEnemyCollision();
 
             if (!isLocked)
-                Handler.solids.Remove(Door);
+                //Handler.solids.Remove(Door);
 
             if(ID == 3)
             {
@@ -309,7 +310,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public void HorizontaleCollision()
+        /*public void HorizontaleCollision()
         {
             for (int i = 0; i < Handler.solids.Count; i++)
             {
@@ -392,9 +393,9 @@ namespace Plateform_2D_v9
 
 
             }
-        }
+        }*/
 
-        public void VerticaleCollision()
+        /*public void VerticaleCollision()
         {
             for (int i = 0; i < Handler.solids.Count; i++)
             {
@@ -505,7 +506,7 @@ namespace Plateform_2D_v9
 
 
 
-        }
+        }*/
 
         public override Rectangle GetAttackRectangle()
         {
@@ -592,9 +593,91 @@ namespace Plateform_2D_v9
             throw new NotImplementedException();
         }
 
-        public override void SetRidingTile(Solid tile)
+        public override void SetRidingTile(TileV2 tile)
         {
             throw new NotImplementedException();
+        }
+
+
+
+
+        /** COLLISION V3 **/
+
+
+        public override void LeftDisplacement(GameTime gameTime)
+        {
+            
+        }
+
+        public override void RightDisplacement(GameTime gameTime)
+        {
+            
+        }
+
+        public override void DownDisplacement(GameTime gameTime)
+        {
+            
+        }
+
+        public override void UpDisplacement(GameTime gameTime)
+        {
+            
+        }
+
+        public override void LeftCollision()
+        {
+            
+        }
+
+        public override void RightCollision()
+        {
+            
+        }
+
+        public override void DownCollision()
+        {
+            
+        }
+
+        public override void UpCollision()
+        {
+            
+        }
+
+        public override void UpdateHitbox()
+        {
+
+            switch (ID)
+            {
+                case 1:
+                    hitbox = new Hitbox((int)Position.X + 3, (int)Position.Y + 1, 10, 14);
+                    break;
+                case 2:
+                    hitbox = new Hitbox((int)Position.X + 1, (int)Position.Y, 13, 14);
+                    break;
+                case 3:
+                    hitbox = new Hitbox((int)Position.X, (int)Position.Y, 16, 32);
+                    break;
+                case 4:
+                    if (isLocked)
+                        hitbox = new Hitbox((int)Position.X + 5, (int)Position.Y, 6, 32);
+                    else
+                        hitbox = new Hitbox((int)Position.X - 5 + 5, (int)Position.Y, 24, 32);
+                    break;
+                case 5:
+                    hitbox = new Hitbox((int)Position.X + 5, (int)Position.Y, 7, 15);
+                    break;
+                case 6:
+                    hitbox = new Hitbox((int)Position.X + 1, (int)Position.Y + 6, 14, 10);
+                    break;
+                case 7:
+                    hitbox = new Hitbox((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
+                    break;
+                default:
+                    hitbox = new Hitbox(0, 0, 0, 0);
+                    break;
+            }
+
         }
 
     }

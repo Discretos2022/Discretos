@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Plateform_2D_v9
 {
-    public class TileV2 : Solid
+    public class TileV2 //: Solid
     {
 
-        private Vector2 Position;
+        public Vector2 Position;
         private Vector2 PosInLevel;
 
         private Rectangle TileFrame;
@@ -28,11 +29,35 @@ namespace Plateform_2D_v9
         public int timer = 0;
 
 
-        public TileV2(Vector2 Position, int type, bool isSlope = false, bool isStatic = true)
-            : base(new Vector2(Position.X, Position.Y), type)
+
+        public bool isStatic;
+        public bool isSlope;
+        public bool isBreakable;
+        public bool isBroken;
+        public bool isTouched;    /// For Breackable Block
+        public bool isInvisible;
+        public int SlopeType;
+
+        public Vector2 OldPosition;
+        public Vector2 Velocity;
+        public Vector2 Acceleration;
+        public Vector2 Wind;
+        public Vector2 Gravity;
+
+
+
+        public BlockID ID;
+        public BlockType blockType;
+
+        public Hitbox hitbox;
+
+        public float[,] grid;
+
+
+        public TileV2(Vector2 Position, BlockID id, bool isSlope = false, bool isStatic = true, float[,] grid = null, Vector2 add = default)
         {
             this.Position = Position;
-            this.type = type;
+            this.ID = id;
             this.isSlope = isSlope;
             this.isInvisible = false;
 
@@ -41,11 +66,20 @@ namespace Plateform_2D_v9
 
             PosInLevel = Position / 16;
 
-            if(type > 0)
+            this.Position += add;
+
+            if (grid == null)
+                this.grid = LevelData.getLevel(Main.LevelPlaying);
+            else
+                this.grid = grid;
+
+            if (ID > 0)
             {
                 setImg();
                 //Console.WriteLine("Loading");
             }
+
+            hitbox = new Hitbox((int)Position.X, (int)Position.Y, 16, 16);
 
             Init();
 
@@ -69,59 +103,68 @@ namespace Plateform_2D_v9
 
         public void Init()
         {
-            switch (type)
+            switch (ID)
             {
-                case 0:
+                case BlockID.none:
                     break;
 
-                case 1:
+                case BlockID.grass:
                     setImg();
+                    blockType = BlockType.block;
+                    //hitbox.isEnabled = false;
                     break;
 
-                case 2:
+                case BlockID.platform_wood:
                     setImg();
+                    blockType = BlockType.platform;
                     break;
 
-                case 3:
+                case BlockID.sand:
                     setImg();
+                    blockType = BlockType.block;
+                    //hitbox.isEnabled = false;
                     break;
 
-                case 4:
+                case BlockID.snow:
                     setImg();
+                    blockType = BlockType.block;
                     break;
 
-                case 5:
+                case BlockID.cloud:
                     setImg();
+                    blockType = BlockType.block;
                     break;
 
-                case 6:
+                case BlockID.brick_gray:
                     setImg();
+                    blockType = BlockType.block;
                     break;
 
-                case 7:
+                case BlockID.volcano:
                     setImg();
+                    blockType = BlockType.block;
                     break;
 
-                case 8:
-                    mechanicBlock = new Animation(Main.Tileset[type], 2, 1, 0.05f);
-                    Velocity = new Vector2(1, 0);
+                case BlockID.mechanical:
+                    blockType = BlockType.block;
+                    mechanicBlock = new Animation(Main.Tileset[(int)ID], 2, 1, 0.05f);
+                    //Velocity = new Vector2(1, 0);
                     mechanicBlock.Start();
                     break;
 
-                case 9:
-                    platformBrickBreak = new Animation(Main.Tileset[type], 7, 2, 0.55f / 7.5f, 1);  // 0.55f
+                case BlockID.platform_brick_break:
+                    blockType = BlockType.platform;
+                    platformBrickBreak = new Animation(Main.Tileset[(int)ID], 7, 2, 0.55f / 7.5f, 1);  // 0.55f
                     platformBrickBreak.Start();
                     isBreakable = true;
                     break;
-
-
 
 
             }
         }
 
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
 
             if (Position.X < 200 || Position.X > 600)
@@ -152,9 +195,9 @@ namespace Plateform_2D_v9
 
             //Console.WriteLine(Position.Y + " ; " + GetRectangle().Y);
 
-            if (type == 8)
+            if ((int)ID == 8)
                 mechanicBlock.Update(gameTime);
-            if (type == 9)
+            if ((int)ID == 9)
             {
 
                 if (isTouched)
@@ -167,6 +210,7 @@ namespace Plateform_2D_v9
                 if (timer >= 30) // 120
                 {
                     isBroken = true;
+                    hitbox.isEnabled = false;
                 }
 
                 if (timer >= 240)
@@ -174,6 +218,7 @@ namespace Plateform_2D_v9
                     timer = 0;
                     isTouched = false;
                     isBroken = false;
+                    hitbox.isEnabled = true;
                     platformBrickBreak.Reset();
                 }
 
@@ -185,24 +230,24 @@ namespace Plateform_2D_v9
         }
 
 
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
             //if (Position.X >= Handler.playersV2[PlayerID].Position.X - 500 && Position.X <= Handler.playersV2[PlayerID].Position.X + 500 && Position.Y >= Handler.playersV2[PlayerID].Position.Y - 400 && Position.Y <= Handler.playersV2[PlayerID].Position.Y + 400)
             //{
 
-                if (type != 8 || type != 9)
+                if (ID != BlockID.mechanical && ID != BlockID.platform_brick_break)
                 {
                     if (isUnknowedTile)
                         spriteBatch.Draw(Main.Tileset[0], new Vector2((int)Position.X, (int)Position.Y), getImg(), Color.White);
                     else
-                        spriteBatch.Draw(Main.Tileset[type], new Vector2(Position.X, Position.Y), getImg(), Color.White);
+                        spriteBatch.Draw(Main.Tileset[(int)ID], new Vector2(Position.X, Position.Y), getImg(), Color.White);
                 }
 
-                if (type == 8)
+                if ((int)ID == 8)
                    mechanicBlock.Draw(spriteBatch, GetPosition());
 
-                if (type == 9 && !isBroken)
+                if ((int)ID == 9 && !isBroken)
                     platformBrickBreak.Draw(spriteBatch, GetPosition() - new Vector2(3, 6));
 
 
@@ -220,16 +265,16 @@ namespace Plateform_2D_v9
         }
 
 
-        public override Rectangle GetRectangle()
+        public Rectangle GetRectangle()
         {
-            if(isBroken)
-                return new Rectangle(0,0,0,0);
+            //if(isBroken)
+                //return new Rectangle(0,0,0,0);
 
             return new Rectangle((int)Position.X, (int)Position.Y, w, h);
         }
 
 
-        public override Vector2 GetPosition() {return Position;}
+        public Vector2 GetPosition() {return Position;}
 
         public bool IsSlope() {return isSlope;}
 
@@ -240,7 +285,7 @@ namespace Plateform_2D_v9
         public void SetSlope(bool IsSlope = false) {isSlope = IsSlope;}
 
 
-        public override void Break()
+        public void Break()
         {
             if(!isTouched)
                 isTouched = true;
@@ -255,13 +300,13 @@ namespace Plateform_2D_v9
         {
             Size = Main.TILESIZE;
 
-            if (type > 0)
+            if (ID > 0)
             {
 
                 CalulateTileAdjacent();
 
                 if (!isSlope || isStatic)
-                    if (Main.SolidTile[type])
+                    if (Main.SolidTile[(int)ID])
                     {
                         TileFrame = new Rectangle((int)getImgTile().X, (int)getImgTile().Y, Size, Size);
                     }
@@ -275,7 +320,7 @@ namespace Plateform_2D_v9
                     TileFrame = new Rectangle((int)GetImgSlope().X, (int)GetImgSlope().Y, Size, Size);
                 }
 
-                if (Main.SolidTileTop[type] && type != 9)
+                if (Main.SolidTileTop[(int)ID] && (int)ID != 9)
                 {
                     Up = false;
                     UpRight = false;
@@ -471,8 +516,8 @@ namespace Plateform_2D_v9
             Left = false;
             UpLeft = false;
 
-            int num = Handler.Level.GetLength(0);
-            int num2 = Handler.Level.GetLength(1);
+            int num = grid.GetLength(1);
+            int num2 = grid.GetLength(0);
             //Console.WriteLine(num + " : " + num2);
 
             /// Up
@@ -518,32 +563,32 @@ namespace Plateform_2D_v9
             int num1 = (int)PosInLevel.X + posX;
             int num2 = (int)PosInLevel.Y + posY;
 
-            int num3 = (int)LevelData.getLevel(Main.LevelPlaying)[num2, num1];
+            int num3 = (int)grid[num2, num1];
 
             //Console.WriteLine(LevelData.getLevel(Main.LevelPlaying).GetLength(0));
 
             if (num3 == -1)
                 return false;
 
-            if (type == 3 && num3 == 5)
+            if ((int)ID == 3 && num3 == 5)
                 return true;
 
-            if (type == 5 && num3 == 3)
+            if ((int)ID == 5 && num3 == 3)
                 return true;
 
-            if (type == 5 && num3 == 6)
+            if ((int)ID == 5 && num3 == 6)
                 return true;
 
-            if (type == 3 && num3 == 6)
+            if ((int)ID == 3 && num3 == 6)
                 return true;
 
-            if (type == 2 && Main.SolidTile[num3])
+            if ((int)ID == 2 && Main.SolidTile[num3])
                 return true;
 
-            if (type == 2 && Main.SolidTileTop[num3])
+            if ((int)ID == 2 && Main.SolidTileTop[num3])
                 return false;
 
-            if (type == num3)
+            if ((int)ID == num3)
                 return true;
 
 
@@ -565,6 +610,35 @@ namespace Plateform_2D_v9
 
         #endregion
 
+
+
+
+        public enum BlockID
+        {
+            none = 0,
+            grass = 1,
+            platform_wood = 2,
+            sand = 3,
+            snow = 4,
+            cloud = 5,
+            brick_gray = 6,
+            volcano = 7,
+            mechanical = 8,
+            platform_brick_break = 9,
+        }
+
+        public enum BlockType
+        {
+            none = 0,
+            block = 1,
+            platform = 2,
+            liquid = 3,
+        }
+
+        public Vector2 GetVelocity()
+        {
+            return Velocity;
+        }
 
     }
 }

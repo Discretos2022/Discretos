@@ -1,0 +1,23 @@
+
+
+1) Object :	Right Displacement
+2) Object :	Right Collision (static)
+3) No Static :	Right Displacement
+4) Object :	Left Collision (no static)
+
+1) Object :	Left Displacement
+2) Object :	Left Collision (static)
+3) No Static :	Left Displacement
+4) Object :	Right Collision (no static)
+
+
+
+5) Object :	Up Displacement
+6) Object :	Up Collision (static)
+7) No Static :	Up Displacement
+8) Object :	Down Collision (no static)
+
+5) Object :	Down Displacement
+6) Object :	Down Collision (static)
+7) No Static :	Down Displacement
+8) Object :	Up Collision (no static)

@@ -12,7 +12,7 @@ namespace Plateform_2D_v9
     {
 
         public static List<Actor> actors = new List<Actor>();
-        public static List<Solid> solids = new List<Solid>();
+        public static List<TileV2> solids = new List<TileV2>();
         public static List<Solid> walls = new List<Solid>();
         public static List<Actor> ladder = new List<Actor>();
 
@@ -22,13 +22,16 @@ namespace Plateform_2D_v9
 
         public static Wall[,] Walls;
 
+        public static List<MovingBlock> blocks;
+
 
         public static void Initialize()
         {
-            solids = new List<Solid>();
+            solids = new List<TileV2>();
             walls = new List<Solid>();
             actors = new List<Actor>();
             ladder = new List<Actor>();
+            blocks = new List<MovingBlock>();
 
         }
 
@@ -49,6 +52,65 @@ namespace Plateform_2D_v9
             {
                 playersV2[i].Update(gameTime);
             }
+
+
+
+
+            #region Left Collision
+
+            playersV2[1].LeftDisplacement(gameTime);
+            for (int i = 0; i < actors.Count; i++) actors[i].LeftDisplacement(gameTime);
+
+
+            playersV2[1].LeftCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].LeftCollision();
+
+            #endregion
+
+
+            #region Right Collision
+
+            playersV2[1].RightDisplacement(gameTime);
+            for (int i = 0; i < actors.Count; i++) actors[i].RightDisplacement(gameTime);
+
+
+            playersV2[1].RightCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].RightCollision();
+
+            #endregion
+
+
+            #region Down Collision
+
+            playersV2[1].DownDisplacement(gameTime);
+            for (int i = 0; i < actors.Count; i++) actors[i].DownDisplacement(gameTime);
+
+
+            playersV2[1].DownCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].DownCollision();
+
+            #endregion
+
+
+            #region Up Collision
+
+            playersV2[1].UpDisplacement(gameTime);
+            for (int i = 0; i < actors.Count; i++) actors[i].UpDisplacement(gameTime);
+
+
+            playersV2[1].UpCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].UpCollision();
+
+            #endregion
+
+
+
+
+
+
+
+
+
 
         }
 
@@ -80,8 +142,16 @@ namespace Plateform_2D_v9
 
             for (int j = yMin; j < yMax; j++)
                 for (int i = xMin; i < xMax; i++)
-                    if (Handler.Level[i, j].getType() > 0)
+                    if (Handler.Level[i, j].ID > 0)
                         Handler.Level[i, j].Draw(spriteBatch, gameTime);
+
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                blocks[i].Draw(spriteBatch, gameTime);
+            }
+
+
 
             for (int i = 0; i < solids.Count; i++)
             {

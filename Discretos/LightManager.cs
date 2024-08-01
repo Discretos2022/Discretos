@@ -118,7 +118,7 @@ namespace Plateform_2D_v9
                             {
 
                                 /// Diagonale  \
-                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) //  && ((lights[0].Position.X < b.Position.X + 32 && lights[0].Position.Y > b.Position.Y + 32) || b.Position.Y < 100)
+                                if (b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x, y + 1)) //  && ((lights[0].Position.X < b.Position.X + 32 && lights[0].Position.Y > b.Position.Y + 32) || b.Position.Y < 100)
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
                                     Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
@@ -142,7 +142,7 @@ namespace Plateform_2D_v9
 
 
                                 /// Down __
-                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) // (lights[i].Position.Y > b.Position.Y || b.Position.Y < 100)
+                                if (b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x, y + 1)) // (lights[i].Position.Y > b.Position.Y || b.Position.Y < 100)
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
                                     Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32); // -4
@@ -166,7 +166,7 @@ namespace Plateform_2D_v9
 
 
                                 /// Left |_
-                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x - 1, y)) // /*&& lights[0].Position.X < b.Position.X * 2*/
+                                if (b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x - 1, y)) // /*&& lights[0].Position.X < b.Position.X * 2*/
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2);
                                     Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32); // -4
@@ -190,7 +190,7 @@ namespace Plateform_2D_v9
 
 
                                 /// Diagonale  /
-                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y + 1)) //  && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4
+                                if (b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x, y + 1)) //  && lights[0].Position.X < b.Position.X * 2 + 32 - 4 && lights[0].Position.Y > b.Position.Y + 32 - 4
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2, b.Position.Y * 2 + 32);
                                     Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
@@ -214,7 +214,7 @@ namespace Plateform_2D_v9
 
 
                                 /// Up --
-                                if (b != null && b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x, y - 1)) // lights[0].Position.Y < b.Position.Y + 32
+                                if (b != null && b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x, y - 1)) // lights[0].Position.Y < b.Position.Y + 32
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2);
                                     Vector2 p3 = new Vector2(b.Position.X * 2, b.Position.Y * 2); // -4
@@ -238,7 +238,7 @@ namespace Plateform_2D_v9
 
 
                                 /// Right _|
-                                if (b.type != 0 && b.type != 2 && !GetIfBlockIsSolid(x + 1, y)) //  /*&& lights[0].Position.X > b.Position.X * 2*/
+                                if (b.ID != TileV2.BlockID.none && b.ID != TileV2.BlockID.platform_wood && !GetIfBlockIsSolid(x + 1, y)) //  /*&& lights[0].Position.X > b.Position.X * 2*/
                                 {
                                     Vector2 p1 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2 + 32);
                                     Vector2 p3 = new Vector2(b.Position.X * 2 + 32, b.Position.Y * 2); // -4
@@ -283,7 +283,7 @@ namespace Plateform_2D_v9
             if (x <= 0 || y <= 0 || x == Handler.Level.GetLength(0) || y == Handler.Level.GetLength(1))
                 return true;
 
-            if (Handler.Level[x, y] != null && Handler.Level[x, y].type != 0 && Handler.Level[x, y].type != 2)
+            if (Handler.Level[x, y] != null && Handler.Level[x, y].ID != 0 && (int)Handler.Level[x, y].ID != 2)
                 return true;
 
             return false;

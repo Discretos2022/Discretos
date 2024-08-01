@@ -245,7 +245,7 @@ namespace Plateform_2D_v9
 
                 for (int j = 0; j < Handler.Level.GetLength(1); j++)
                     for (int i = 0; i < Handler.Level.GetLength(0); i++)
-                        if (Handler.Level[i, j].getType() > 0)
+                        if (Handler.Level[i, j].ID > 0)
                             Handler.Level[i, j].Update(gameTime);
 
 

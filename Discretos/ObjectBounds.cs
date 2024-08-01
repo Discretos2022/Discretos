@@ -66,7 +66,7 @@ namespace Plateform_2D_v9
 
         public override void Break()
         {
-            Handler.solids.Remove(this);
+            //Handler.solids.Remove(this);
         }
     }
 }

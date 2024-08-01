@@ -79,7 +79,6 @@ namespace Plateform_2D_v9
             if (Main.PixelPerfect)
             { Rx = Main.ResolutionX; Ry = Main.ResolutionY;}
 
-
             /// Creation de la Camera.
             _translation = Matrix.CreateLookAt(new Vector3(Position.X - Rx / (2 * Zoom), Position.Y - Ry / (2 * Zoom), 5), new Vector3(Position.X - Rx / (2 * Zoom), Position.Y - Ry / (2 * Zoom), 0), Vector3.Up);
 
