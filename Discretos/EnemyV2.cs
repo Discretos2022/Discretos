@@ -724,7 +724,7 @@ namespace Plateform_2D_v9
             UpdateHitbox();
         }
 
-        public override void LeftCollision()
+        public override void LeftStaticCollision()
         {
 
             /// Static Block
@@ -783,7 +783,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public override void RightCollision()
+        public override void RightStaticCollision()
         {
 
             /// Static Block
@@ -842,7 +842,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public override void DownCollision()
+        public override void DownStaticCollision()
         {
 
             /// Static Block
@@ -981,7 +981,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public override void UpCollision()
+        public override void UpStaticCollision()
         {
 
             /// Static Block

@@ -55,7 +55,7 @@ namespace Plateform_2D_v9
         private int invincibletime = 60;  //1s
         private int time = 0;
 
-        private TileV2 TileRided;
+        private MovingBlock blockUnder;
 
         private int AttackNum = 0;
 
@@ -96,6 +96,12 @@ namespace Plateform_2D_v9
 
         public bool OnLadder;
         public bool OnTopOfLadder;
+
+
+        /// <summary>
+        /// For espace of 1 block
+        /// </summary>
+        public bool tileOnUp;
 
 
         public PlayerV2(Vector2 Position, int PlayerID, int _myPlayerID = 1)
@@ -1006,7 +1012,7 @@ namespace Plateform_2D_v9
 
         public override void SetRidingTile(TileV2 tile)
         {
-            TileRided = tile;
+            //TileRided = tile;
         }
 
         public void PlayerIsLowerAndEspaceEqualOne()
@@ -1039,14 +1045,14 @@ namespace Plateform_2D_v9
             if (SpringTouched) { Power = 1.22f; }
 
             /// Jump Controle Propulsion Vector Recuperation
-            if (TileRided != null && TileRided.GetVelocity().Y !< 0)
-                V = V + -TileRided.GetVelocity().Y/20;
+            if (blockUnder != null && blockUnder.Velocity.Y !< 0)
+                V = V + -blockUnder.Velocity.Y/20;
 
             if (((KeyInput.getKeyState().IsKeyDown(Main.Up) && !KeyInput.getOldKeyState().IsKeyDown(Main.Up)) || (GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad) && !GamePadInput.GetOldPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad))) && !isLower && (isOnGround || infiniJump || OnLadder) && ID == myPlayerID)//&& !isJump)
-            { Acceleration.Y = -JumpImpulsion * Power; TileRided = null; isJump = true; OnLadder = false; }
+            { Acceleration.Y = -JumpImpulsion * Power; blockUnder = null; isJump = true; OnLadder = false; }
 
             if (((KeyInput.getKeyState().IsKeyDown(Main.Up) && !KeyInput.getOldKeyState().IsKeyDown(Main.Up)) || (GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad) && !GamePadInput.GetOldPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad))) && isLower && (isOnGround || infiniJump || OnLadder) && ID == myPlayerID)// && !isJump)
-            { Acceleration.Y = -LowerJumpImpulsion * Power; TileRided = null; isJump = true; OnLadder = false; }
+            { Acceleration.Y = -LowerJumpImpulsion * Power; blockUnder = null; isJump = true; OnLadder = false; }
 
             /// Jump Controle Propulsion
             if ((KeyInput.getKeyState().IsKeyDown(Main.Up) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad)) && (int)Velocity.Y <= 0 && ID == myPlayerID)
@@ -1056,14 +1062,14 @@ namespace Plateform_2D_v9
             #region Second Player
 
             /// Jump Controle Propulsion Vector Recuperation
-            if (TileRided != null && TileRided.GetVelocity().Y! < 0)
-                V = V + -TileRided.GetVelocity().Y / 20;
+            if (blockUnder != null && blockUnder.Velocity.Y! < 0)
+                V = V + -blockUnder.Velocity.Y / 20;
 
             if (UpKey && !UpOldKey && !isLower && (isOnGround || infiniJump) && ID != myPlayerID)//&& !isJump)
-            { Acceleration.Y = -JumpImpulsion * Power; TileRided = null; isJump = true; }
+            { Acceleration.Y = -JumpImpulsion * Power; blockUnder = null; isJump = true; }
 
             if (UpKey && !UpOldKey && isLower && (isOnGround || infiniJump) && ID != myPlayerID)// && !isJump)
-            { Acceleration.Y = -LowerJumpImpulsion * Power; TileRided = null; isJump = true; }
+            { Acceleration.Y = -LowerJumpImpulsion * Power; blockUnder = null; isJump = true; }
 
             /// Jump Controle Propulsion
             if (UpKey && (int)Velocity.Y <= 0 && ID != myPlayerID)
@@ -1073,9 +1079,9 @@ namespace Plateform_2D_v9
 
 
             if (SpringTouched && (KeyInput.getKeyState().IsKeyDown(Main.Up) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad)))
-            { Acceleration.Y = -JumpImpulsion * Power; TileRided = null; isJump = true; SpringTouched = false; }
+            { Acceleration.Y = -JumpImpulsion * Power; blockUnder = null; isJump = true; SpringTouched = false; }
             else if(SpringTouched && (!KeyInput.getKeyState().IsKeyDown(Main.Up) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad)))
-            { Acceleration.Y = -JumpImpulsion / Power; TileRided = null; isJump = true; SpringTouched = false; }
+            { Acceleration.Y = -JumpImpulsion / Power; blockUnder = null; isJump = true; SpringTouched = false; }
         }
 
         public void Lowing()
@@ -1085,12 +1091,12 @@ namespace Plateform_2D_v9
             if ((KeyInput.getKeyState().IsKeyDown(Main.Down) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && !isJump && !isLower && isOnGround && myPlayerID == ID)
                 Position.Y += 16;
 
-            if ((!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && !isJump && isLower && isOnGround && myPlayerID == ID)      ///     BOGUE OF SLOPE
+            if ((!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && !isJump && isLower && isOnGround && myPlayerID == ID && !tileOnUp)      ///     BOGUE OF SLOPE
                 Position.Y -= 16;                                                                                                       ///     RESOLVED !!!!!
 
             if ((KeyInput.getKeyState().IsKeyDown(Main.Down) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && (!isJump && isOnGround) && myPlayerID == ID)
                 isLower = true;
-            else if ((!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && (!isJump && isOnGround) && myPlayerID == ID)
+            else if ((!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)) && (!isJump && isOnGround) && myPlayerID == ID && !tileOnUp)
                 isLower = false;
 
             if (isLower)
@@ -1386,7 +1392,7 @@ namespace Plateform_2D_v9
             if (isLower)
                 return new Vector2(0, -8) + Position;
 
-            return Position;
+            return Position; // + new Vector2(Random.Shared.Next(-1, 1), Random.Shared.Next(-1, 1));
 
         }
 
@@ -1516,6 +1522,8 @@ namespace Plateform_2D_v9
 
         public override void LeftDisplacement(GameTime gameTime)
         {
+            if (blockUnder != null && blockUnder.Velocity.X < 0) Position.X += blockUnder.Velocity.X;
+
             if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID == myPlayerID)
             { Position.X -= 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
 
@@ -1526,6 +1534,8 @@ namespace Plateform_2D_v9
 
         public override void RightDisplacement(GameTime gameTime)
         {
+            if (blockUnder != null && blockUnder.Velocity.X > 0 && !Left) Position.X += blockUnder.Velocity.X;
+
             if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID == myPlayerID)
             { Position.X += 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
 
@@ -1544,36 +1554,443 @@ namespace Plateform_2D_v9
         {
             Jump();
             Lowing();
-            PlayerIsLowerAndEspaceEqualOne();
+            //PlayerIsLowerAndEspaceEqualOne();
             if (Velocity.Y < 0) Position.Y += (int)Velocity.Y;
             UpdateHitbox();
         }
 
 
+        #region Static Collsition
 
-        public override void LeftCollision()
+        public override void LeftStaticCollision()
         {
             LeftCollisionStaticSystem();
             UpdateHitbox();
         }
 
-        public override void RightCollision()
+        public override void RightStaticCollision()
         {
             RightCollisionStaticSystem();
             UpdateHitbox();
         }
 
-        public override void DownCollision()
+        public override void DownStaticCollision()
         {
             DownCollisionStaticSystem();
             UpdateHitbox();
         }
 
-        public override void UpCollision()
+        public override void UpStaticCollision()
         {
             UpCollisionStaticSystem();
             UpdateHitbox();
         }
+
+        #endregion
+
+
+
+
+        #region Dynamic Collision
+
+
+        public override void LeftDynamicCollision()
+        {
+
+            /// Dynamic Block
+            for (int b = 0; b < Handler.blocks.Count; b++)
+            {
+
+                MovingBlock block = Handler.blocks[b];
+
+                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
+                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
+                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+
+                int xMin = (int)(Point1.X - block.Position.X) / 16;
+                int xMax = (int)(Point2.X - block.Position.X) / 16;
+
+                int yMin = (int)(Point1.Y - block.Position.Y) / 16;
+                int yMax = (int)(Point3.Y - block.Position.Y) / 16;
+
+                if (xMin < 0)
+                    xMin = 0;
+                if (xMax > block.tiles.GetLength(0) - 1)
+                    xMax = block.tiles.GetLength(0) - 1;
+                if (yMin < 0)
+                    yMin = 0;
+                if (yMax >= block.tiles.GetLength(1))
+                    yMax = block.tiles.GetLength(1) - 1;
+
+                for (int j = yMin; j <= yMax; j++)
+                {
+                    for (int i = xMin; i <= xMax; i++)
+                    {
+
+                        TileV2 tile = block.tiles[i, j];
+
+                        int index = i - 1;  ///
+                        if (index < 0)      /// For Slope BUG           (Pas encore fait dans TileV2 et EnemyV2)
+                            index = 0;      ///
+
+                        if (tile == null)                        /// provisoir
+                            break;
+
+                        /// Collision dans le même sens     <-  ||  <-
+                        int v = 0;
+                        if (block.Velocity.X < 0 && (i == block.tiles.GetLength(0) - 1 || block.tiles[i + 1, j].blockType != TileV2.BlockType.block)) v = (int)block.Velocity.X;
+                        
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(new Rectangle(tile.hitbox.rectangle.X + v, tile.hitbox.rectangle.Y, tile.hitbox.rectangle.Width, tile.hitbox.rectangle.Height)) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
+                        {
+
+                            Position.X = tile.hitbox.rectangle.X + v + tile.hitbox.rectangle.Width;
+                            //if ((!Left && !Right) || BlockMove)
+                            Left = true;
+
+                        }
+                    }
+                }
+            }
+
+            UpdateHitbox();
+
+        }
+
+        public override void RightDynamicCollision()
+        {
+
+            /// Dynamic Block
+            for (int b = 0; b < Handler.blocks.Count; b++)
+            {
+
+                MovingBlock block = Handler.blocks[b];
+
+                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
+                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
+                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+
+                int xMin = (int)(Point1.X - block.Position.X) / 16;
+                int xMax = (int)(Point2.X - block.Position.X) / 16;
+
+                int yMin = (int)(Point1.Y - block.Position.Y) / 16;
+                int yMax = (int)(Point3.Y - block.Position.Y) / 16;
+
+                if (xMin < 0)
+                    xMin = 0;
+                if (xMax > block.tiles.GetLength(0) - 1)
+                    xMax = block.tiles.GetLength(0) - 1;
+                if (yMin < 0)
+                    yMin = 0;
+                if (yMax >= block.tiles.GetLength(1))
+                    yMax = block.tiles.GetLength(1) - 1;
+
+                for (int j = yMin; j <= yMax; j++)
+                {
+                    for (int i = xMin; i <= xMax; i++)
+                    {
+
+                        TileV2 tile = block.tiles[i, j];
+
+                        int index = i - 1;  ///
+                        if (index < 0)      /// For Slope BUG           (Pas encore fait dans TileV2 et EnemyV2)
+                            index = 0;      ///
+
+                        if (tile == null)                        /// provisoir
+                            break;
+
+
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
+                        {
+
+                            Position.X = tile.Position.X - hitbox.rectangle.Width;
+                            //if ((!Left && !Right) || BlockMove)
+                            Right = true;
+
+                        }
+                    }
+                }
+            }
+
+            UpdateHitbox();
+
+        }
+
+        public override void DownDynamicCollision()
+        {
+
+            tileOnUp = false;
+            for (int b = 0; b < Handler.blocks.Count; b++)
+            {
+
+                MovingBlock block = Handler.blocks[b];
+                blockUnder = null;
+
+                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
+                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
+                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+
+                int xMin = (int)(Point1.X - block.Position.X) / 16;
+                int xMax = (int)(Point2.X - block.Position.X) / 16;
+
+                int yMin = (int)(Point1.Y - block.Position.Y) / 16 - 1;
+                int yMax = (int)(Point3.Y - block.Position.Y) / 16 + 1;
+
+                
+
+                if (xMin < 0)
+                    xMin = 0;
+                if (xMax > block.tiles.GetLength(0) - 1)
+                    xMax = block.tiles.GetLength(0) - 1;
+                if (yMin < 0)
+                    yMin = 0;
+                if (yMax >= block.tiles.GetLength(1))
+                    yMax = block.tiles.GetLength(1) - 1;
+
+                float result = 0;
+
+                for (int j = yMin; j <= yMax; j++)
+                {
+                    for (int i = xMin; i <= xMax; i++)
+                    {
+
+                        TileV2 tile = block.tiles[i, j];
+
+                        /// NoSlope
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        {
+
+                            Position.Y = tile.Position.Y - hitbox.rectangle.Height;
+
+                            Down = true;
+                            Acceleration.Y = 0;
+                            Velocity.Y = 0;
+                            isJump = false;
+                            isOnGround = true;
+                            OnLadder = false;
+
+                            /// Break Block if Player is on and is on solid block in the left
+                            if (Position.X > tile.Position.X && Handler.Level[xMax, yMax].isBreakable && !tile.isBreakable)
+                                Handler.Level[xMax, yMax].Break();
+
+                            //Console.WriteLine(tile.Position.X/16);
+
+                            //Console.WriteLine("Down");
+
+                        }
+
+                        /// Slope
+                        /*if (tile.isSlope && Collision.TriangleSolidVsActor(this, tile) && Main.SolidTile[(int)tile.ID])
+                        {
+                            /// Down Slope
+                            if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown || (Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
+                            {
+                                //Console.WriteLine("Collision Slope");
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown)
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, GetRectangle().Height);
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, GetRectangle().Height);
+
+                                //Console.WriteLine(Collision.TriangleSolidVsActorResolution(this, tile));
+
+
+                                Down = true;
+                                Acceleration.Y = 2;
+                                Velocity.Y = 0;
+                                isJump = false;
+                                isOnGround = true;
+                                isOnSlope = true;
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown && goRight)
+                                    Acceleration.Y = 0;
+                                else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown && goLeft)
+                                    Acceleration.Y = 3;
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goRight)
+                                    Acceleration.Y = 3;
+                                else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goLeft)
+                                    Acceleration.Y = 0;
+
+                                if (Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height <= 1)
+                                    Acceleration.Y = 0;
+
+                                //Console.WriteLine(Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height);
+
+                                Position.Y = Collision.TriangleSolidVsActorResolution(this, tile).Y;
+                            }
+
+                        }*/
+
+                        /// Platform
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
+                        {
+                            ///          ///Provisoir///           ///
+                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
+                            {
+
+                                Position.Y = tile.Position.Y - hitbox.rectangle.Height;
+
+                                Down = true;
+                                Acceleration.Y = 0;
+                                Velocity.Y = 0;
+                                isJump = false;
+                                isOnGround = true;
+
+                                if (tile.isBreakable)
+                                    tile.Break();
+
+                            }
+                        }
+
+                        UpdateHitbox();
+
+                        
+                        if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y + 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle))
+                        {
+                            if (tile.blockType == TileV2.BlockType.block)
+                                blockUnder = block;
+                            if (tile.blockType == TileV2.BlockType.platform && OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y)
+                                blockUnder = block;
+                        }
+
+                        if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y - 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle))
+                        {
+                            if (tile.blockType == TileV2.BlockType.block)
+                                tileOnUp = true;
+                        }
+
+                        /// Break all breakable platform
+                        if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y + 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
+                        {
+
+                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
+                            {
+                                if (tile.isBreakable)
+                                    tile.Break();
+                            }
+                        }
+
+
+                    }
+                }
+
+            }
+
+        }
+
+        public override void UpDynamicCollision()
+        {
+
+            for (int b = 0; b < Handler.blocks.Count; b++)
+            {
+
+                MovingBlock block = Handler.blocks[b];
+
+                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
+                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
+                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+
+                int xMin = (int)(Point1.X - block.Position.X) / 16;
+                int xMax = (int)(Point2.X - block.Position.X) / 16;
+
+                int yMin = (int)(Point1.Y - block.Position.Y) / 16;
+                int yMax = (int)(Point3.Y - block.Position.Y) / 16;
+
+
+
+                if (xMin < 0)
+                    xMin = 0;
+                if (xMax > block.tiles.GetLength(0) - 1)
+                    xMax = block.tiles.GetLength(0) - 1;
+                if (yMin < 0)
+                    yMin = 0;
+                if (yMax >= block.tiles.GetLength(1))
+                    yMax = block.tiles.GetLength(1) - 1;
+
+                float result = 0;
+
+                for (int j = yMin; j <= yMax; j++)
+                {
+                    for (int i = xMin; i <= xMax; i++)
+                    {
+
+                        TileV2 tile = block.tiles[i, j];
+
+                        /// NoSlope
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        {
+
+                            //Console.WriteLine("Up");
+
+                            Position.Y = tile.Position.Y + tile.GetRectangle().Height;
+
+                            Up = true;
+                            Velocity.Y = 0;
+                            Acceleration.Y = 0;
+
+                            //SetRidingTile(null);
+
+                        }
+
+                        /// Slope
+                        /*if (tile.isSlope && Collision.TriangleSolidVsActor(this, tile) && Main.SolidTile[(int)tile.ID])
+                        {
+                            /// Down Slope
+                            if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown || (Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
+                            {
+                                //Console.WriteLine("Collision Slope");
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown)
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, GetRectangle().Height);
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, GetRectangle().Height);
+
+                                //Console.WriteLine(Collision.TriangleSolidVsActorResolution(this, tile));
+
+
+                                Down = true;
+                                Acceleration.Y = 2;
+                                Velocity.Y = 0;
+                                isJump = false;
+                                isOnGround = true;
+                                isOnSlope = true;
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown && goRight)
+                                    Acceleration.Y = 0;
+                                else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown && goLeft)
+                                    Acceleration.Y = 3;
+
+                                if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goRight)
+                                    Acceleration.Y = 3;
+                                else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goLeft)
+                                    Acceleration.Y = 0;
+
+                                if (Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height <= 1)
+                                    Acceleration.Y = 0;
+
+                                //Console.WriteLine(Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height);
+
+                                Position.Y = Collision.TriangleSolidVsActorResolution(this, tile).Y;
+                            }
+
+                        }*/
+
+                    }
+
+                    
+
+
+                }
+
+            }
+
+        }
+
+
+        #endregion
+
 
 
 
@@ -1656,8 +2073,8 @@ namespace Plateform_2D_v9
                         {
 
                             Position.X = tile.Position.X + tile.hitbox.rectangle.Width;
-                            if ((!Left && !Right) || BlockMove)
-                                Left = true;
+                            //if ((!Left && !Right) || BlockMove)
+                            Left = true;
 
                         }
                     }
@@ -1743,13 +2160,17 @@ namespace Plateform_2D_v9
                         {
 
                             Position.X = tile.Position.X - hitbox.rectangle.Width;
-                            if ((!Left && !Right) || BlockMove)
-                                Right = true;
+                            //if ((!Left && !Right) || BlockMove)
+                            Right = true;
 
                         }
                     }
                 }
             }
+
+            if (IsSquish())
+                KillPlayer();
+
         }
 
         public void DownCollisionStaticSystem()
@@ -1794,8 +2215,8 @@ namespace Plateform_2D_v9
             int xMin = (int)Point1.X / 16;
             int xMax = (int)Point2.X / 16;
 
-            int yMin = (int)Point1.Y / 16;
-            int yMax = (int)Point3.Y / 16;
+            int yMin = (int)Point1.Y / 16 - 1;
+            int yMax = (int)Point3.Y / 16 + 1;
 
             if (Handler.Level != null)
             {
@@ -1892,7 +2313,7 @@ namespace Plateform_2D_v9
                         if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
                         {
                             ///          ///Provisoir///           ///
-                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
+                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
                             {
 
                                 Position.Y = tile.Position.Y - hitbox.rectangle.Height;
@@ -1903,11 +2324,28 @@ namespace Plateform_2D_v9
                                 isJump = false;
                                 isOnGround = true;
 
-                                if (tile.isBreakable)
-                                    tile.Break();
-
                             }
                         }
+
+                        UpdateHitbox();
+
+                        if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y - 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle))
+                        {
+                            if (tile.blockType == TileV2.BlockType.block)
+                                tileOnUp = true;
+                        }
+
+                        /// Break all breakable platform
+                        if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y + 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
+                        {
+                            
+                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
+                            {
+                                if (tile.isBreakable)
+                                    tile.Break();
+                            }
+                        }
+
                     }
                 }
             }
@@ -1917,59 +2355,6 @@ namespace Plateform_2D_v9
         {
 
             isOnSlope = false;
-
-            /*
-            /// Moving Block
-            for (int i = 0; i < Handler.solids.Count; i++)
-            {
-
-                Solid tile = Handler.solids[i];
-
-                if (Main.SolidTile[Handler.solids[i].getType()]) //&& !Main.tiles[i].IsSlope())
-                {
-
-                    if (Collision.SolidVsActor(this, tile))
-                    {
-
-
-                        if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Up)
-                        {
-
-                            //Console.WriteLine("Up");
-
-
-                            Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Up, this, tile).Y;
-
-                            Up = true;
-                            Velocity.Y = 0;
-                            Acceleration.Y = 0;
-
-                            if (tile.Velocity.Y > 0)
-                                Acceleration.Y = tile.Velocity.Y;
-
-                            //SetRidingTile(null);
-
-
-
-                        }
-
-                        else if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Down)
-                        {
-                            Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Down, this, tile).Y;
-
-                            Down = true;
-                            Acceleration.Y = 0;
-                            Velocity.Y = 0;
-                            isJump = false;
-                            isOnGround = true;
-                            OnLadder = false;
-
-                            //Console.WriteLine("Down");
-                        }
-                    }
-                }
-            }*/
-
 
             /// Static Block
             Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
@@ -2090,6 +2475,8 @@ namespace Plateform_2D_v9
                 if (result != 0)
                     Position.Y = result;
 
+                if (IsSquish())
+                    KillPlayer();
 
             }
         }

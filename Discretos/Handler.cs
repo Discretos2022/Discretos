@@ -48,6 +48,11 @@ namespace Plateform_2D_v9
                 actors[i].Update(gameTime);
             }
 
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                blocks[i].Update(gameTime);
+            }
+
             for (int i = 1; i <= playersV2.Count; i++)
             {
                 playersV2[i].Update(gameTime);
@@ -58,57 +63,72 @@ namespace Plateform_2D_v9
 
             #region Left Collision
 
-            playersV2[1].LeftDisplacement(gameTime);
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].LeftDisplacement(gameTime);
             for (int i = 0; i < actors.Count; i++) actors[i].LeftDisplacement(gameTime);
 
+            for (int i = 0; i < blocks.Count; i++) blocks[i].RightDisplacement(gameTime);
 
-            playersV2[1].LeftCollision();
-            for (int i = 0; i < actors.Count; i++) actors[i].LeftCollision();
+
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].LeftDynamicCollision();
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].LeftStaticCollision();
+
+            for (int i = 0; i < actors.Count; i++) actors[i].LeftStaticCollision();
 
             #endregion
 
 
             #region Right Collision
 
-            playersV2[1].RightDisplacement(gameTime);
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].RightDisplacement(gameTime);
             for (int i = 0; i < actors.Count; i++) actors[i].RightDisplacement(gameTime);
 
 
-            playersV2[1].RightCollision();
-            for (int i = 0; i < actors.Count; i++) actors[i].RightCollision();
+            for (int i = 0; i < blocks.Count; i++) blocks[i].LeftDisplacement(gameTime);
+            
+            
+
+
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].RightDynamicCollision();
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].RightStaticCollision();
+
+            /*Bug*/ //if (!playersV2[1].isDead) playersV2[1].LeftDynamicCollision();
+            /*Bug*/ //if (!playersV2[1].isDead) playersV2[1].LeftStaticCollision();
+
+            for (int i = 0; i < actors.Count; i++) actors[i].RightStaticCollision();
 
             #endregion
 
 
             #region Down Collision
 
-            playersV2[1].DownDisplacement(gameTime);
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].DownDisplacement(gameTime);
             for (int i = 0; i < actors.Count; i++) actors[i].DownDisplacement(gameTime);
 
 
-            playersV2[1].DownCollision();
-            for (int i = 0; i < actors.Count; i++) actors[i].DownCollision();
+            for (int i = 0; i < blocks.Count; i++) blocks[i].UpDisplacement(gameTime);
+
+
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].DownDynamicCollision();
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].DownStaticCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].DownStaticCollision();
 
             #endregion
 
 
             #region Up Collision
 
-            playersV2[1].UpDisplacement(gameTime);
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].UpDisplacement(gameTime);
             for (int i = 0; i < actors.Count; i++) actors[i].UpDisplacement(gameTime);
 
 
-            playersV2[1].UpCollision();
-            for (int i = 0; i < actors.Count; i++) actors[i].UpCollision();
+            for (int i = 0; i < blocks.Count; i++) blocks[i].DownDisplacement(gameTime);
+
+
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].UpDynamicCollision();
+            if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].UpStaticCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].UpStaticCollision();
 
             #endregion
-
-
-
-
-
-
-
 
 
 

@@ -624,22 +624,22 @@ namespace Plateform_2D_v9
             
         }
 
-        public override void LeftCollision()
+        public override void LeftStaticCollision()
         {
             
         }
 
-        public override void RightCollision()
+        public override void RightStaticCollision()
         {
             
         }
 
-        public override void DownCollision()
+        public override void DownStaticCollision()
         {
             
         }
 
-        public override void UpCollision()
+        public override void UpStaticCollision()
         {
             
         }

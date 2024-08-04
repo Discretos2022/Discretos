@@ -167,11 +167,11 @@ namespace Plateform_2D_v9
         public void Update(GameTime gameTime)
         {
 
-            if (Position.X < 200 || Position.X > 600)
+            /*if (Position.X < 200 || Position.X > 600)
                 Velocity.X *= -1;
 
             if (Position.Y < 100 || Position.Y > 200)
-                Velocity.Y *= -1;
+                Velocity.Y *= -1;*/
 
 
             /*for(int i = 0; i < Handler.solids.Count - 1; i++)
@@ -252,7 +252,7 @@ namespace Plateform_2D_v9
 
 
                 DEBUG.DebugCollision(GetRectangle(), Color.Black, spriteBatch);
-                DEBUG.DebugCollision(new Rectangle(GetRectangle().X + 1, GetRectangle().Y + 1, w - 2, h - 2), isSlope ? Color.Aqua : Color.Blue, spriteBatch);
+                DEBUG.DebugCollision(new Rectangle(GetRectangle().X + 1, GetRectangle().Y + 1, w - 2, h - 2), isSlope ? Color.Aqua : (hitbox.isEnabled ? Color.Blue : Color.Blue * 0.5f), spriteBatch);
 
                 if (Main.Debug)
                 {

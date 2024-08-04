@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,42 @@ namespace Plateform_2D_v9
 
         }
 
+        public void Update(GameTime gameTime)
+        {
+
+            //Velocity.X = 10;
+
+            if (Position.X > 94 * 16 - 1)
+            {
+                Velocity.X *= -1.0f;
+                //Position.X = 600;
+            }
+
+
+            else if (Position.X < 75 * 16 + 1)
+            {
+                Velocity.X *= -1.0f;
+                //Position.X = 200;
+            }
+
+            if (Position.Y > 10)
+            {
+                Velocity.Y *= -1.0f;
+                //Position.Y = 300;
+            }
+
+
+            else if (Position.Y < 13 * 16)
+            {
+                Velocity.Y *= -1.0f;
+                //Position.Y = 50;
+            }
+
+        }
+
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
-            Position += Velocity;
-
 
             for (int i = 0; i < tiles.GetLength(0); i++)
             {
@@ -47,25 +78,89 @@ namespace Plateform_2D_v9
                         tiles[i, j].Draw(spriteBatch, gameTime);
                     }
 
-                    tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
+                    //tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
 
                 }
             }
 
-            if (Position.X > 400)
-            {
-                Velocity.X *= -1.0f;
-                Position.X = 400;
-            }
-                
+        }
 
-            else if (Position.X < 100)
+
+
+
+        public void LeftDisplacement(GameTime gameTime)
+        {
+
+            if (Velocity.X < 0)
             {
-                Velocity.X *= -1.0f;
-                Position.X = 100;
+                Position.X += Velocity.X;
+
+                for (int i = 0; i < tiles.GetLength(0); i++)
+                    for (int j = 0; j < tiles.GetLength(1); j++)
+                    {
+                        tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
+                        tiles[i, j].hitbox.rectangle = new Rectangle((int)Position.X + i * 16, (int)Position.Y + j * 16, 16, 16);
+                    }
+
             }
 
         }
+
+        public void RightDisplacement(GameTime gameTime)
+        {
+
+            if (Velocity.X > 0)
+            {
+                Position.X += Velocity.X;
+
+                for (int i = 0; i < tiles.GetLength(0); i++)
+                    for (int j = 0; j < tiles.GetLength(1); j++)
+                    {
+                        tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
+                        tiles[i, j].hitbox.rectangle = new Rectangle((int)tiles[i, j].Position.X, (int)tiles[i, j].Position.Y, 16, 16);
+                    }
+
+            }
+
+        }
+
+        public void DownDisplacement(GameTime gameTime)
+        {
+
+            if (Velocity.Y > 0)
+            {
+                Position.Y += Velocity.Y;
+
+                for (int i = 0; i < tiles.GetLength(0); i++)
+                    for (int j = 0; j < tiles.GetLength(1); j++)
+                    {
+                        tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
+                        tiles[i, j].hitbox.rectangle = new Rectangle((int)Position.X + i * 16, (int)Position.Y + j * 16, 16, 16);
+                    }
+
+            }
+
+        }
+
+        public void UpDisplacement(GameTime gameTime)
+        {
+
+            if (Velocity.Y < 0)
+            {
+                Position.Y += Velocity.Y;
+
+                for (int i = 0; i < tiles.GetLength(0); i++)
+                    for (int j = 0; j < tiles.GetLength(1); j++)
+                    {
+                        tiles[i, j].Position = Position + new Vector2(i * 16, j * 16);
+                        tiles[i, j].hitbox.rectangle = new Rectangle((int)Position.X + i * 16, (int)Position.Y + j * 16, 16, 16);
+                    }
+
+            }
+
+        }
+
+
 
 
         public void InitTile(float[,] table)

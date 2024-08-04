@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:18
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:21
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -68,6 +68,7 @@ Level
 	* Level 7 Extension 1 (build 3)
 	* Level 7 Extension 2 (build 5)
 	* Level 7 Extension 3 (build 6)
+	* Level 7 Extension 4 (build 8)
 	* New Platform - BrokenBrick (build 3)
 	* New Object - Golden Key (build 6)
 	* New Object - Wood Door (build 6)
@@ -82,6 +83,7 @@ Collision
 	* Collision improved (build 1, 2, 3, 4, 5, 6, 7, 8)
 	* New Collision System (implemented) (build 4)
 	* New Collision System (build 5)
+	* New Collision System (build 8)
 
 System
 
@@ -103,6 +105,7 @@ System
 	* Particle Effect Updated (build 8)
 	* Shader System Updated (build 8)
 	* NetworkEngine 3.0 to NetworkEngine 5.0 (build 8)
+	* New Dynamic Block System (build 8)
 
 
 Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------
