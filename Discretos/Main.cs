@@ -401,12 +401,17 @@ namespace Plateform_2D_v9
             if (KeyInput.getKeyState().IsKeyDown(Keys.E) && !KeyInput.getOldKeyState().IsKeyDown(Keys.E) && Debug)
             {
 
-                Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0)))); // -2 -> -20
-                Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0)))); // -2 -> -20
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble() * 10, (float)Util.random.Next(-20, 0))));
 
-                //Handler.actors.Add(new EnemyV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), 1));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-1, 0)))); // -2 -> -20
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-1, 0))));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-1, 0))));
+                //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-1, 0))));
+
+                Handler.actors.Add(new EnemyV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), 1));
 
             }
             

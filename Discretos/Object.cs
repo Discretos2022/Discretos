@@ -16,11 +16,6 @@ namespace Plateform_2D_v9
     public class Object : Actor
     {
 
-        public bool Right = false;
-        public bool Left = false;
-        public bool Up = false;
-        public bool Down = false;
-
         public bool open = false;
 
         public int ladderHeight;
@@ -91,6 +86,7 @@ namespace Plateform_2D_v9
 
                 case 4:
                     Door = new ObjectBounds(Position + new Vector2(6, 0), 1, 4, 32);
+                    hitbox.isEnabled = true;
                     //Handler.solids.Add(Door);
                     break;
 
@@ -156,7 +152,7 @@ namespace Plateform_2D_v9
 
             PlayerAndEnemyCollision();
 
-            if (!isLocked)
+            //if (!isLocked)
                 //Handler.solids.Remove(Door);
 
             if(ID == 3)
@@ -180,7 +176,7 @@ namespace Plateform_2D_v9
         {
             //spriteBatch.Draw(texture, Position, Color.White);
 
-            DEBUG.DebugCollision(GetRectangle(), Color.DarkBlue, spriteBatch);
+            DEBUG.DebugCollision(hitbox.rectangle, Color.DarkBlue, spriteBatch);
 
             if (ID != 5 || !isCollected)
                 NumAnimation.X = 0;
@@ -217,7 +213,7 @@ namespace Plateform_2D_v9
                 else
                 {
                     spriteBatch.Draw(Main.Object[ID], Position + new Vector2(5, 0), new Rectangle(21, 0, 16, 32), Color.White);
-                    if(isLocked)
+                    if(hitbox.isEnabled) // isLocked && 
                         spriteBatch.Draw(Main.Cadenas, Position + new Vector2(0, 10), new Rectangle(0, 0, 16, 16), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 }
             else if (ID == 5)
@@ -561,16 +557,16 @@ namespace Plateform_2D_v9
 
         public override bool IsSquish()
         {
-            if (Left && Right)
+            if (LeftCollision && RightCollision)
                 goto L_1;
-            else if (Up && Down)
+            else if (UpCollision && DownCollision)
                 goto L_1;
 
 
-            Left = false;
-            Right = false;
-            Up = false;
-            Down = false;
+            LeftCollision = false;
+            RightCollision = false;
+            UpCollision = false;
+            DownCollision = false;
 
             return false;
 
@@ -579,10 +575,10 @@ namespace Plateform_2D_v9
 
                 //Console.WriteLine(Left + " ; " + Right + "  :  " + Down + " ; " + Up);
 
-                Left = false;
-                Right = false;
-                Up = false;
-                Down = false;
+                LeftCollision = false;
+                RightCollision = false;
+                UpCollision = false;
+                DownCollision = false;
 
                 return true;
             }
@@ -650,31 +646,31 @@ namespace Plateform_2D_v9
             switch (ID)
             {
                 case 1:
-                    hitbox = new Hitbox((int)Position.X + 3, (int)Position.Y + 1, 10, 14);
+                    hitbox.rectangle = new Rectangle((int)Position.X + 3, (int)Position.Y + 1, 10, 14);
                     break;
                 case 2:
-                    hitbox = new Hitbox((int)Position.X + 1, (int)Position.Y, 13, 14);
+                    hitbox.rectangle = new Rectangle((int)Position.X + 1, (int)Position.Y, 13, 14);
                     break;
                 case 3:
-                    hitbox = new Hitbox((int)Position.X, (int)Position.Y, 16, 32);
+                    hitbox.rectangle = new Rectangle((int)Position.X, (int)Position.Y, 16, 32);
                     break;
                 case 4:
-                    if (isLocked)
-                        hitbox = new Hitbox((int)Position.X + 5, (int)Position.Y, 6, 32);
-                    else
-                        hitbox = new Hitbox((int)Position.X - 5 + 5, (int)Position.Y, 24, 32);
+                    //if (isLocked)
+                        hitbox.rectangle = new Rectangle((int)Position.X + 5, (int)Position.Y, 6, 32);
+                    //else
+                        //hitbox.rectangle = new Rectangle((int)Position.X - 5 + 5, (int)Position.Y, 24, 32);
                     break;
                 case 5:
-                    hitbox = new Hitbox((int)Position.X + 5, (int)Position.Y, 7, 15);
+                    hitbox.rectangle = new Rectangle((int)Position.X + 5, (int)Position.Y, 7, 15);
                     break;
                 case 6:
-                    hitbox = new Hitbox((int)Position.X + 1, (int)Position.Y + 6, 14, 10);
+                    hitbox.rectangle = new Rectangle((int)Position.X + 1, (int)Position.Y + 6, 14, 10);
                     break;
                 case 7:
-                    hitbox = new Hitbox((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
+                    hitbox.rectangle = new Rectangle((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
                     break;
                 default:
-                    hitbox = new Hitbox(0, 0, 0, 0);
+                    hitbox.rectangle = new Rectangle(0, 0, 0, 0);
                     break;
             }
 

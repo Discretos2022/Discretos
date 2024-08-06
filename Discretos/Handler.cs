@@ -72,6 +72,7 @@ namespace Plateform_2D_v9
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].LeftDynamicCollision();
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].LeftStaticCollision();
 
+            for (int i = 0; i < actors.Count; i++) actors[i].LeftDynamicCollision();
             for (int i = 0; i < actors.Count; i++) actors[i].LeftStaticCollision();
 
             #endregion
@@ -94,6 +95,7 @@ namespace Plateform_2D_v9
             /*Bug*/ //if (!playersV2[1].isDead) playersV2[1].LeftDynamicCollision();
             /*Bug*/ //if (!playersV2[1].isDead) playersV2[1].LeftStaticCollision();
 
+            for (int i = 0; i < actors.Count; i++) actors[i].RightDynamicCollision();
             for (int i = 0; i < actors.Count; i++) actors[i].RightStaticCollision();
 
             #endregion
@@ -110,6 +112,7 @@ namespace Plateform_2D_v9
 
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].DownDynamicCollision();
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].DownStaticCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].DownDynamicCollision();
             for (int i = 0; i < actors.Count; i++) actors[i].DownStaticCollision();
 
             #endregion
@@ -126,6 +129,7 @@ namespace Plateform_2D_v9
 
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].UpDynamicCollision();
             if (!playersV2[NetPlay.MyPlayerID()].isDead) playersV2[NetPlay.MyPlayerID()].UpStaticCollision();
+            for (int i = 0; i < actors.Count; i++) actors[i].UpDynamicCollision();
             for (int i = 0; i < actors.Count; i++) actors[i].UpStaticCollision();
 
             #endregion

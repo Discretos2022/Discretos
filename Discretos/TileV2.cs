@@ -36,7 +36,6 @@ namespace Plateform_2D_v9
         public bool isBroken;
         public bool isTouched;    /// For Breackable Block
         public bool isInvisible;
-        public int SlopeType;
 
         public Vector2 OldPosition;
         public Vector2 Velocity;
@@ -48,6 +47,7 @@ namespace Plateform_2D_v9
 
         public BlockID ID;
         public BlockType blockType;
+        public SlopeType slopeType = SlopeType.None;
 
         public Hitbox hitbox;
 
@@ -278,9 +278,9 @@ namespace Plateform_2D_v9
 
         public bool IsSlope() {return isSlope;}
 
-        public void SetSlopeType(int type) {SlopeType = type;}
+        public void SetSlopeType(int type) {slopeType = (SlopeType)type;}
 
-        public int GetSlopeType() {return SlopeType;}
+        public SlopeType GetSlopeType() {return slopeType;}
 
         public void SetSlope(bool IsSlope = false) {isSlope = IsSlope;}
 
@@ -633,6 +633,15 @@ namespace Plateform_2D_v9
             block = 1,
             platform = 2,
             liquid = 3,
+        }
+
+        public enum SlopeType
+        {
+            None = 0,
+            LeftDown = 1,   //   /|
+            RightDown = 2,  //   |\
+            LeftUp = 3,     //   \|
+            RightUp = 4,    //   |/
         }
 
         public Vector2 GetVelocity()
