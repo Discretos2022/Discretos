@@ -25,6 +25,7 @@ namespace Plateform_2D_v9
 
         private TileV2 TileRided;
 
+
         public EnemyV2(Vector2 Position, int ID)
             : base(new Vector2(Position.X, Position.Y))
         {
@@ -184,16 +185,18 @@ namespace Plateform_2D_v9
                 case 1:
                     //rectangle = new Rectangle((int)Position.X, (int)Position.Y, 14, 28);
                     Walk = new Animation(Main.Enemy[ID], 4, 1, 0.15f);
-                    this.Velocity = new Vector2(0.6f, 0); // 0.6f, 0
-                    this.KnockBack = new Vector2(3, 2);
+                    Velocity = new Vector2(0.6f, 0); // 0.6f, 0
+                    BaseVelocity = new Vector2(0.6f, 0);
+                    KnockBack = new Vector2(3, 2);
                     Walk.Start();
                     break;
 
                 case 2:
                     //rectangle = new Rectangle((int)Position.X, (int)Position.Y, 14, 28);
                     Walk = new Animation(Main.Enemy[ID], 4, 1, 0.10f);
-                    this.Velocity = new Vector2(0.8f, 0);
-                    this.KnockBack = new Vector2(2, 0);
+                    Velocity = new Vector2(0.8f, 0);
+                    BaseVelocity = new Vector2(0.8f, 0);
+                    KnockBack = new Vector2(1, 2); // 2, 0
                     Walk.Start();
                     break;
 
@@ -323,7 +326,7 @@ namespace Plateform_2D_v9
                     if (hitbox.rectangle.Intersects(actor.GetAttackRectangle()))
                     {
                         RemovePV(1);
-                        //Acceleration.Y = -KnockBack.Y;
+                        Acceleration.Y = -KnockBack.Y;
                         //Acceleration.X = KnockBack.X;
 
 
@@ -339,9 +342,9 @@ namespace Plateform_2D_v9
                         }
 
                         if (hitbox.rectangle.X >= actor.hitbox.rectangle.X)
-                            Acceleration.X = KnockBack.X;
+                            Velocity.X = KnockBack.X;
                         else if (hitbox.rectangle.X < actor.hitbox.rectangle.X)
-                            Acceleration.X = -KnockBack.X;
+                            Velocity.X = -KnockBack.X;
 
 
                     }
@@ -367,6 +370,9 @@ namespace Plateform_2D_v9
 
             //Acceleration.X -= 0.2f;
             Acceleration.Y += Gravity;
+
+            if (Velocity.X > BaseVelocity.X) Velocity.X -= 0.2f;
+            if (Velocity.X < -BaseVelocity.X) Velocity.X += 0.2f;
 
 
             Velocity.Y = Acceleration.Y;
@@ -703,8 +709,8 @@ namespace Plateform_2D_v9
             if (Velocity.X < 0) Position.X += Velocity.X;
             if (Wind.X < 0) Position.X += Wind.X;
             
-            if (Acceleration.X < 0)
-                Position.X += Acceleration.X;
+            //if (Acceleration.X < 0)
+                //Position.X += Acceleration.X;
 
             base.LeftDisplacement(gameTime);
         }
@@ -714,8 +720,8 @@ namespace Plateform_2D_v9
             if (Velocity.X > 0) Position.X += Velocity.X;
             if (Wind.X > 0) Position.X += Wind.X;
             
-            if (Acceleration.X > 0)
-                Position.X += Acceleration.X;
+            //if (Acceleration.X > 0)
+                //Position.X += Acceleration.X;
 
             base.RightDisplacement(gameTime);
         }
@@ -723,6 +729,13 @@ namespace Plateform_2D_v9
         public override void DownDisplacement(GameTime gameTime)
         {
             if (Velocity.Y > 0) Position.Y += (int)Velocity.Y;
+
+            if (isOnSlope == TileV2.SlopeType.LeftDown && Velocity.X < 0)
+                Position.Y += BaseVelocity.X;
+
+            else if (isOnSlope == TileV2.SlopeType.RightDown && Velocity.X > 0)
+                Position.Y += BaseVelocity.X + 1;
+
             UpdateHitbox();
         }
 
@@ -751,7 +764,8 @@ namespace Plateform_2D_v9
         }
         public override void DownStaticCollisionAction()
         {
-
+            if (isLeft) Velocity.X = -BaseVelocity.X;
+            if (!isLeft) Velocity.X = BaseVelocity.X;
         }
         public override void UpStaticCollisionAction()
         {

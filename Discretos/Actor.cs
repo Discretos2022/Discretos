@@ -14,6 +14,7 @@ namespace Plateform_2D_v9
         public Vector2 Position;
         public Vector2 OldPosition;
         public Vector2 Velocity;
+        public Vector2 BaseVelocity;
         public Vector2 Acceleration;
         public Vector2 Wind;
         public float Gravity;
@@ -136,12 +137,12 @@ namespace Plateform_2D_v9
         {
 
             /// Static Block
-            if (Handler.Level != null && Handler.Level.Length != 0 && Velocity.X < 0)
+            if (Handler.Level != null && Handler.Level.Length != 0 && Velocity.X + Wind.X < 0)
             {
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)Point1.X / 16;
                 int xMax = (int)Point2.X / 16;
@@ -173,7 +174,7 @@ namespace Plateform_2D_v9
                             break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
                         {
 
                             Position.X = tile.Position.X + tile.hitbox.rectangle.Width;
@@ -216,12 +217,12 @@ namespace Plateform_2D_v9
         {
 
             /// Static Block
-            if (Handler.Level != null && Handler.Level.Length != 0 && Velocity.X > 0)
+            if (Handler.Level != null && Handler.Level.Length != 0 && Velocity.X + Wind.X > 0)
             {
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)Point1.X / 16;
                 int xMax = (int)Point2.X / 16;
@@ -253,7 +254,7 @@ namespace Plateform_2D_v9
                             //break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
                         {
 
                             Position.X = tile.Position.X - hitbox.rectangle.Width;
@@ -301,9 +302,9 @@ namespace Plateform_2D_v9
             isOnSlope = TileV2.SlopeType.None;
 
             /// Static Block
-            Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-            Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-            Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+            Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+            Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+            Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
             int xMin = (int)Point1.X / 16;
             int xMax = (int)Point2.X / 16;
@@ -336,7 +337,7 @@ namespace Plateform_2D_v9
                             break;
 
                         /// NoSlope
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             Position.Y = tile.Position.Y - hitbox.rectangle.Height;
@@ -461,10 +462,10 @@ namespace Plateform_2D_v9
 
 
                         /// Platform
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
                         {
                             ///          ///Provisoir///           ///
-                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && !pressDown)
+                            if (OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y && Velocity.Y >= 0 && !pressDown)
                             {
 
                                 Position.Y = tile.Position.Y - hitbox.rectangle.Height;
@@ -491,7 +492,7 @@ namespace Plateform_2D_v9
                         if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y + 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
                         {
 
-                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && !pressDown && canBreakBlock)
+                            if (OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y && Velocity.Y >= 0 && !pressDown && canBreakBlock)
                             {
                                 if (tile.isBreakable)
                                     tile.Break();
@@ -509,9 +510,9 @@ namespace Plateform_2D_v9
             //isOnSlope = TileV2.SlopeType.None;
 
             /// Static Block
-            Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-            Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-            Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+            Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+            Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+            Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
             int xMin = (int)Point1.X / 16;
             int xMax = (int)Point2.X / 16;
@@ -544,13 +545,13 @@ namespace Plateform_2D_v9
                             break;
 
                         /// NoSlope
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             //Console.WriteLine("Up");
 
 
-                            Position.Y = tile.Position.Y + tile.GetRectangle().Height;
+                            Position.Y = tile.Position.Y + tile.hitbox.rectangle.Height;
 
                             UpCollision = true;
                             Velocity.Y = 0;
@@ -571,10 +572,10 @@ namespace Plateform_2D_v9
                                 //Console.WriteLine("Collision Slope");
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, hitbox.rectangle.Height);
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(hitbox.rectangle.Width - 1, hitbox.rectangle.Height);
 
                                 //Console.WriteLine(Collision.TriangleSolidVsActorResolution(this, tile));
 
@@ -596,10 +597,10 @@ namespace Plateform_2D_v9
                                 else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goLeft)
                                     Acceleration.Y = 0;
 
-                                if (Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height <= 1)
+                                if (Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height <= 1)
                                     Acceleration.Y = 0;
 
-                                //Console.WriteLine(Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height);
+                                //Console.WriteLine(Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height);
 
                                 Position.Y = Collision.TriangleSolidVsActorResolution(this, tile).Y;
                             }
@@ -610,7 +611,7 @@ namespace Plateform_2D_v9
 
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftUp)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, 0);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(hitbox.rectangle.Width - 1, 0);
                                 else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightUp)
                                     PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, 0);
 
@@ -652,9 +653,9 @@ namespace Plateform_2D_v9
 
                 MovingBlock block = Handler.blocks[b];
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)(Point1.X - block.Position.X) / 16;
                 int xMax = (int)(Point2.X - block.Position.X) / 16;
@@ -714,9 +715,9 @@ namespace Plateform_2D_v9
 
                 MovingBlock block = Handler.blocks[b];
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)(Point1.X - block.Position.X) / 16;
                 int xMax = (int)(Point2.X - block.Position.X) / 16;
@@ -748,7 +749,7 @@ namespace Plateform_2D_v9
                             break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
                         {
 
                             Position.X = tile.Position.X - hitbox.rectangle.Width;
@@ -774,9 +775,9 @@ namespace Plateform_2D_v9
                 MovingBlock block = Handler.blocks[b];
                 blockUnder = null;
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)(Point1.X - block.Position.X) / 16;
                 int xMax = (int)(Point2.X - block.Position.X) / 16;
@@ -805,7 +806,7 @@ namespace Plateform_2D_v9
                         TileV2 tile = block.tiles[i, j];
 
                         /// NoSlope
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             Position.Y = tile.Position.Y - hitbox.rectangle.Height;
@@ -834,10 +835,10 @@ namespace Plateform_2D_v9
                                 //Console.WriteLine("Collision Slope");
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, hitbox.rectangle.Height);
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(hitbox.rectangle.Width - 1, hitbox.rectangle.Height);
 
                                 //Console.WriteLine(Collision.TriangleSolidVsActorResolution(this, tile));
 
@@ -859,10 +860,10 @@ namespace Plateform_2D_v9
                                 else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goLeft)
                                     Acceleration.Y = 0;
 
-                                if (Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height <= 1)
+                                if (Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height <= 1)
                                     Acceleration.Y = 0;
 
-                                //Console.WriteLine(Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height);
+                                //Console.WriteLine(Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height);
 
                                 Position.Y = Collision.TriangleSolidVsActorResolution(this, tile).Y;
                             }
@@ -870,10 +871,10 @@ namespace Plateform_2D_v9
                         }*/
 
                         /// Platform
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
                         {
                             ///          ///Provisoir///           ///
-                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && !pressDown)// (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
+                            if (OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y && Velocity.Y >= 0 && !pressDown)// (!KeyInput.getKeyState().IsKeyDown(Main.Down) && !GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad)))
                             {
 
                                 Position.Y = tile.Position.Y - hitbox.rectangle.Height;
@@ -898,7 +899,7 @@ namespace Plateform_2D_v9
                         {
                             if (tile.blockType == TileV2.BlockType.block)
                                 blockUnder = block;
-                            if (tile.blockType == TileV2.BlockType.platform && OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y)
+                            if (tile.blockType == TileV2.BlockType.platform && OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y)
                                 blockUnder = block;
                         }
 
@@ -912,7 +913,7 @@ namespace Plateform_2D_v9
                         if (tile.hitbox.isEnabled && new Rectangle(hitbox.rectangle.X, hitbox.rectangle.Y + 1, hitbox.rectangle.Width, hitbox.rectangle.Height).Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.platform && !tile.isSlope)
                         {
 
-                            if (OldPosition.Y + GetRectangle().Height <= tile.GetRectangle().Y && Velocity.Y >= 0 && !pressDown && canBreakBlock)
+                            if (OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y && Velocity.Y >= 0 && !pressDown && canBreakBlock)
                             {
                                 if (tile.isBreakable)
                                     tile.Break();
@@ -934,9 +935,9 @@ namespace Plateform_2D_v9
 
                 MovingBlock block = Handler.blocks[b];
 
-                Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-                Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-                Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
+                Vector2 Point1 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y);
+                Vector2 Point2 = new Vector2(hitbox.rectangle.X + hitbox.rectangle.Width - 0, hitbox.rectangle.Y);
+                Vector2 Point3 = new Vector2(hitbox.rectangle.X, hitbox.rectangle.Y + hitbox.rectangle.Height - 1);
 
                 int xMin = (int)(Point1.X - block.Position.X) / 16;
                 int xMax = (int)(Point2.X - block.Position.X) / 16;
@@ -965,12 +966,12 @@ namespace Plateform_2D_v9
                         TileV2 tile = block.tiles[i, j];
 
                         /// NoSlope
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.GetRectangle()) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             //Console.WriteLine("Up");
 
-                            Position.Y = tile.Position.Y + tile.GetRectangle().Height;
+                            Position.Y = tile.Position.Y + tile.hitbox.rectangle.Height;
 
                             UpCollision = true;
                             Velocity.Y = 0;
@@ -989,10 +990,10 @@ namespace Plateform_2D_v9
                                 //Console.WriteLine("Collision Slope");
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(0, hitbox.rectangle.Height);
 
                                 if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.LeftDown)
-                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(GetRectangle().Width - 1, GetRectangle().Height);
+                                    PosOfDebug = Collision.TriangleSolidVsActorResolution(this, tile) + new Vector2(hitbox.rectangle.Width - 1, hitbox.rectangle.Height);
 
                                 //Console.WriteLine(Collision.TriangleSolidVsActorResolution(this, tile));
 
@@ -1014,10 +1015,10 @@ namespace Plateform_2D_v9
                                 else if ((Collision.BasicTriangleType)tile.SlopeType == Collision.BasicTriangleType.RightDown && goLeft)
                                     Acceleration.Y = 0;
 
-                                if (Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height <= 1)
+                                if (Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height <= 1)
                                     Acceleration.Y = 0;
 
-                                //Console.WriteLine(Handler.Level[i, j + 1].GetRectangle().Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - GetRectangle().Height);
+                                //Console.WriteLine(Handler.Level[i, j + 1].hitbox.rectangle.Y - Collision.TriangleSolidVsActorResolution(this, tile).Y - hitbox.rectangle.Height);
 
                                 Position.Y = Collision.TriangleSolidVsActorResolution(this, tile).Y;
                             }

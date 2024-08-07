@@ -870,6 +870,7 @@ namespace Plateform_2D_v9
                     ParticleEffectV2.type = 2;
                     ParticleEffectV2.Actived = false;
                     ParticleEffectV2.SetScale(0.5f);
+                    ParticleEffectV2.setWind(-1);
                     ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
                     break;
             }

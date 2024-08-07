@@ -164,6 +164,7 @@ namespace Plateform_2D_v9
 
                 if (Main.LevelPlaying != 5)
                     Wind = Vector2.Zero;
+                    
 
             }
 
