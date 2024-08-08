@@ -20,8 +20,6 @@ namespace Plateform_2D_v9
 
         public int ladderHeight;
 
-        public ObjectBounds Door;
-
         private int time = 0;
 
         private Animation FlagAnimation; /// CheckPoint
@@ -85,9 +83,7 @@ namespace Plateform_2D_v9
                     break;
 
                 case 4:
-                    Door = new ObjectBounds(Position + new Vector2(6, 0), 1, 4, 32);
                     hitbox.isEnabled = true;
-                    //Handler.solids.Add(Door);
                     break;
 
                 case 5:
@@ -126,17 +122,8 @@ namespace Plateform_2D_v9
 
             }
 
-            this.OldPosition.X = Position.X;
-            
-            //Position.X += Velocity.X;
-            //HorizontaleCollision();
-            //HorizontaleCollision();
-
-            this.OldPosition.Y = Position.Y;
-
-            //Position.Y += Velocity.Y;
-            //ApplyPhysic();
-            //VerticaleCollision();
+            OldPosition.X = Position.X;
+            OldPosition.Y = Position.Y;
 
             NumAnimation.Y += numX;
             NumAnimation.X += numY;
@@ -151,9 +138,6 @@ namespace Plateform_2D_v9
                 BasicAnimation.Update(gameTime);
 
             PlayerAndEnemyCollision();
-
-            //if (!isLocked)
-                //Handler.solids.Remove(Door);
 
             if(ID == 3)
             {
@@ -174,7 +158,6 @@ namespace Plateform_2D_v9
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            //spriteBatch.Draw(texture, Position, Color.White);
 
             DEBUG.DebugCollision(hitbox.rectangle, Color.DarkBlue, spriteBatch);
 
@@ -251,9 +234,9 @@ namespace Plateform_2D_v9
             {
                 Actor player = Handler.playersV2[i];
 
-                if (Collision.RectVsRect(GetRectangle(), player.GetRectangle()))
+                if (GetRectangle().Intersects(player.GetRectangle()))
                     open = true;
-                if (Collision.RectVsRect(GetRectangle(), player.GetRectangle()))
+                if (GetRectangle().Intersects(player.GetRectangle()))
                     if (ID == 6 && BasicAnimation.GetFrame() >= 6)
                     {
                         BasicAnimation.Reset();
@@ -268,9 +251,9 @@ namespace Plateform_2D_v9
 
                 if (a.actorType == ActorType.Enemy)
                 {
-                    if (Collision.RectVsRect(GetRectangle(), a.GetRectangle()))
+                    if (GetRectangle().Intersects(a.GetRectangle()))
                         open = true;
-                    if (Collision.RectVsRect(GetRectangle(), a.GetRectangle()))
+                    if (GetRectangle().Intersects(a.GetRectangle()))
                         if (ID == 6 && BasicAnimation.GetFrame() >= 6)
                         {
                             BasicAnimation.Reset();
@@ -302,207 +285,7 @@ namespace Plateform_2D_v9
 
             OldPosition.Y = Position.Y;
 
-            Position.Y += (int)Velocity.Y;
-
         }
-
-        /*public void HorizontaleCollision()
-        {
-            for (int i = 0; i < Handler.solids.Count; i++)
-            {
-
-                Solid tile = Handler.solids[i];
-
-                if (Main.SolidTile[Handler.solids[i].getType()]) //&& !Main.tiles[i].IsSlope())
-                {
-
-                    if (Collision.SolidVsActor(this, tile))
-                    {
-
-                        if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.X) == Collision.Direction.Left)
-                        {
-                            Position.X = Collision.SolidVsActorResolution(Collision.Direction.Left, this, tile).X;
-                            Left = true;
-                            Velocity.X = 0;
-                        }
-
-                        else if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.X) == Collision.Direction.Right)
-                        {
-                            Position.X = Collision.SolidVsActorResolution(Collision.Direction.Right, this, tile).X;
-                            Right = true;
-                            Velocity.X = 0;
-                        }
-                    }
-                }
-            }
-
-
-            Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-            Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width - 0, GetRectangle().Y);
-            Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height - 1);
-
-            int xMin = (int)Point1.X / 16;
-            int xMax = (int)Point2.X / 16;
-
-            int yMin = (int)Point1.Y / 16;
-            int yMax = (int)Point3.Y / 16;
-
-            if (Handler.Level != null)
-            {
-
-                if (xMin < 0)
-                    xMin = 0;
-                if (xMax > Handler.Level.GetLength(0))
-                    xMax = Handler.Level.GetLength(0);
-                if (yMin < 0)
-                    yMin = 0;
-                if (yMax >= Handler.Level.GetLength(1))
-                    yMax = Handler.Level.GetLength(1) - 1;
-
-                for (int j = yMin; j <= yMax; j++)
-                {
-                    for (int i = xMin; i <= xMax; i++)
-                    {
-
-                        Solid tile = Handler.Level[i, j];
-
-                        if (Collision.SolidVsActor(this, tile) && Main.SolidTile[tile.getType()])
-                        {
-
-                            if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.X) == Collision.Direction.Left)
-                            {
-                                Position.X = Collision.SolidVsActorResolution(Collision.Direction.Left, this, tile).X;
-                                Left = true;
-                                //Console.WriteLine("Left");
-                            }
-
-                            if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.X) == Collision.Direction.Right)
-                            {
-                                Position.X = Collision.SolidVsActorResolution(Collision.Direction.Right, this, tile).X;
-                                Right = true;
-                                //Console.WriteLine("Right");
-                            }
-
-                        }
-                    }
-                }
-
-
-            }
-        }*/
-
-        /*public void VerticaleCollision()
-        {
-            for (int i = 0; i < Handler.solids.Count; i++)
-            {
-
-                Solid tile = Handler.solids[i];
-
-                if (Main.SolidTile[Handler.solids[i].getType()]) //&& !Main.tiles[i].IsSlope())
-                {
-
-                    if (Collision.SolidVsActor(this, tile))
-                    {
-
-                        if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Up)
-                        {
-
-                            Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Up, this, tile).Y;
-
-                            Up = true;
-                            Velocity.Y = 0;
-                            Acceleration.Y = 0;
-
-                        }
-
-                        else if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Down)
-                        {
-                            Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Down, this, tile).Y;
-
-                            Down = true;
-                            Acceleration.Y = 0;
-                            Velocity.Y = 0;
-                            Velocity.X = 0;
-                        }
-                    }
-                }
-            }
-
-
-            Vector2 Point1 = new Vector2(GetRectangle().X, GetRectangle().Y);
-            Vector2 Point2 = new Vector2(GetRectangle().X + GetRectangle().Width, GetRectangle().Y);
-            Vector2 Point3 = new Vector2(GetRectangle().X, GetRectangle().Y + GetRectangle().Height);
-
-            int xMin = (int)Point1.X / 16;
-            int xMax = (int)Point2.X / 16;
-
-            int yMin = (int)Point1.Y / 16;
-            int yMax = (int)Point3.Y / 16;
-
-            if (Handler.Level != null)
-            {
-
-                if (xMin < 0)
-                    xMin = 0;
-                if (xMax > Handler.Level.GetLength(0))
-                    xMax = Handler.Level.GetLength(0);
-                if (yMin < 0)
-                    yMin = 0;
-                if (yMax >= Handler.Level.GetLength(1))
-                    yMax = Handler.Level.GetLength(1) - 1;
-
-                for (int j = yMin; j <= yMax; j++)
-                {
-                    for (int i = xMin; i <= xMax; i++)
-                    {
-
-                        Solid tile = Handler.Level[i, j];
-
-                        if (Collision.SolidVsActor(this, tile) && Main.SolidTile[tile.getType()])
-                        {
-
-
-                            if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Up)
-                            {
-
-                                Console.WriteLine("Up");
-
-
-                                Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Up, this, tile).Y;
-
-                                Up = true;
-                                Velocity.Y = 0;
-                                Acceleration.Y = 0;
-
-                                //SetRidingTile(null);
-
-
-
-                            }
-
-                            else if (Collision.SolidVsActorDirection(this, tile, Collision.Direction.Y) == Collision.Direction.Down)
-                            {
-                                Position.Y = Collision.SolidVsActorResolution(Collision.Direction.Down, this, tile).Y;
-
-                                Down = true;
-                                Acceleration.Y = 0;
-                                Velocity.Y = 0;
-                                Velocity.X = 0;
-
-                                //Console.WriteLine("Down");
-                            }
-                        }
-
-
-                    }
-                }
-
-
-            }
-
-
-
-        }*/
 
         public override Rectangle GetAttackRectangle()
         {
@@ -516,28 +299,7 @@ namespace Plateform_2D_v9
 
         public override Rectangle GetRectangle()
         {
-            switch (ID)
-            {
-                case 1:
-                    return new Rectangle((int)Position.X + 3, (int)Position.Y + 1, 10, 14);
-                case 2:
-                    return new Rectangle((int)Position.X + 1, (int)Position.Y, 13, 14);
-                case 3:
-                    return new Rectangle((int)Position.X, (int)Position.Y, 16, 32);
-                case 4:
-                    if(isLocked)
-                        return new Rectangle((int)Position.X + 5, (int)Position.Y, 6, 32);
-                    else
-                        return new Rectangle((int)Position.X - 5 + 5, (int)Position.Y, 24, 32);
-                case 5:
-                    return new Rectangle((int)Position.X + 5, (int)Position.Y, 7, 15);
-                case 6:
-                    return new Rectangle((int)Position.X + 1, (int)Position.Y + 6, 14, 10);
-                case 7:
-                    return new Rectangle((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
-                default:
-                    return Rectangle.Empty;
-            }
+            return hitbox.rectangle;
         }
 
         public override bool HasLowerState()
@@ -546,11 +308,6 @@ namespace Plateform_2D_v9
         }
 
         public override bool IsLower()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsRiding()
         {
             throw new NotImplementedException();
         }
@@ -585,11 +342,6 @@ namespace Plateform_2D_v9
         }
 
         public override void RemovePV(int PV)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SetRidingTile(TileV2 tile)
         {
             throw new NotImplementedException();
         }

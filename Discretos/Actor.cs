@@ -71,8 +71,6 @@ namespace Plateform_2D_v9
 
         public abstract void Draw(SpriteBatch render, GameTime gameTime);
 
-        public abstract bool IsRiding();
-        public abstract void SetRidingTile(TileV2 tile);
         public abstract bool IsSquish();
         public abstract bool IsLower();
         public abstract void RemovePV(int PV);

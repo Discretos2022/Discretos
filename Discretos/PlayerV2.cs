@@ -137,8 +137,6 @@ namespace Plateform_2D_v9
             if(myPlayerID == ID)
             {
 
-            
-
                 //GamePad.SetVibration(PlayerIndex.One, 1f, 1f);
 
                 if (isOnGround)
@@ -163,104 +161,30 @@ namespace Plateform_2D_v9
                 if (KeyInput.getKeyState().IsKeyDown(Keys.T) && !KeyInput.getOldKeyState().IsKeyDown(Keys.T))
                     this.Position = Level.getSpawn(); //new Vector2(200, 200);
 
-                if (myPlayerID == ID)
+                if (KeyInput.getKeyState().IsKeyDown(Main.Left) || KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad))
+                { Walk.Start();}
+                else
                 {
-                    if (KeyInput.getKeyState().IsKeyDown(Main.Left) || KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad))
-                    { Walk.Start();}
-                    else
-                    {
-                        Walk.Reset();
-                        Walk.Stop();
-                    }
+                    Walk.Reset();
+                    Walk.Stop();
                 }
-            
-
-                #region Second PLayer
-
-                if(myPlayerID != ID)
-                {
-                    if (LeftKey || RightKey)
-                        Walk.Start();
-                    else
-                    {
-                        Walk.Reset();
-                        Walk.Stop();
-                    }
-                }
-            
-
-                #endregion
-
 
                 #region Controle
 
                 OldPosition.X = Position.X;
                 OldPosition.Y = Position.Y;
 
-                /*if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID == myPlayerID)
-                { Position.X -= 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
-                
 
-                if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID == myPlayerID)
-                { Position.X += 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
-                */
-
-                #region Second Player
-
-                if (LeftKey && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID != myPlayerID)
-                { Position.X -= 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; }
-
-
-                if (RightKey && ((!isLower && !isJump) || (isLower && isJump) || isJump) && ID != myPlayerID)
-                { Position.X += 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; }
-
-                #endregion
-
-
-                /*Position.X += Wind.X;
-
-
-                if (TileRided != null)
-                    Position.X += TileRided.GetVelocity().X;
-
-                //Console.WriteLine(Main.tiles.Exists(x => x.getType() == 6 && x.getPosInLevel() == new Vector2(0, 1)));
-*/
                 if (isDead)
                     SquishPlayer.Update(gameTime);
 
                 if (isAttack)
                     BasicAttack.Update(gameTime);
 
-
-                //if (!isDead)
-                //{ HorizontaleCollision(); HorizontaleCollision(); HorizontaleCollision(); }   ///HorizontaleCollision(); HorizontaleCollision(); }
-
                 if (IsSquish())
                     KillPlayer();
 
                 OldPosition.Y = Position.Y;
-
-                //Jump();
-
-                //DisplacementOnLadder();
-
-                //if (TileRided != null)
-                //Position.Y += TileRided.GetVelocity().Y;
-
-                //if (!isDead && !OnLadder)
-                    //ApplyPhysic();
-
-                //if(!isOnGround)
-                    //Position.Y += Wind.Y;
-
-                //DetectOnSolid();
-
-                //Lowing();
-                //PlayerIsLowerAndEspaceEqualOne();
-
-                //if (!isDead)
-                //{ VerticaleCollision(); VerticaleCollision(); }
-
 
                 if (IsSquish())
                     KillPlayer();
@@ -272,66 +196,23 @@ namespace Plateform_2D_v9
                 /// test of Util
                 //Console.WriteLine(Util.GetNumUnderPoint(20.123456f, 0));
 
-
                 ActorCollision();
+                
+                if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && !isLower)
+                    goLeft = true;
+                else
+                    goLeft = false;
 
-                if(myPlayerID == ID)
-                {
-                    if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && !isLower)
-                        goLeft = true;
-                    else
-                        goLeft = false;
-
-                    if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && !isLower)
-                        goRight = true;
-                    else
-                        goRight = false;
-                }
-            
-
-                #region Second Player
-
-                if (myPlayerID != ID)
-                {
-                    if (LeftKey && !isLower)
-                        goLeft = true;
-                    else
-                        goLeft = false;
-
-                    if (RightKey && !isLower)
-                        goRight = true;
-                    else
-                        goRight = false;
-                }
-
-            
-
-                #endregion
-
+                if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && !isLower)
+                    goRight = true;
+                else
+                    goRight = false;
 
                 Walk.Update(gameTime);
 
                 if (((KeyInput.getKeyState().IsKeyDown(Main.Attack) && !KeyInput.getOldKeyState().IsKeyDown(Main.Attack))
                     || (GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.AttackPad) && !GamePadInput.GetOldPadState((PlayerIndex)ID - 1).IsButtonDown(Main.AttackPad))) && !isAttack && !isLower  && myPlayerID == ID)
                 { isAttack = true; AttackNum++; }
-
-
-                #region Second Player
-
-                //if (Client.instance != null)
-                //{
-                //    //ClientSend.PlayerState();
-
-                //    //PlayerKeyMultiPlayer();
-                //    //ClientSend.PLayerKey();
-                //    //ClientSend.PlayerPos();
-
-                //}
-
-                //Attack();
-
-                #endregion
-
 
                 if ((int)Velocity.Y > 0 || isJump && isOnSlope == TileV2.SlopeType.None)
                     isOnGround = false;
@@ -342,43 +223,6 @@ namespace Plateform_2D_v9
                         KillPlayer();
 
                 PlayerDead();
-
-
-                /*for(int i = 0; i < collectedObjects.Count; i++)
-                {
-                    Object obj1 = collectedObjects[i];
-                    Object obj2 = collectedObjects[i];
-                    if (i > 0)
-                        obj2 = collectedObjects[i - 1];
-
-                    obj1.Update(gameTime);
-
-                    float diffx = 0;
-                    float diffy = 0;
-
-                    if (i == 0)
-                    {
-                        if (isRight)
-                            diffx = obj1.Position.X - Position.X + 16;
-                        else
-                            diffx = obj1.Position.X - Position.X - 16;
-
-                        diffy = obj1.Position.Y - Position.Y - GetRectangle().Height + 20;
-                    }
-                    else if(i > 0)
-                    {
-                        if (isRight)
-                            diffx = obj1.Position.X - obj2.Position.X + 10;
-                        else
-                            diffx = obj1.Position.X - obj2.Position.X - 10;
-
-                        diffy = obj1.Position.Y - obj2.Position.Y;
-                    }
-
-                    collectedObjects[i].Velocity = new Vector2(-diffx / 5, -diffy / 5);
-
-                }*/
-
 
                 if (Main.Debug)
                     infiniJump = true;
@@ -578,8 +422,6 @@ namespace Plateform_2D_v9
 
             }
 
-
-
         }
 
         public void KillPlayer()
@@ -624,63 +466,6 @@ namespace Plateform_2D_v9
             Main.text = "";
             PV = 3;
             num = 0;
-        }
-
-        public override bool IsRiding()
-        {
-            return false;
-        }
-
-        public void DetectOnSolid()
-        {
-            for (int i = 0; i < Handler.solids.Count; i++)
-            {
-                TileV2 tile = Handler.solids[i];
-
-                if (tile.blockType == TileV2.BlockType.block) //&& !Main.tiles[i].IsSlope())
-                {
-
-                    if (Collision.RectVsRect(new Rectangle(GetRectangle().X, GetRectangle().Y + GetRectangle().Height + 1, GetRectangle().Width, 1), tile.GetRectangle()))
-                    {
-                        SetRidingTile(tile);
-                        goto L_2;
-                    }
-                    else
-                        SetRidingTile(null);
-
-                
-                        
-                }
-            }
-
-        L_2:;
-
-        }
-
-        public override void SetRidingTile(TileV2 tile)
-        {
-            //TileRided = tile;
-        }
-
-        public void PlayerIsLowerAndEspaceEqualOne()
-        {
-            if (wasLower && !isLower)
-            {
-                for (int i = 0; i < Handler.solids.Count; i++)
-                {
-                    TileV2 tile = Handler.solids[i];
-
-                    if (tile.blockType == TileV2.BlockType.block) //&& !Main.tiles[i].IsSlope())
-                    {
-
-                        if (Collision.RectVsRect(new Rectangle(GetRectangle().X, (int)((float)GetRectangle().Y - Velocity.Y  + 16), GetRectangle().Width, GetRectangle().Height - 16), tile.GetRectangle()))
-                        {
-                            isLower = true;
-                            Position.Y += 16;
-                        }
-                    }
-                }
-            }
         }
 
         public void Jump()
@@ -841,8 +626,6 @@ namespace Plateform_2D_v9
 
             OldPos.Y = Position.Y;
 
-            //Position.Y += (int)Velocity.Y;
-
         }
 
         public void ActorCollision()
@@ -856,7 +639,7 @@ namespace Plateform_2D_v9
                 if ((actor.ID == 1 || actor.ID == 2) && actor.actorType == ActorType.Enemy)
                 {
 
-                    if (Collision.RectVsRect(GetRectangle(), actor.GetRectangle()))
+                    if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
                         //Console.WriteLine("Ennemie ! ");
 
@@ -871,7 +654,7 @@ namespace Plateform_2D_v9
                         //Handler.actors.Remove(actor);
                     }
 
-                    if (Collision.RectVsRect(GetRectangle(), actor.GetAttackRectangle()))
+                    if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
 
                         if (time == 0)
@@ -887,7 +670,7 @@ namespace Plateform_2D_v9
 
                 else if(actor.actorType == ActorType.Item)
                 {
-                    if (Collision.RectVsRect(GetRectangle(), actor.GetRectangle()))
+                    if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
                         Main.Money += actor.ID;
                         //AddMoney(actor.ID);
@@ -899,7 +682,7 @@ namespace Plateform_2D_v9
 
                 else if (actor.actorType == ActorType.Object)
                 {
-                    if (Collision.RectVsRect(GetRectangle(), actor.GetRectangle()))
+                    if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
                         switch (actor.ID)
                         {
@@ -976,7 +759,7 @@ namespace Plateform_2D_v9
 
                 Actor ladder = Handler.ladder[i];
 
-                if (Collision.RectVsRect(GetRectangleForLadder(), ladder.GetRectangle()))
+                if (GetRectangleForLadder().Intersects(ladder.GetRectangle()))
                 {
                     if ((KeyInput.getKeyState().IsKeyDown(Keys.Space) || (KeyInput.getKeyState().IsKeyDown(Main.Down) && GetRectangle().Y + GetRectangle().Height != ladder.GetRectangle().Y + ladder.GetRectangle().Height)) && !OnLadder && GetRectangle().Y > ladder.GetRectangle().Y - 16)
                     { OnLadder = true; isOnGround = false; Acceleration.Y = 0; Position.X = ladder.GetRectangle().X - 1; }
@@ -1011,10 +794,7 @@ namespace Plateform_2D_v9
 
         public override Rectangle GetRectangle()
         {
-            if (isLower)
-                return new Rectangle((int)Position.X, (int)Position.Y + 0, 16, 16);
-
-            return new Rectangle((int)Position.X, (int)Position.Y, 16, 32);    //16, 32);
+            return hitbox.rectangle;
         }
 
 
@@ -1041,75 +821,6 @@ namespace Plateform_2D_v9
                 return new Vector2(0, -8) + Position;
 
             return Position; // + new Vector2(Random.Shared.Next(-1, 1), Random.Shared.Next(-1, 1));
-
-        }
-
-
-        /// <summary>
-        /// Used for Multiplayer Network
-        /// </summary>
-        public void AddMoney(int _money)
-        {
-            //if(Client.instance != null)
-                //if (Client.instance.tcp.socket != null)
-                    //ClientSend.CollectedMoney(_money);
-        }
-
-
-        public bool IsAttack()
-        {
-            return isAttack;
-        }
-
-        public bool IsRight()
-        {
-            return isRight; 
-        }
-
-        public bool IsGoLeft()
-        {
-            return goLeft;
-        }
-
-        public bool IsGoRight()
-        {
-            return goRight;
-        }
-
-        public void PlayerKeyMultiPlayer()
-        {
-            if (KeyInput.getKeyState().IsKeyDown(Main.Down) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad))
-                DownKey2 = true;
-            else
-                DownKey2 = false;
-
-            if (KeyInput.getKeyState().IsKeyDown(Main.Up) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.UpPad))
-                UpKey2 = true;
-            else
-                UpKey2 = false;
-
-            if (KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad))
-                LeftKey2 = true;
-            else
-                LeftKey2 = false;
-
-            if (KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad))
-                RightKey2 = true;
-            else
-                RightKey2 = false;
-
-            if (KeyInput.getKeyState().IsKeyDown(Main.Attack) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.AttackPad))
-                AttackKey2 = true;
-            else
-                AttackKey2 = false;
-
-        }
-
-        public void Attack()
-        {
-
-            if (AttackKey && !AttackOldKey && !isAttack && !isLower && myPlayerID != ID)
-            { isAttack = true; AttackNum++; Console.WriteLine("ERROR"); }
 
         }
 
@@ -1227,15 +938,9 @@ namespace Plateform_2D_v9
 
         #region Static Collsition Action
 
-        public override void LeftStaticCollisionAction()
-        {
+        public override void LeftStaticCollisionAction() { }
 
-        }
-
-        public override void RightStaticCollisionAction()
-        {
-
-        }
+        public override void RightStaticCollisionAction() { }
 
         public override void DownStaticCollisionAction()
         {
@@ -1243,10 +948,7 @@ namespace Plateform_2D_v9
             OnLadder = false;
         }
 
-        public override void UpStaticCollisionAction()
-        {
-
-        }
+        public override void UpStaticCollisionAction() { }
 
         #endregion
 
@@ -1254,15 +956,9 @@ namespace Plateform_2D_v9
         #region Dynamic Collision Action
 
 
-        public override void LeftDynamicCollisionAction(MovingBlock block)
-        {
+        public override void LeftDynamicCollisionAction(MovingBlock block) { }
 
-        }
-
-        public override void RightDynamicCollisionAction(MovingBlock block)
-        {
-
-        }
+        public override void RightDynamicCollisionAction(MovingBlock block) { }
 
         public override void DownDynamicCollisionAction(MovingBlock block)
         {
@@ -1270,10 +966,7 @@ namespace Plateform_2D_v9
             OnLadder = false;
         }
 
-        public override void UpDynamicCollisionAction(MovingBlock block)
-        {
-
-        }
+        public override void UpDynamicCollisionAction(MovingBlock block) { }
 
 
         #endregion
@@ -1286,10 +979,6 @@ namespace Plateform_2D_v9
             else
                 hitbox = new Hitbox((int)Position.X, (int)Position.Y, 16, 32);    //16, 32);
         }
-
-
-
-
 
     }
 }

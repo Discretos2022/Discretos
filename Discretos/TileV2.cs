@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Plateform_2D_v9
 {
-    public class TileV2 //: Solid
+    public class TileV2
     {
 
         public Vector2 Position;
