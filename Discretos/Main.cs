@@ -237,9 +237,9 @@ namespace Plateform_2D_v9
             #endregion
 
             
-            Tileset = new Texture2D[10];
+            Tileset = new Texture2D[11 + 1];
             Wallset = new Texture2D[200];
-            Object = new Texture2D[8];
+            Object = new Texture2D[9 + 1];
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3];
             BackgroundTexture = new Texture2D[20];
@@ -256,6 +256,8 @@ namespace Plateform_2D_v9
             SolidTile[7] = true; // cendre
             SolidTile[8] = true; // movingblock
             SolidTileTop[9] = true; // platform brick break
+            SolidTile[10] = true; // ice
+            SolidTile[11] = true; // low-snow
 
 
             LoadImg();
@@ -377,7 +379,9 @@ namespace Plateform_2D_v9
 
         protected override void Update(GameTime gameTime)
         {
-            
+            if (KeyInput.getKeyState().IsKeyDown(Keys.F9) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F9))
+                WorldMap.CreateWorldMapData();
+
             if (gameState == GameState.Menu && KeyInput.getKeyState().IsKeyDown(Keys.F5) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F5))
                 LevelData.CreateLevelData();
 
@@ -640,13 +644,13 @@ namespace Plateform_2D_v9
             GraphicsDevice.Clear(new Color(0,0,0,0f));
 
             
-            /*LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+            LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
             LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
-            LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);*/
+            LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
 
-            LightManager.AmbianteLightR = new Color(0, 0, 0, 0.1f);
+            /*LightManager.AmbianteLightR = new Color(0, 0, 0, 0.1f);
             LightManager.AmbianteLightG = new Color(0, 0, 0, 0.1f);
-            LightManager.AmbianteLightB = new Color(0, 0, 0, 0.4f);
+            LightManager.AmbianteLightB = new Color(0, 0, 0, 0.4f);*/
 
 
             //if (LightManager.lights.Count < 1)

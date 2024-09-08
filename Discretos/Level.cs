@@ -61,6 +61,26 @@ namespace Plateform_2D_v9
                 Main.text = num + "";  // * tiles / 100 + "    /   100";
             }
 
+
+
+
+
+            for (int j = 0; j < Handler.Level.GetLength(1); j++)
+            {
+                for (int i = 0; i < Handler.Level.GetLength(0); i++)
+                {
+
+                    Handler.Level[i, j].InitImg(Handler.Level);
+
+                }
+                Main.text = num + "";  // * tiles / 100 + "    /   100";
+            }
+
+
+
+
+
+
             Console.WriteLine(LevelData.getObjectData(Main.LevelPlaying).GetLength(1));
 
             /// LevelObject
@@ -72,7 +92,7 @@ namespace Plateform_2D_v9
                     int[,] tableau = LevelData.getObjectData(Main.LevelPlaying);
                     int type = tableau[i, j];
                     if (type != 0)
-                        Handler.actors.Add(new Object(pos, type));    //Handler.levelitem.Add(new LevelItem(pos, type));
+                        Handler.actors.Add(new Object(pos, (Object.ObjectID)type));    //Handler.levelitem.Add(new LevelItem(pos, type));
 
                 }
 

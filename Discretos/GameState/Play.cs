@@ -283,9 +283,9 @@ namespace Plateform_2D_v9
                 Main.gameState = GameState.Playing;
             }
 
-            Main.camera.FollowObjectInWorldMap(new Vector2(WorldMap.GetLevelSelectorPos().X, WorldMap.GetLevelSelectorPos().Y));
-
             WorldMap.Update(gameTime);
+
+            Main.camera.FollowObjectInWorldMap(new Vector2(WorldMap.GetLevelSelectorPos().X, WorldMap.GetLevelSelectorPos().Y));
 
             if (NetPlay.MyPlayerID() == 1)
             {

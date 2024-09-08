@@ -272,6 +272,17 @@ namespace Plateform_2D_v9
             MapLogic[37, 58] = new TileMap(TileMapType.Path);
             MapLogic[38, 58] = new TileMap(TileMapType.Level, 7);  // Level Pos
 
+
+            MapLogic[16, 58] = new TileMap(TileMapType.Level, 10);  // Level Pos
+            MapLogic[17, 58] = new TileMap(TileMapType.Path);
+            MapLogic[18, 58] = new TileMap(TileMapType.Path);
+            MapLogic[19, 58] = new TileMap(TileMapType.Path);
+            MapLogic[20, 58] = new TileMap(TileMapType.Path);
+            MapLogic[21, 58] = new TileMap(TileMapType.Path);
+            MapLogic[22, 58] = new TileMap(TileMapType.Path);
+
+
+
             for (int j = 0; j < MapLogic.GetLength(1); j++)
                 for (int i = 0; i < MapLogic.GetLength(1); i++)
                 {
@@ -325,10 +336,15 @@ namespace Plateform_2D_v9
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), color, spriteBatch);
+            if (tileMapType == WorldMap.TileMapType.Path)
+                DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), Color.Orange, spriteBatch);
+            else if (tileMapType == WorldMap.TileMapType.Crossroads)
+                DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), Color.DarkMagenta, spriteBatch);
+            else if (tileMapType == WorldMap.TileMapType.Level)
+                DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), Color.Red, spriteBatch);
 
-            if (tileMapType == WorldMap.TileMapType.Ground)
-                DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), Color.CornflowerBlue, spriteBatch);
+            //if (tileMapType == WorldMap.TileMapType.Ground)
+            //DEBUG.DebugCollision(new Rectangle((int)Position.X, (int)Position.Y, 16, 16), Color.CornflowerBlue, spriteBatch);
 
             color = new Color(Color.White, 0);
 

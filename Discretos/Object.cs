@@ -29,6 +29,8 @@ namespace Plateform_2D_v9
         private float numX = 0.1f;
         private float numY = 0.1f;
 
+        private ObjectID objectID;
+
         /// <summary>
         /// 
         /// </summary>
@@ -37,11 +39,12 @@ namespace Plateform_2D_v9
         /// <param name="isLocked">Si ID = 4 (Porte)</param>
         /// <param name="numOfTriggerObject"></param>
         /// <param name="heightLadder">Si ID = 7 (Echelle)</param>
-        public Object(Vector2 Position, int ID, bool isLocked = false, int numOfTriggerObject = -1, int ladderHeight = 0)
+        public Object(Vector2 Position, ObjectID ID, bool isLocked = false, int numOfTriggerObject = -1, int ladderHeight = 0)
             : base(Position)
         {
             actorType = ActorType.Object;
-            this.ID = ID;
+            objectID = ID;
+            this.ID = (int)ID;
             this.isLocked = isLocked;
             this.NumOfTriggerObject = numOfTriggerObject;
             this.Velocity = Vector2.Zero;
@@ -49,7 +52,7 @@ namespace Plateform_2D_v9
 
             NumAnimation.X = Util.NextFloat(-0.8f, 0.8f);
 
-            if(ID == 5)
+            if(ID == ObjectID.gold_key)
                 NumAnimation.Y = Util.NextFloat(-3, 3);
 
             Init();
@@ -59,46 +62,51 @@ namespace Plateform_2D_v9
 
         public void Init()
         {
-            switch (ID)
+            switch (objectID)
             {
-                case 1:
+                case ObjectID.coin:
                     BasicAnimation = new Animation(Main.Object[ID], 4, 1, 0.1f);
                     BasicAnimation.Start();
                     light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 20f, Color.White);
                     LightManager.lights.Add(light);
                     break;
 
-                case 2:
+                case ObjectID.core:
                     BasicAnimation = new Animation(Main.Object[ID], 4, 1, 0.1f);
                     BasicAnimation.Start();
                     light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 20f, new Color(255, 100, 100));
                     LightManager.lights.Add(light);
                     break;
 
-                case 3:
+                case ObjectID.checkPoint:
                     BasicAnimation = new Animation(Main.Object[ID], 4, 3, 0.1f, 1);
                     BasicAnimation.Start();
                     FlagAnimation = new Animation(Main.Object[ID], 4, 3, 0.1f, 2);
                     FlagAnimation.Start();
                     break;
 
-                case 4:
+                case ObjectID.wood_door:
                     hitbox.isEnabled = true;
                     break;
 
-                case 5:
+                case ObjectID.gold_key:
                     BasicAnimation = new Animation(Main.Object[ID], 18, 1, 0.05f);
                     BasicAnimation.Start();
                     break;
 
-                case 6:
+                case ObjectID.spring:
                     BasicAnimation = new Animation(Main.Object[ID], 8, 1, 0.05f);
                     BasicAnimation.Start();
 
                     break;
 
-                case 7:
+                case ObjectID.wood_ladder:
                     Handler.ladder.Add(this);
+                    break;
+
+                case ObjectID.torche:
+                    light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 50f, Color.White); // 50f
+                    LightManager.lights.Add(light);
                     break;
 
             }
@@ -134,7 +142,7 @@ namespace Plateform_2D_v9
             if (NumAnimation.X > 0.8f || NumAnimation.X < -0.8f)
                 numY *= -1;
 
-            if (ID != 3 && ID != 4 && ID != 7)
+            if (ID != 3 && ID != 4 && ID != 7 && ID != 9)
                 BasicAnimation.Update(gameTime);
 
             PlayerAndEnemyCollision();
@@ -222,6 +230,10 @@ namespace Plateform_2D_v9
                     else
                         spriteBatch.Draw(Main.Object[ID], Position + new Vector2(2, 16 * (i - 1) - 2), new Rectangle(18, 0, 18, 20), Color.White);
                 }
+            }
+            else if (ID == 9)
+            {
+                spriteBatch.Draw(Main.Object[ID], Position, Color.White);
             }
 
         }
@@ -421,12 +433,31 @@ namespace Plateform_2D_v9
                 case 7:
                     hitbox.rectangle = new Rectangle((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
                     break;
+                case 9:
+                    hitbox.rectangle = new Rectangle((int)Position.X, (int)Position.Y, 6, 6);
+                    break;
                 default:
                     hitbox.rectangle = new Rectangle(0, 0, 0, 0);
                     break;
             }
 
         }
+
+
+        public enum ObjectID
+        {
+            coin = 1,
+            core = 2,
+            checkPoint = 3,
+            wood_door = 4,
+            gold_key = 5,
+            spring = 6,
+            wood_ladder = 7,
+            wood_ladder_snow = 8,
+            torch = 9,
+
+        };
+
 
     }
 }
