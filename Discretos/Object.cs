@@ -104,9 +104,11 @@ namespace Plateform_2D_v9
                     Handler.ladder.Add(this);
                     break;
 
-                case ObjectID.torche:
-                    light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2), 1f, 50f, Color.White); // 50f
+                case ObjectID.torch:
+                    light = new Light(Position + new Vector2(GetRectangle().Width / 2, GetRectangle().Height / 2 -2), 1f, 60f, Color.White); // 50f
                     LightManager.lights.Add(light);
+                    BasicAnimation = new Animation(Main.Object[ID], 4, 1, 0.1f);
+                    BasicAnimation.Start();
                     break;
 
             }
@@ -142,7 +144,7 @@ namespace Plateform_2D_v9
             if (NumAnimation.X > 0.8f || NumAnimation.X < -0.8f)
                 numY *= -1;
 
-            if (ID != 3 && ID != 4 && ID != 7 && ID != 9)
+            if (ID != 3 && ID != 4 && ID != 7)
                 BasicAnimation.Update(gameTime);
 
             PlayerAndEnemyCollision();
@@ -233,7 +235,8 @@ namespace Plateform_2D_v9
             }
             else if (ID == 9)
             {
-                spriteBatch.Draw(Main.Object[ID], Position, Color.White);
+                //spriteBatch.Draw(Main.Object[ID], Position, Color.White);
+                BasicAnimation.Draw(spriteBatch, Position);
             }
 
         }
@@ -407,34 +410,37 @@ namespace Plateform_2D_v9
         public override void UpdateHitbox()
         {
 
-            switch (ID)
+            switch (objectID)
             {
-                case 1:
+                case ObjectID.coin:
                     hitbox.rectangle = new Rectangle((int)Position.X + 3, (int)Position.Y + 1, 10, 14);
                     break;
-                case 2:
+                case ObjectID.core:
                     hitbox.rectangle = new Rectangle((int)Position.X + 1, (int)Position.Y, 13, 14);
                     break;
-                case 3:
+                case ObjectID.checkPoint:
                     hitbox.rectangle = new Rectangle((int)Position.X, (int)Position.Y, 16, 32);
                     break;
-                case 4:
+                case ObjectID.wood_door:
                     //if (isLocked)
                         hitbox.rectangle = new Rectangle((int)Position.X + 5, (int)Position.Y, 6, 32);
                     //else
                         //hitbox.rectangle = new Rectangle((int)Position.X - 5 + 5, (int)Position.Y, 24, 32);
                     break;
-                case 5:
+                case ObjectID.gold_key:
                     hitbox.rectangle = new Rectangle((int)Position.X + 5, (int)Position.Y, 7, 15);
                     break;
-                case 6:
+                case ObjectID.spring:
                     hitbox.rectangle = new Rectangle((int)Position.X + 1, (int)Position.Y + 6, 14, 10);
                     break;
-                case 7:
+                case ObjectID.wood_ladder:
                     hitbox.rectangle = new Rectangle((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
                     break;
-                case 9:
-                    hitbox.rectangle = new Rectangle((int)Position.X, (int)Position.Y, 6, 6);
+                case ObjectID.wood_ladder_snow:
+                    hitbox.rectangle = new Rectangle((int)Position.X + 4, (int)Position.Y, 14, 16 * ladderHeight);
+                    break;
+                case ObjectID.torch:
+                    hitbox.rectangle = new Rectangle((int)Position.X + 3, (int)Position.Y, 10, 16);
                     break;
                 default:
                     hitbox.rectangle = new Rectangle(0, 0, 0, 0);

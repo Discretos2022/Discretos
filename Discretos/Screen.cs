@@ -139,7 +139,7 @@ namespace Plateform_2D_v9
         {
 
             /// Image processing
-            if (Main.LevelPlaying == 3)
+            if (LightManager.isLightEnable)
             {
                 render.GetLightAndHullProcess(BackTarget, LightMaskBackground, LightMaskBackground, LightMaskBackground, ref BackTargetLight, gameTime, spriteBatch); // LightMaskLevel, HullMaskLevel, ColorMaskLevel
                 render.GetLightAndHullProcess(LevelTarget, LightMaskLevel, HullMaskLevel, ColorMaskLevel, ref LevelTargetLight, gameTime, spriteBatch);
@@ -157,7 +157,7 @@ namespace Plateform_2D_v9
 
             render.Begin5(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
 
-            if (Main.LevelPlaying == 3)
+            if (LightManager.isLightEnable)
             {
                 spriteBatch.Draw(BackTargetLight, destinationRectangle, Color.White);
                 spriteBatch.Draw(LevelTargetLight, destinationRectangle, Color.White);

@@ -54,6 +54,8 @@ namespace Plateform_2D_v9
 
         public static Texture2D TileMap;
         public static Texture2D WorldMapImg;
+        public static Texture2D Cascade;
+        public static Texture2D Propeller;
 
         public static Texture2D Light_1_1000x1000;
 
@@ -288,7 +290,6 @@ namespace Plateform_2D_v9
             Handler.InitPlayersList();
 
             WorldMap.CreateWorldMapData();
-            WorldMap.LoadWorldMap();
             LevelData.CreateLevelData();
 
 
@@ -357,6 +358,8 @@ namespace Plateform_2D_v9
 
             TileMap = Content.Load<Texture2D>("Images\\Map\\TileMap");
             WorldMapImg = Content.Load<Texture2D>("Images\\Map\\WorldMap");
+            Cascade = Content.Load<Texture2D>("Images\\Map\\Cascade");
+            Propeller = Content.Load<Texture2D>("Images\\Map\\Propeller");
 
             SuperFont = Content.Load<Texture2D>("Images\\SuperFont");
 
@@ -643,10 +646,10 @@ namespace Plateform_2D_v9
             render.BeginAdditive(false, gameTime, spriteBatch, camera);
             GraphicsDevice.Clear(new Color(0,0,0,0f));
 
-            
-            LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
-            LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
-            LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
+
+            //LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+            //LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
+            //LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
 
             /*LightManager.AmbianteLightR = new Color(0, 0, 0, 0.1f);
             LightManager.AmbianteLightG = new Color(0, 0, 0, 0.1f);
@@ -661,7 +664,8 @@ namespace Plateform_2D_v9
 
             //LightManager.lights[0].Radius = 50f;
 
-            LightManager.Draw(spriteBatch);
+            if(LightManager.isLightEnable)
+                LightManager.Draw(spriteBatch, new Rectangle((int)camera.Position.X - 1920 / 4 / 2, (int)camera.Position.Y - 1080 / 4 / 2, 1920 / 4, 1080 / 4));
 
             render.End(spriteBatch);
             screen.UnSet();
@@ -822,6 +826,8 @@ namespace Plateform_2D_v9
             Handler.Walls = null;
             Handler.Walls = new Wall[LevelData.GetWallType(LevelPlaying).GetLength(1), LevelData.GetWallType(LevelPlaying).GetLength(0)];
 
+            StartLevel(LevelPlaying);
+
             ThreadPool.QueueUserWorkItem(new WaitCallback(Level.LoadLevel), 1);
 
         }
@@ -863,6 +869,24 @@ namespace Plateform_2D_v9
 
             switch (level)
             {
+                case 3 :
+                    LightManager.isLightEnable = true;
+
+                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
+                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
+
+                    break;
+
+                case 10:
+                    LightManager.isLightEnable = true;
+
+                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
+                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
+                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
+
+                    break;
+
                 case 5:
                     ParticleEffectV2.SetScale(1f);
                     ParticleEffectV2.type = 1;

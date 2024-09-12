@@ -31,6 +31,8 @@ namespace Plateform_2D_v9
         public static int indexCount = 0;
         public static int triangle_count = 0;
 
+        public static bool isLightEnable = false;
+
 
         public static void Init()
         {
@@ -56,12 +58,12 @@ namespace Plateform_2D_v9
 
         }
 
-        public static void Draw(SpriteBatch spriteBatch)
+        public static void Draw(SpriteBatch spriteBatch, Rectangle ambianteRect)
         {
 
-            spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 2000, 500), AmbianteLightR);
-            spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 2000, 500), AmbianteLightG);
-            spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 2000, 500), AmbianteLightB);
+            spriteBatch.Draw(Main.Bounds, ambianteRect, AmbianteLightR);
+            spriteBatch.Draw(Main.Bounds, ambianteRect, AmbianteLightG);
+            spriteBatch.Draw(Main.Bounds, ambianteRect, AmbianteLightB);
 
             for (int i = 0; i < lights.Count; i++)
             {

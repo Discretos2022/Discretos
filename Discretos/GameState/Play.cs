@@ -275,12 +275,12 @@ namespace Plateform_2D_v9
 
             if (KeyInput.getKeyState().IsKeyDown(Keys.M) && !KeyInput.getOldKeyState().IsKeyDown(Keys.M))
             {
-                Main.MapLoaded = false;
+                //Main.MapLoaded = false;
                 Main.LevelSelector();
-                Main.inWorldMap = false;
-                Main.inLevel = true;
-                Camera.Zoom = 4f;
-                Main.gameState = GameState.Playing;
+                //Main.inWorldMap = false;
+                //Main.inLevel = true;
+                //Camera.Zoom = 4f;
+                //Main.gameState = GameState.Playing;
             }
 
             WorldMap.Update(gameTime);
@@ -355,6 +355,7 @@ namespace Plateform_2D_v9
                 Camera.Zoom = 4f;
                 Main.gameState = GameState.Playing;
                 Main.isPaused = false;
+                LightManager.isLightEnable = false;
             }
 
 

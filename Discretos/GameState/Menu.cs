@@ -145,6 +145,8 @@ namespace Plateform_2D_v9
 
             //NetPlay.IsMultiplaying = false;
 
+            LightManager.isLightEnable = false;
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
