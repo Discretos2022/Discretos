@@ -112,6 +112,9 @@ namespace Plateform_2D_v9
 
                     glyphRect.Add(new Rectangle(600, 0, 9, 16));   //SPACE
                     glyphRect.Add(new Rectangle(533, 0, 1, 16));   //!
+                    glyphRect.Add(new Rectangle(567, 0, 7, 16));   //*
+                    glyphRect.Add(new Rectangle(575, 0, 7, 16));   //+
+                    glyphRect.Add(new Rectangle(585, 0, 7, 16));   //-
                     glyphRect.Add(new Rectangle(583, 0, 1, 16));   //.
 
                     glyphRect.Add(new Rectangle(456, 0, 6, 16));   //0
@@ -188,6 +191,9 @@ namespace Plateform_2D_v9
 
                     charList.Add(' ');
                     charList.Add('!');
+                    charList.Add('*');
+                    charList.Add('+');
+                    charList.Add('-');
                     charList.Add('.');
 
                     charList.Add('0');
@@ -269,6 +275,9 @@ namespace Plateform_2D_v9
 
                     Vector3List.Add(new Vector3(0, -4, 0));//SPACE
                     Vector3List.Add(new Vector3(0, -8, 0));//!
+                    Vector3List.Add(new Vector3(0, -2, 0));//*
+                    Vector3List.Add(new Vector3(0, -2, 0));//+
+                    Vector3List.Add(new Vector3(0, -2, 0));//-
                     Vector3List.Add(new Vector3(0, -8, 0));//.
 
                     Vector3List.Add(new Vector3(0, -3, 0));//0

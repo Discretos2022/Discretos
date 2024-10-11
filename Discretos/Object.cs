@@ -163,6 +163,13 @@ namespace Plateform_2D_v9
             if (ID == 5)
                 Position += Velocity;
 
+            if(objectID == ObjectID.torch)
+            {
+                light.Radius = 60 + Random.Shared.Next(-3, 3);
+                //light.Color = Color.Orange;
+            }
+                
+
 
         }
 

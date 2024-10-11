@@ -17,7 +17,7 @@ namespace Plateform_2D_v9
         public Vector2 BaseVelocity;
         public Vector2 Acceleration;
         public Vector2 Wind;
-        public float Gravity;
+        public float Gravity = 0.35f;
         public int PV;
         public Vector2 KnockBack;
 
@@ -165,7 +165,7 @@ namespace Plateform_2D_v9
                         TileV2 tile = Handler.Level[i, j];
 
                         int index = i + 1;  ///
-                        if (index > Handler.Level.GetLength(0))      /// For Slope BUG           (Pas encore fait dans TileV2 et EnemyV2)
+                        if (index >= Handler.Level.GetLength(0))      /// For Slope BUG           (Pas encore fait dans TileV2 et EnemyV2)
                             index = Handler.Level.GetLength(0) - 1;      ///
 
                         if (tile == null)                        /// provisoir

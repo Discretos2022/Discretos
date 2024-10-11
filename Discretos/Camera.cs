@@ -149,7 +149,7 @@ namespace Plateform_2D_v9
         public void UpdateBackground()
         {
             if(Main.gameState == GameState.Playing)
-                Background.SetBackgroundPos(position.X, position.Y + 150);
+                Background.SetBackgroundPos(position.X, position.Y + Background.shift); // + 150
         }
 
 

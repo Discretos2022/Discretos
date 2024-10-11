@@ -119,7 +119,7 @@ namespace NetworkEngine_5._0.Client
                     for (int o = 0; o < Handler.playersV2[id].GetCollectedObjectList().Count; o++)
                     {
                         if (Handler.actors[index].NumOfTriggerObject == Handler.playersV2[id].GetCollectedObjectList()[o].NumOfTriggerObject && Handler.actors[index].isLocked)
-                        { Handler.actors[index].isLocked = false; Handler.playersV2[id].GetCollectedObjectList().Remove(Handler.playersV2[id].GetCollectedObjectList()[o]); }
+                        { Handler.actors[index].isLocked = false; Handler.actors[index].hitbox.isEnabled = false; Handler.playersV2[id].GetCollectedObjectList().Remove(Handler.playersV2[id].GetCollectedObjectList()[o]); }
                     }
 
                     break;

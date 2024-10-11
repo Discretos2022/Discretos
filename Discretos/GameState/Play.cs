@@ -220,7 +220,7 @@ namespace Plateform_2D_v9
                     Background.SetBackground(3);
                 else if (Main.LevelPlaying == 7)
                     Background.SetBackground(4);
-                else if (Main.LevelPlaying == 3)
+                else if (Main.LevelPlaying == 3 || Main.LevelPlaying == 11)
                     Background.SetBackground(6, 7, 8, 9, 10, 11);
                 else if (Main.LevelPlaying == 8)
                     Background.SetBackground(3);
@@ -229,7 +229,7 @@ namespace Plateform_2D_v9
                 else if (Main.LevelPlaying == 10)
                     Background.SetBackground(6, 7, 8, 9, 10, 11);
                 else if(Main.LevelPlaying == 6)
-                    Background.SetBackground(13, 14);
+                    Background.SetBackground(15, 15, 15); //Background.SetBackground(13, 14);
                 else
                     Background.SetBackground(2);
 
@@ -395,6 +395,11 @@ namespace Plateform_2D_v9
                 InitButton();
 
             }
+
+            if (Main.inWorldMap)
+                if (WorldMap.GetNode().level != 0)
+                    Writer.DrawText(Main.UltimateFont, "level " + WorldMap.GetNode().level + "-" + 1, new Vector2(50, 100), Color.Black, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f, 4f, spriteBatch);
+
 
 
         }

@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:21
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:25
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -51,6 +51,7 @@ Level
 	* New Level 7 (build 1)
 	* New Level 8 (build 1)
 	* New Level 9 (build 5)
+	* New Level 10 (build 8)
 	* New Particle Effect - SnowFall (build 1)
 	* New Effect - SnowStorm (build 3)
 	* New Effect - Rain (build 8)
@@ -75,8 +76,13 @@ Level
 	* New Object - Spring (build 6)
 	* New Object - CheckPoint (build "6", 7)
 	* New Object - Wood Ladder (build 7)
+	* New Object - Torch (build 8)
 	* New Wall - Brick Wall (build 6)
 	* Object Sprite improved - CheckPoint (build 7)
+
+WorldMap
+
+	* World 1 Updated (build 8)
 
 Collision
 
@@ -106,6 +112,7 @@ System
 	* Shader System Updated (build 8)
 	* NetworkEngine 3.0 to NetworkEngine 5.0 (build 8)
 	* New Dynamic Block System (build 8)
+	* New WorldMap System (build 8)
 
 
 Version 0.0.0.8 Changes -----------------------------------------------------------------------------------------

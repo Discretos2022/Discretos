@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Plateform_2D_v9.Enemy;
 using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
@@ -243,7 +244,7 @@ namespace Plateform_2D_v9
             Wallset = new Texture2D[200];
             Object = new Texture2D[9 + 1];
             SpriteSheetItem = new Texture2D[7];
-            Enemy = new Texture2D[3];
+            Enemy = new Texture2D[3 + 1];
             BackgroundTexture = new Texture2D[20];
             Screens = new Texture2D[2 + 1];
 
@@ -418,10 +419,12 @@ namespace Plateform_2D_v9
                 //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-1, 0))));
                 //Handler.actors.Add(new ItemV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-1, 0))));
 
-                Handler.actors.Add(new EnemyV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), 1));
+                //Handler.actors.Add(new EnemyV2(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y), 1));
+
+                Handler.actors.Add(new BlackSwordMan(new Vector2(MouseInput.GetLevelPos(graphics.IsFullScreen, camera).X, MouseInput.GetLevelPos(graphics.IsFullScreen, camera).Y)));
 
             }
-            
+
             if (((KeyInput.getKeyState().IsKeyDown(Keys.F12) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F12)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.BigButton) && !GamePadInput.GetOldPadState(PlayerIndex.One).IsButtonDown(Buttons.BigButton))) && gameState != GameState.Menu)
             {
                 Background.SetBaseBackgroundPos(0, 0);
@@ -817,9 +820,6 @@ namespace Plateform_2D_v9
             Handler.Initialize();
 
 
-
-            //Handler.players.Add(playerV2);
-
             Handler.Level = null;
             Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
 
@@ -827,8 +827,6 @@ namespace Plateform_2D_v9
             Handler.Walls = new Wall[LevelData.GetWallType(LevelPlaying).GetLength(1), LevelData.GetWallType(LevelPlaying).GetLength(0)];
 
             StartLevel(LevelPlaying);
-
-            ThreadPool.QueueUserWorkItem(new WaitCallback(Level.LoadLevel), 1);
 
         }
 
@@ -864,6 +862,7 @@ namespace Plateform_2D_v9
             inWorldMap = false;
             inLevel = true;
             Camera.Zoom = 4f;
+            Background.shift = 150;
 
             ParticleEffectV2.particles.Clear();
 
@@ -875,15 +874,6 @@ namespace Plateform_2D_v9
                     LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
                     LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
                     LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
-
-                    break;
-
-                case 10:
-                    LightManager.isLightEnable = true;
-
-                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
-                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
-                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
 
                     break;
 
@@ -901,6 +891,22 @@ namespace Plateform_2D_v9
                     ParticleEffectV2.setWind(-1);
                     ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
                     break;
+
+                case 10:
+                    LightManager.isLightEnable = true;
+
+                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
+                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
+                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
+
+                    break;
+
+                case 11:
+
+                    Background.shift = 80;
+
+                    break;
+
             }
 
         }

@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/// Solved : Player Collision Between 2 blocks with left and right pressed -> kill player
+
 namespace Plateform_2D_v9
 {
     /// <summary>
@@ -400,12 +402,12 @@ namespace Plateform_2D_v9
                 else if (!isRight && !goRight && !goLeft && !isJump && !isLower)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
 
-                if (isRight && goRight && !isJump && !isLower)
+                if (isRight && goRight && !isJump && !isLower) //     && isOnGround)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10));
                 else if (!isRight && goLeft && !isJump && !isLower)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10), SpriteEffects.FlipHorizontally);
 
-                if (isRight && isJump && !isLower)
+                if (isRight && isJump && !isLower)       //&& !isOnGround)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(60, 0, 30, 50), Color.White);
                 else if (!isRight && isJump && !isLower)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(60, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
@@ -636,7 +638,7 @@ namespace Plateform_2D_v9
 
                 Actor actor = Handler.actors[i];
 
-                if ((actor.ID == 1 || actor.ID == 2) && actor.actorType == ActorType.Enemy)
+                if (actor.actorType == ActorType.Enemy)
                 {
 
                     if (GetRectangle().Intersects(actor.GetRectangle()))
@@ -654,7 +656,7 @@ namespace Plateform_2D_v9
                         //Handler.actors.Remove(actor);
                     }
 
-                    if (GetRectangle().Intersects(actor.GetRectangle()))
+                    if (GetRectangle().Intersects(actor.GetAttackRectangle()))
                     {
 
                         if (time == 0)
@@ -883,7 +885,8 @@ namespace Plateform_2D_v9
         {
             Velocity.X = 0;
             if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && ((!isLower && !isJump) || (isLower && !isOnGround) || isJump) && ID == myPlayerID)
-            { Velocity.X = -2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
+                if (!KeyInput.getKeyState().IsKeyDown(Main.Right)) /// Solve collision between 2 blocks
+                { Velocity.X = -2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
 
             Position.X += Velocity.X;
 
@@ -896,7 +899,8 @@ namespace Plateform_2D_v9
         {
             Velocity.X = 0;
             if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && ((!isLower && !isJump) || (isLower && !isOnGround) || isJump) && ID == myPlayerID)
-            { Velocity.X = 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
+                if (!KeyInput.getKeyState().IsKeyDown(Main.Left)) /// Solve collision between 2 blocks
+                { Velocity.X = 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
 
             /// /!\ PHYSIQUE !!!!!
             //if (isOnSlope == TileV2.SlopeType.LeftDown)

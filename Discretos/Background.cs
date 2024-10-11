@@ -35,6 +35,8 @@ namespace Plateform_2D_v9
         private static Vector2 BackPosition5_2;
         private static Vector2 BackPosition6_2;
 
+        public static int shift = 150;
+
 
         public static void Update()
         {
@@ -190,7 +192,7 @@ namespace Plateform_2D_v9
             if (BackgroundID_6 != 0)
                 spriteBatch.Draw(Main.BackgroundTexture[BackgroundID_6], new Vector2(-BackPosition6_2.X + BasePosition.X, -BackPosition6_2.Y + BasePosition.Y * 6 /*(float)Math.Cos(math) * 200*/), null, Color.White, 0f, Vector2.Zero, 4f * Main.ScreenRatioComparedWith1080p, SpriteEffects.None, 0f);
 
-            Paralaxe = 2;
+            Paralaxe = 2; // 2
 
             
 

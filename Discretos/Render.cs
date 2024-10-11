@@ -234,15 +234,15 @@ namespace Plateform_2D_v9
         }
 
 
-        public void GetLightAndHullProcess(Texture2D texture, Texture2D lightMask, Texture2D hullMash, Texture2D colorMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        public void GetLightAndHullProcess(Texture2D texture, Texture2D lightMask, Texture2D hullMask, Texture2D colorMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
         {
 
             game.GraphicsDevice.SetRenderTarget(textureOUT);
             Begin(!Main.PixelPerfect, gameTime, spriteBatch, null, false);
             game.GraphicsDevice.Clear(Color.Transparent);
 
-            Main.LightEffect.Parameters["lightMask"].SetValue(lightMask);
-            Main.LightEffect.Parameters["hullMask"].SetValue(hullMash);
+            Main.LightEffect.Parameters["lightMask"].SetValue(lightMask);   // lightMask
+            Main.LightEffect.Parameters["hullMask"].SetValue(hullMask);     // hullMask
             Main.LightEffect.Parameters["DEBUG"].SetValue(Main.Debug);
             //Main.LightEffect.Parameters["colorMask"].SetValue(colorMask);
             Main.LightEffect.CurrentTechnique.Passes[6].Apply();

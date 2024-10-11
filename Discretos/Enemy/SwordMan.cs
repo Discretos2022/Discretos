@@ -6,63 +6,67 @@ using Plateform_2D_v9.Core;
 using Plateform_2D_v9.NetCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Plateform_2D_v9
+namespace Plateform_2D_v9.Enemy
 {
-    class EnemyV2 : Actor
+    public class SwordMan : EnemyV3
     {
 
-        private new readonly float Gravity = 0.35f;   //0.3f
-
-        private readonly int invincibleTime = 7;
+        private Animation Walk;
         private int time;
 
-        private Animation Walk;
-
-        private bool isLeft;
-
-
-        public EnemyV2(Vector2 Position, int ID)
-            : base(new Vector2(Position.X, Position.Y))
+        public SwordMan(Vector2 Position) : base(Position)
         {
-            this.actorType = ActorType.Enemy;
-            this.ID = ID;
-            this.PV = 3;
 
-            InitEnemy();
+            ID = EnemyType.swordman;
+
+            PV = 3;
+
+            Walk = new Animation(Main.Enemy[(int)ID], 4, 1, 0.10f);
+            Velocity = new Vector2(0.8f, 0);
+            BaseVelocity = new Vector2(0.8f, 0);
+            KnockBack = new Vector2(1, 2); // 2, 0
+            Walk.Start();
 
         }
 
         public override void Update(GameTime gameTime)
         {
 
-            if(isOnGround)
-                this.Wind = Play.Wind / 6;
-            else
-                this.Wind = Play.Wind;
-
             Walk.Update(gameTime);
 
+            PlayerV2 p = Handler.playersV2[1];
 
-            OldPosition.X = Position.X;
-            OldPosition.Y = Position.Y;
-
-
-            if(ID == 2)
+            for (int i = 2; i <= 4; i++)
             {
-                if (Handler.playersV2[1].Position.X < Position.X && Velocity.Y == 0)
+
+                if (Handler.playersV2.ContainsKey(i))
+                {
+                    if (Vector2.Distance(p.Position, Position) > Vector2.Distance(Handler.playersV2[i].Position, Position))
+                        p = Handler.playersV2[i];
+                }
+                
+            }
+
+            if (Math.Abs(p.Position.X - Position.X) > 20)
+            {
+                if (p.Position.X < Position.X && Velocity.Y == 0)
                 {
                     Velocity.X = -Math.Abs(Velocity.X);
                     isLeft = true;
                 }
 
-                if (Handler.playersV2[1].Position.X > Position.X && Velocity.Y == 0)
+                else if (p.Position.X > Position.X && Velocity.Y == 0)
                 {
                     Velocity.X = -(-Math.Abs(Velocity.X));
                     isLeft = false;
                 }
             }
+
+            
 
             if (time > 0)
             {
@@ -92,10 +96,6 @@ namespace Plateform_2D_v9
                 Vector2 v3 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
                 Vector2 v4 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
 
-                /*Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));
-                Handler.actors.Add(new ItemV2(new Vector2(Position.X, Position.Y), (int)Util.random.Next(1, 7), new Vector2((float)Util.random.NextDouble(), (float)Util.random.Next(-2, 0))));*/
 
                 Handler.actors.Add(new ItemV2(pos, id1, v1));
                 Handler.actors.Add(new ItemV2(pos, id2, v2));
@@ -105,7 +105,7 @@ namespace Plateform_2D_v9
                 if (NetPlay.IsMultiplaying)
                 {
 
-                    if(NetPlay.MyPlayerID() == 1)
+                    if (NetPlay.MyPlayerID() == 1)
                     {
                         ServerSender.SendCreatedItem(pos.X, pos.Y, id1, v1.X, v1.Y);
                         ServerSender.SendCreatedItem(pos.X, pos.Y, id2, v2.X, v2.Y);
@@ -127,10 +127,12 @@ namespace Plateform_2D_v9
             }
 
 
+
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+
             DEBUG.DebugCollision(GetRectangle(), Color.Blue, spriteBatch);
 
             DEBUG.DebugCollision(GetAttackRectangle(), Color.Red, spriteBatch);
@@ -153,89 +155,6 @@ namespace Plateform_2D_v9
 
         }
 
-        public void InitEnemy()
-        {
-            switch (ID)
-            {
-                case 1:
-                    Walk = new Animation(Main.Enemy[ID], 4, 1, 0.15f);
-                    Velocity = new Vector2(0.6f, 0); // 0.6f, 0
-                    BaseVelocity = new Vector2(0.6f, 0);
-                    KnockBack = new Vector2(3, 2);
-                    Walk.Start();
-                    break;
-
-                case 2:
-                    Walk = new Animation(Main.Enemy[ID], 4, 1, 0.10f);
-                    Velocity = new Vector2(0.8f, 0);
-                    BaseVelocity = new Vector2(0.8f, 0);
-                    KnockBack = new Vector2(1, 2); // 2, 0
-                    Walk.Start();
-                    break;
-
-                default:
-                    //rectangle = new Rectangle(0, 0, 0, 0);
-                    break;
-            }
-        }
-
-        public override Rectangle GetRectangle()
-        {
-            return hitbox.rectangle;
-        }
-
-        public override Rectangle GetAttackRectangle()
-        {
-            switch (ID)
-            {
-                case 1:
-                    if (!isLeft)
-                        return new Rectangle((int)Position.X + 12, (int)Position.Y + 13, 14, 6);
-                    else
-                        return new Rectangle((int)Position.X - 12, (int)Position.Y + 13, 14, 6);
-
-                case 2:
-                    if (!isLeft)
-                        return new Rectangle((int)Position.X + 14, (int)Position.Y + 2, 8, 13);
-                    else
-                        return new Rectangle((int)Position.X - 8, (int)Position.Y + 2, 8, 13);
-
-                default:
-                    return new Rectangle(0, 0, 0, 0);
-
-            }
-        }
-
-        public override bool HasLowerState()
-        {
-            return false;
-        }
-
-        public override bool IsLower()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsSquish()
-        {
-            if (LeftCollision && RightCollision)
-                goto L_1;
-            else if (UpCollision && DownCollision)
-                goto L_1;
-
-            LeftCollision = false;
-            RightCollision = false;
-            UpCollision = false;
-            DownCollision = false;
-
-            return false;
-
-        L_1:
-            {
-                LeftCollision = false; RightCollision = false; UpCollision = false; DownCollision = false;
-                return true;
-            }
-        }
 
         public void ActorCollision()
         {
@@ -275,16 +194,6 @@ namespace Plateform_2D_v9
             }
         }
 
-        public override void RemovePV(int PV)
-        {
-            //if (!Hited)
-            //{
-                this.PV -= PV;
-                this.Hited = true;
-                time = invincibleTime;
-            //}
-            
-        }
 
         public void ApplyPhysic()
         {
@@ -307,9 +216,20 @@ namespace Plateform_2D_v9
 
         }
 
-        public override Vector2 GetPosForCamera()
+
+        public override Rectangle GetAttackRectangle()
         {
-            return Position;
+            if (!isLeft)
+                return new Rectangle((int)Position.X + 14, (int)Position.Y + 2, 8, 13);
+            else
+                return new Rectangle((int)Position.X - 8, (int)Position.Y + 2, 8, 13);
+        }
+
+        
+
+        public override void UpdateHitbox()
+        {
+            hitbox = new Hitbox((int)Math.Round(Position.X), (int)Math.Round(Position.Y), 15, 28);
         }
 
 
@@ -357,22 +277,35 @@ namespace Plateform_2D_v9
         {
             if (isLeft)
             {
-                Velocity.X *= -1.0f;
-                isLeft = false;
+
+                Acceleration.Y = -KnockBack.Y;
+                Velocity.X = KnockBack.X;
+
+                Walk.Stop();
+
+                //Velocity.X *= -1.0f;
+                //isLeft = false;
             }
         }
         public override void RightStaticCollisionAction()
         {
             if (!isLeft)
             {
-                Velocity.X *= -1.0f;
-                isLeft = true;
+
+                Acceleration.Y = -KnockBack.Y;
+                Velocity.X = -KnockBack.X;
+
+                Walk.Stop();
+
+                //Velocity.X *= -1.0f;
+                //isLeft = true;
             }
         }
         public override void DownStaticCollisionAction()
         {
             if (isLeft) Velocity.X = -BaseVelocity.X;
             if (!isLeft) Velocity.X = BaseVelocity.X;
+            Walk.Start();
         }
         public override void UpStaticCollisionAction()
         {
@@ -406,24 +339,6 @@ namespace Plateform_2D_v9
         }
 
 
-        public override void UpdateHitbox()
-        {
-
-            switch (ID)
-            {
-                case 1:
-                    hitbox = new Hitbox((int)Math.Round(Position.X), (int)Math.Round(Position.Y), 15, 28);
-                    break;
-                case 2:
-                    hitbox = new Hitbox((int)Math.Round(Position.X), (int)Math.Round(Position.Y), 14, 28);
-                    break;
-                default:
-                    hitbox = new Hitbox(0, 0, 0, 0);
-                    break;
-            }
-
-        }
-
-
     }
+
 }

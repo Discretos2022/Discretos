@@ -231,13 +231,18 @@ namespace Plateform_2D_v9
             return LevelSelectorPos;
         }
 
+        public static MapNode GetNode()
+        {
+            return node;
+        }
+
         public static void SetLevelSelectorPos(Vector2 _newPosition)
         {
             LevelSelectorPos = _newPosition;
         }
 
 
-        class MapNode
+        public class MapNode
         {
 
             public Vector2 Position;

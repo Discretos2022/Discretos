@@ -70,6 +70,11 @@ namespace Plateform_2D_v9
             spriteBatch.Draw(Texture, pos, _sourceRectangles[frame], Color.White, 0, Vector2.Zero, 1f, effect, 0f);
         }
 
+        public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color color, SpriteEffects effect = SpriteEffects.None)
+        {
+            spriteBatch.Draw(Texture, pos, _sourceRectangles[frame], color, 0, Vector2.Zero, 1f, effect, 0f);
+        }
+
         public int GetFrame()
         {
             return frame;
