@@ -246,7 +246,7 @@ namespace Plateform_2D_v9
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3 + 1];
             BackgroundTexture = new Texture2D[20];
-            Screens = new Texture2D[2 + 1];
+            Screens = new Texture2D[3 + 1];
 
 
             SolidTile[0] = false; // vide

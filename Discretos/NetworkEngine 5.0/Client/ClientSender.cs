@@ -34,6 +34,17 @@ namespace NetworkEngine_5._0.Client
             Client.SendTCP(packet);
         }
 
+        public static void SendBreakPlatform(int x, int y, int playerID, int except = -1)
+        {
+            string packet = CreateTCPpacket(playerID.ToString() + ";" + x + ";" + y, NetPlay.PacketType.breakPlatform);
+            Client.SendTCP(packet);
+        }
+
+        public static void SendCheckPointHited(int index, int playerID, int except = -1)
+        {
+            string packet = CreateTCPpacket(playerID.ToString() + ";" + index, NetPlay.PacketType.checkpointHited);
+            Client.SendTCP(packet);
+        }
 
 
 

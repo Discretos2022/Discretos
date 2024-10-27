@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Plateform_2D_v9.Enemy;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -234,9 +235,9 @@ namespace Plateform_2D_v9
                 {  6,  0,  0,  0,  0,  0,  0,6.1f, 6,6.1f,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6  },
                 {  6,  6,  3,  3,  5,  5,  6,  6,  6,  6,  6,  6,  6,  6,6.1f, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6  },
                 {  6,  6,  3,  3,  5,  5,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
-                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
-                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
-                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
+                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
+                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
+                {  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6,  6,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  0,  0,  6,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  6,  6  },
 
 
             };
@@ -465,8 +466,57 @@ namespace Plateform_2D_v9
             {
                 case 3:
                     //Handler.enemies.Add(new Enemy(new Vector2(20, 40), 1));
-                    Handler.actors.Add(new Object(new Vector2(100, 144), Object.ObjectID.torch));
+
+                    //Handler.actors.Add(new Object(new Vector2(100, 144), Object.ObjectID.torch));
+                    Handler.actors.Add(new Torch(new Vector2(100, 144)));
+
+                    Handler.actors.Add(new Collectible(new Vector2(1 * 16, 13 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(2 * 16, 13 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(3 * 16, 13 * 16), Collectible.CollectibleType.coin));
+
+                    Handler.actors.Add(new Collectible(new Vector2(6 * 16, 5 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(7 * 16, 4 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(8 * 16, 4 * 16), Collectible.CollectibleType.coin));
+
+                    Handler.actors.Add(new Collectible(new Vector2(20 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(21 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(22 * 16, 3 * 16), Collectible.CollectibleType.coin));
+
+                    Handler.actors.Add(new Collectible(new Vector2(19 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(20 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(21 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(22 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(23 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(24 * 16, 18 * 16), Collectible.CollectibleType.coin));
+
+                    Handler.actors.Add(new Collectible(new Vector2(42 * 16, 3 * 16), Collectible.CollectibleType.life));
+
+
                     Handler.actors.Add(new SpearKnight(new Vector2(40, 50)));
+                    break;
+
+                case 4:
+
+                    Handler.actors.Add(new Collectible(new Vector2(28 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(29 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(30 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(31 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(32 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(33 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(34 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(35 * 16, 5 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(35 * 16, 4 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(36 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(37 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(38 * 16, 4 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(38 * 16, 5 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(39 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(39 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(40 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(40 * 16, 9 * 16), Collectible.CollectibleType.coin));
+
+                    Handler.actors.Add(new Collectible(new Vector2(5 * 16, 7 * 16), Collectible.CollectibleType.life));
+
                     break;
 
                 case 5:
@@ -474,6 +524,28 @@ namespace Plateform_2D_v9
                     //Handler.enemies.Add(new Enemy(new Vector2(300, 100), 1));
                     //Handler.enemies.Add(new Enemy(new Vector2(500, 120), 1));
                     //Handler.enemies.Add(new Enemy(new Vector2(300, 150), 2));
+
+
+                    Handler.actors.Add(new Collectible(new Vector2(18 * 16, 6 * 16), Collectible.CollectibleType.life));
+
+                    Handler.actors.Add(new Collectible(new Vector2(28 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(29 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(30 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(31 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(32 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(33 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(34 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(35 * 16, 5 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(35 * 16, 4 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(36 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(37 * 16, 3 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(38 * 16, 4 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(38 * 16, 5 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(39 * 16, 6 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(39 * 16, 7 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(40 * 16, 8 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(40 * 16, 9 * 16), Collectible.CollectibleType.coin));
+
 
                     Handler.actors.Add(new SpearKnight(new Vector2(200, 40)));
                     Handler.actors.Add(new SpearKnight(new Vector2(300, 100)));
@@ -484,42 +556,57 @@ namespace Plateform_2D_v9
 
                 case 7:
 
+
+
+                    //Handler.actors.Add(new Object(new Vector2(44 * 16, 9 * 16), Object.ObjectID.wood_door, true, 1));
+                    //Handler.actors.Add(new Object(new Vector2(46 * 16, 9 * 16), Object.ObjectID.wood_door, true, 1));
+                    //Handler.actors.Add(new Object(new Vector2(20 * 16, 3 * 16), Object.ObjectID.gold_key, numOfTriggerObject: 1));
+                    //Handler.actors.Add(new Object(new Vector2(3 * 16, 7 * 16), Object.ObjectID.gold_key, numOfTriggerObject: 1));
+
+                    Handler.actors.Add(new Door(new Vector2(44 * 16, 9 * 16), Door.DoorVariante.wood, 1));
+                    Handler.actors.Add(new Door(new Vector2(46 * 16, 9 * 16), Door.DoorVariante.wood, 1));
+                    Handler.actors.Add(new Key(new Vector2(20 * 16, 3 * 16), 1));
+                    Handler.actors.Add(new Key(new Vector2(3 * 16, 7 * 16), 1));
+
+
+                    //Handler.actors.Add(new Object(new Vector2(71 * 16, 10 * 16), Object.ObjectID.spring));
+                    Handler.actors.Add(new Spring(new Vector2(71 * 16, 10 * 16)));
+
+                    //Handler.actors.Add(new Object(new Vector2(63 * 16, 4 * 16), Object.ObjectID.wood_ladder, ladderHeight: 7));
+                    Handler.actors.Add(new Ladder(new Vector2(63 * 16, 11 * 16), Ladder.LadderVariante.wood, 7));
+
+                    //Handler.actors.Add(new Object(new Vector2(41 * 16, 9 * 16), Object.ObjectID.checkPoint));
+                    Handler.actors.Add(new CheckPoint(new Vector2(41 * 16, 9 * 16), 1));
+
+                    //Handler.actors.Add(new Object(new Vector2(72 * 16, 15 * 16), Object.ObjectID.checkPoint));
+                    Handler.actors.Add(new CheckPoint(new Vector2(72 * 16, 15 * 16), 2));
+
+                    Handler.actors.Add(new Collectible(new Vector2(42 * 16, 3 * 16), Collectible.CollectibleType.life));
+
+
+
                     Handler.actors.Add(new SpearKnight(new Vector2(200, 100)));
                     Handler.actors.Add(new SpearKnight(new Vector2(300, 100)));
                     Handler.actors.Add(new SwordMan(new Vector2(400, 120)));
                     Handler.actors.Add(new SwordMan(new Vector2(500, 50)));
 
-                    Handler.actors.Add(new Object(new Vector2(44 * 16, 9 * 16), Object.ObjectID.wood_door, true, 1));
-                    Handler.actors.Add(new Object(new Vector2(46 * 16, 9 * 16), Object.ObjectID.wood_door, true, 1));
-                    Handler.actors.Add(new Object(new Vector2(20 * 16, 3 * 16), Object.ObjectID.gold_key, numOfTriggerObject: 1));
-                    Handler.actors.Add(new Object(new Vector2(3 * 16, 7 * 16), Object.ObjectID.gold_key, numOfTriggerObject: 1));
-
-                    Handler.actors.Add(new Object(new Vector2(71 * 16, 10 * 16), Object.ObjectID.spring));
-
-
-                    Handler.actors.Add(new Object(new Vector2(63 * 16, 4 * 16), Object.ObjectID.wood_ladder, ladderHeight: 7));
-
-                    Handler.actors.Add(new Object(new Vector2(41 * 16, 9 * 16), Object.ObjectID.checkPoint));
-
-                    Handler.actors.Add(new Object(new Vector2(72 * 16, 15 * 16), Object.ObjectID.checkPoint));
-
-
-
                     break;
 
                 case 10:
 
-                    Handler.actors.Add(new Object(new Vector2(28 * 16, 36 * 16), Object.ObjectID.spring));
+                    //Handler.actors.Add(new Object(new Vector2(28 * 16, 36 * 16), Object.ObjectID.spring));
+                    //Handler.actors.Add(new Object(new Vector2(17 * 16, 18 * 16), Object.ObjectID.spring));
+                    //Handler.actors.Add(new Object(new Vector2(14 * 16, 11 * 16), Object.ObjectID.spring));
+                    //Handler.actors.Add(new Object(new Vector2(5 * 16, 36 * 16), Object.ObjectID.torch));
+                    //Handler.actors.Add(new Object(new Vector2(19 * 16, 34 * 16), Object.ObjectID.torch));
+                    //Handler.actors.Add(new Object(new Vector2(24 * 16, 21 * 16), Object.ObjectID.torch));
 
-                    Handler.actors.Add(new Object(new Vector2(17 * 16, 18 * 16), Object.ObjectID.spring));
-
-                    Handler.actors.Add(new Object(new Vector2(14 * 16, 11 * 16), Object.ObjectID.spring));
-
-                    Handler.actors.Add(new Object(new Vector2(5 * 16, 36 * 16), Object.ObjectID.torch));
-
-                    Handler.actors.Add(new Object(new Vector2(19 * 16, 34 * 16), Object.ObjectID.torch));
-
-                    Handler.actors.Add(new Object(new Vector2(24 * 16, 21 * 16), Object.ObjectID.torch));
+                    Handler.actors.Add(new Spring(new Vector2(28 * 16, 36 * 16)));
+                    Handler.actors.Add(new Spring(new Vector2(17 * 16, 18 * 16)));
+                    Handler.actors.Add(new Spring(new Vector2(14 * 16, 11 * 16)));
+                    Handler.actors.Add(new Torch(new Vector2(5 * 16, 36 * 16)));
+                    Handler.actors.Add(new Torch(new Vector2(19 * 16, 34 * 16)));
+                    Handler.actors.Add(new Torch(new Vector2(24 * 16, 21 * 16)));
 
 
                     break;
@@ -527,14 +614,28 @@ namespace Plateform_2D_v9
 
                 case 11:
 
+                    Handler.actors.Add(new Ladder(new Vector2(34 * 16, 23 * 16), Ladder.LadderVariante.wood_snow, 10));
+                    Handler.actors.Add(new CheckPoint(new Vector2(38 * 16, 21 * 16), 1));
+                    //Handler.actors.Add(new CheckPoint(new Vector2(10 * 16, 21 * 16), 2));
+                    Handler.actors.Add(new Spring(new Vector2(40 * 16, 22 * 16)));
+                    Handler.actors.Add(new Collectible(new Vector2(40 * 16, 18 * 16), Collectible.CollectibleType.coin));
+                    Handler.actors.Add(new Collectible(new Vector2(38 * 16, 18 * 16), Collectible.CollectibleType.life));
+                    Handler.actors.Add(new Door(new Vector2(32 * 16, 21 * 16), Door.DoorVariante.wood, 1));
+
+                    Handler.actors.Add(new Key(new Vector2(15 * 16, 20 * 16), 1));
+
+
+                    Handler.actors.Add(new Collectible(new Vector2(22 * 16, 13 * 16), Collectible.CollectibleType.life));
+                    Handler.actors.Add(new Spring(new Vector2(22 * 16, 22 * 16)));
+
+
                     Handler.actors.Add(new SpearKnight(new Vector2(200, 100)));
                     Handler.actors.Add(new SpearKnight(new Vector2(300, 100)));
                     Handler.actors.Add(new SwordMan(new Vector2(400, 100)));
                     Handler.actors.Add(new SwordMan(new Vector2(500, 100)));
 
-                    Handler.actors.Add(new Object(new Vector2(22 * 16, 13 * 16), Object.ObjectID.core));
-
-                    Handler.actors.Add(new Object(new Vector2(22 * 16, 22 * 16), Object.ObjectID.spring));
+                    //Handler.actors.Add(new Object(new Vector2(22 * 16, 13 * 16), Object.ObjectID.core));
+                    //Handler.actors.Add(new Object(new Vector2(22 * 16, 22 * 16), Object.ObjectID.spring));
 
                     break;
 
@@ -712,7 +813,30 @@ namespace Plateform_2D_v9
                 case 7:
                     ObjectData = new int[,]
                     {
+
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+
+                        /*{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0 },
@@ -732,7 +856,7 @@ namespace Plateform_2D_v9
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
                         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
-                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
+                        {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },*/
                     };
                     break;
 

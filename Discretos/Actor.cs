@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NetworkEngine_5._0.Client;
+using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.Core;
+using Plateform_2D_v9.NetCore;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -191,10 +195,10 @@ namespace Plateform_2D_v9
 
                 Actor actor = Handler.actors[i];
 
-                if (this != actor)
+                if (this != actor && actor.actorType == ActorType.Object)
                 {
 
-                    if (actor.actorType == ActorType.Object && actor.ID == 4 && hitbox.rectangle.Intersects(new Rectangle(actor.hitbox.rectangle.X + 1, actor.hitbox.rectangle.Y, actor.hitbox.rectangle.Width - 2, actor.hitbox.rectangle.Height)))
+                    if (((ObjectV2)actor).objectID == ObjectV2.ObjectID.wood_door && hitbox.rectangle.Intersects(new Rectangle(actor.hitbox.rectangle.X + 1, actor.hitbox.rectangle.Y, actor.hitbox.rectangle.Width - 2, actor.hitbox.rectangle.Height)))
                     {
                         if (actor.hitbox.isEnabled || !canOpenDoor)
                         {
@@ -270,10 +274,10 @@ namespace Plateform_2D_v9
 
                 Actor actor = Handler.actors[i];
 
-                if (this != actor)
+                if (this != actor && actor.actorType == ActorType.Object)
                 {
 
-                    if (actor.actorType == ActorType.Object && actor.ID == 4 && hitbox.rectangle.Intersects(new Rectangle(actor.hitbox.rectangle.X + 1, actor.hitbox.rectangle.Y, actor.hitbox.rectangle.Width - 2, actor.hitbox.rectangle.Height)))
+                    if (((ObjectV2)actor).objectID == ObjectV2.ObjectID.wood_door && hitbox.rectangle.Intersects(new Rectangle(actor.hitbox.rectangle.X + 1, actor.hitbox.rectangle.Y, actor.hitbox.rectangle.Width - 2, actor.hitbox.rectangle.Height)))
                     {
 
                         if (actor.hitbox.isEnabled || !canOpenDoor)
@@ -493,10 +497,24 @@ namespace Plateform_2D_v9
                             if (OldPosition.Y + hitbox.rectangle.Height <= tile.hitbox.rectangle.Y && Velocity.Y >= 0 && !pressDown && canBreakBlock)
                             {
                                 if (tile.isBreakable)
+                                {
+
+                                    if (NetPlay.IsMultiplaying)
+                                    {
+                                        if (NetPlay.MyPlayerID() == 1)
+                                        {
+                                            ServerSender.SendBreakPlatform((int)(tile.Position.X / 16), (int)(tile.Position.Y / 16), NetPlay.MyPlayerID());
+                                        }
+                                        else
+                                        {
+                                            ClientSender.SendBreakPlatform((int)(tile.Position.X / 16), (int)(tile.Position.Y / 16), NetPlay.MyPlayerID());
+                                        }
+                                    }
+
                                     tile.Break();
+                                }
                             }
                         }
-
                     }
                 }
             }

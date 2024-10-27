@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +15,12 @@ namespace Plateform_2D_v9
         static int tiles;
         static Vector2 Spawn;
 
+        public static int lastCheckPointNumber = 0;
+
         public static void LoadLevel(object threadContext)
         {
+
+            lastCheckPointNumber = 0;
 
             while (!Main.ContentLoaded)
             {
@@ -84,7 +89,7 @@ namespace Plateform_2D_v9
             Console.WriteLine(LevelData.getObjectData(Main.LevelPlaying).GetLength(1));
 
             /// LevelObject
-            for (int j = 0; j < LevelData.getObjectData(Main.LevelPlaying).GetLength(1); j++)
+            /*for (int j = 0; j < LevelData.getObjectData(Main.LevelPlaying).GetLength(1); j++)
             {
                 for (int i = 0; i < LevelData.getObjectData(Main.LevelPlaying).GetLength(0); i++)
                 {
@@ -96,7 +101,7 @@ namespace Plateform_2D_v9
 
                 }
 
-            }
+            }*/
 
             if(Main.LevelPlaying == 7)
             {
@@ -135,7 +140,7 @@ namespace Plateform_2D_v9
 
         public static void setSpawn(int x, int y){ Spawn = new Vector2(x*16, y*16);}
 
-        public static void setCheckPoint(Vector2 CheckPointPos) { Spawn = CheckPointPos; } 
+        public static void setCheckPoint(CheckPoint checkPoint) { Spawn = checkPoint.Position; lastCheckPointNumber = checkPoint.number; } 
 
         public static Vector2 getSpawn()
         {

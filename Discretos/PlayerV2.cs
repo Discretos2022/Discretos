@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using NetworkEngine_5._0.Client;
+using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.Core;
 using Plateform_2D_v9.NetCore;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,7 +60,7 @@ namespace Plateform_2D_v9
         public bool infiniJump = false;
 
         private Object collectedKey;
-        private List<Object> collectedObjects;
+        private List<ObjectV2> collectedObjects;
 
 
         /// <summary>
@@ -109,7 +112,7 @@ namespace Plateform_2D_v9
 
             AttackRect = new Rectangle(0, 0, 0, 0);
 
-            collectedObjects = new List<Object>();
+            collectedObjects = new List<ObjectV2>();
 
             width = 16;
             height = 32;
@@ -684,36 +687,46 @@ namespace Plateform_2D_v9
 
                 else if (actor.actorType == ActorType.Object)
                 {
+
                     if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
-                        switch (actor.ID)
+
+                        ObjectV2 element = (ObjectV2)actor;
+
+                        switch (element.objectID)
                         {
-                            case 1:
+                            case ObjectV2.ObjectID.coin:
                                 Main.Money += 1;
-                                //AddMoney(1);
-                                LightManager.lights.Remove(actor.light);
-                                //Handler.actors.Remove(actor);
-                                Handler.RemoveActor(actor);
+                                LightManager.lights.Remove(element.light);
+                                Handler.RemoveActor(element);
                                 break;
-                            case 2:
+                            case ObjectV2.ObjectID.core:
                                 PV += 1;
-                                LightManager.lights.Remove(actor.light);
-                                //Handler.actors.Remove(actor);
-                                Handler.RemoveActor(actor);
+                                LightManager.lights.Remove(element.light);
+                                Handler.RemoveActor(element);
                                 break;
-                            case 3:
-                                Level.setCheckPoint(actor.Position);
-                                actor.CheckPointHited = true;
+                            case ObjectV2.ObjectID.checkPoint:
+
+                                if (NetPlay.IsMultiplaying)
+                                {
+                                    if (NetPlay.MyPlayerID() == 1)
+                                        ServerSender.SendCheckPointHited(Handler.actors.IndexOf(element), NetPlay.MyPlayerID());
+                                    else
+                                        ClientSender.SendCheckPointHited(Handler.actors.IndexOf(element), NetPlay.MyPlayerID());
+                                }
+
+                                if (Level.lastCheckPointNumber < ((CheckPoint)element).number) Level.setCheckPoint((CheckPoint)element);
+                                ((CheckPoint)element).hited = true;
                                 break;
 
-                            case 4:
+                            case ObjectV2.ObjectID.wood_door:
                                 //if (collectedKey != null)
                                 //  if (actor.NumOfTriggerObject == collectedKey.NumOfTriggerObject)
                                 //    actor.isLocked = false;
 
                                 for(int o = 0; o < collectedObjects.Count; o++)
                                 {
-                                    if (actor.NumOfTriggerObject == collectedObjects[o].NumOfTriggerObject && actor.isLocked)
+                                    if (((Door)actor).trigger == ((Key)collectedObjects[o]).trigger && ((Door)actor).hitbox.isEnabled)
                                     { 
                                         actor.isLocked = false;
                                         actor.hitbox.isEnabled = false;
@@ -732,19 +745,17 @@ namespace Plateform_2D_v9
 
                                 break;
 
-                            case 5:
+                            case ObjectV2.ObjectID.gold_key:
                                 actor.isCollected = true;
-                                collectedObjects.Add((Object)actor);
-                                //collectedKey = (Object)actor;
-                                //Handler.actors.Remove(actor);
+                                collectedObjects.Add((ObjectV2)actor);
                                 Handler.RemoveActor(actor);
                                 break;
 
-                            case 6:
+                            case ObjectV2.ObjectID.spring:
                                 SpringTouched = true;
                                 break;
 
-                            case 7:
+                            case ObjectV2.ObjectID.wood_ladder:
                                 break;
 
                         }
@@ -826,7 +837,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public void AddCollectedObject(Object key)
+        public void AddCollectedObject(ObjectV2 key)
         {
             collectedObjects.Add(key);
         }
@@ -836,8 +847,9 @@ namespace Plateform_2D_v9
         {
             for (int i = 0; i < collectedObjects.Count; i++)
             {
-                Object obj1 = collectedObjects[i];
-                Object obj2 = collectedObjects[i];
+
+                ObjectV2 obj1 = collectedObjects[i];
+                ObjectV2 obj2 = collectedObjects[i];
                 if (i > 0)
                     obj2 = collectedObjects[i - 1];
 
@@ -870,7 +882,7 @@ namespace Plateform_2D_v9
             }
         }
 
-        public List<Object> GetCollectedObjectList()
+        public List<ObjectV2> GetCollectedObjectList()
         {
             return collectedObjects;
         }

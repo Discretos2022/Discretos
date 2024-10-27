@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Plateform_2D_v9;
 using Plateform_2D_v9.NetCore;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,8 +64,8 @@ namespace NetworkEngine_5._0.Server
                     int id = int.Parse(itemData[0]);
                     index = int.Parse(itemData[1]);
 
-                    Handler.actors[index].isCollected = true;
-                    Handler.playersV2[id].AddCollectedObject((Plateform_2D_v9.Object)Handler.actors[index]);
+                    ((Key)Handler.actors[index]).isCollected = true;
+                    Handler.playersV2[id].AddCollectedObject((Key)Handler.actors[index]);
                     Handler.actors.RemoveAt(index);
 
                     ServerSender.SendCollectedKey(index, id, sender);
@@ -81,11 +82,44 @@ namespace NetworkEngine_5._0.Server
 
                     for (int o = 0; o < Handler.playersV2[id].GetCollectedObjectList().Count; o++)
                     {
-                        if (Handler.actors[index].NumOfTriggerObject == Handler.playersV2[id].GetCollectedObjectList()[o].NumOfTriggerObject && Handler.actors[index].isLocked)
-                        { Handler.actors[index].isLocked = false; Handler.actors[index].hitbox.isEnabled = false; Handler.playersV2[id].GetCollectedObjectList().Remove(Handler.playersV2[id].GetCollectedObjectList()[o]); }
+                        if (((Door)Handler.actors[index]).trigger == ((Key)Handler.playersV2[id].GetCollectedObjectList()[o]).trigger && ((Door)Handler.actors[index]).hitbox.isEnabled)
+                        { ((Door)Handler.actors[index]).isLocked = false; ((Door)Handler.actors[index]).hitbox.isEnabled = false; Handler.playersV2[id].GetCollectedObjectList().Remove(Handler.playersV2[id].GetCollectedObjectList()[o]); }
                     }
 
                     ServerSender.SendOpenDoor(index, id, sender);
+
+                    break;
+
+
+                case NetPlay.PacketType.breakPlatform:
+
+                    itemData = GetDataTCP(packet).Split(";");
+
+                    id = int.Parse(itemData[0]);
+                    x = int.Parse(itemData[1]);
+                    y = int.Parse(itemData[2]);
+
+                    if (Handler.Level[(int)x, (int)y].isBreakable)
+                        Handler.Level[(int)x, (int)y].Break();
+
+                    ServerSender.SendBreakPlatform((int)x, (int)y, id, sender);
+
+                    break;
+
+
+                case NetPlay.PacketType.checkpointHited:
+
+                    itemData = GetDataTCP(packet).Split(";");
+
+                    id = int.Parse(itemData[0]);
+                    index = int.Parse(itemData[1]);
+
+                    ObjectV2 element = (ObjectV2)Handler.actors[index];
+
+                    if (Level.lastCheckPointNumber < ((CheckPoint)element).number) Level.setCheckPoint(((CheckPoint)element));
+                    ((CheckPoint)element).hited = true;
+
+                    ServerSender.SendCheckPointHited(index, id, sender);
 
                     break;
 

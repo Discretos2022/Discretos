@@ -49,6 +49,8 @@ namespace Plateform_2D_v9.NetCore
             createItem = 12,
             collectedKey = 13,
             openDoor = 14,
+            breakPlatform = 15,
+            checkpointHited = 16,
         }
 
         public static int MyPlayerID()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Plateform_2D_v9.NetCore;
+using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -226,14 +227,14 @@ namespace Plateform_2D_v9
             {
                 if (NetPlay.MyPlayerID() == 1)
                 {
-                    if (actor.actorType == Actor.ActorType.Object && actor.GetID() == 5)
+                    if (actor.actorType == Actor.ActorType.Object && ((ObjectV2)actor).objectID == ObjectV2.ObjectID.gold_key)
                         NetworkEngine_5._0.Server.ServerSender.SendCollectedKey(actors.IndexOf(actor), NetPlay.MyPlayerID());
                     else
                         NetworkEngine_5._0.Server.ServerSender.SendDistroyedObject(actors.IndexOf(actor));
                 }
                 else
                 {
-                    if (actor.actorType == Actor.ActorType.Object && actor.GetID() == 5)
+                    if (actor.actorType == Actor.ActorType.Object && ((ObjectV2)actor).objectID == ObjectV2.ObjectID.gold_key)
                         NetworkEngine_5._0.Client.ClientSender.SendCollectedKey(actors.IndexOf(actor), NetPlay.MyPlayerID());
                     else
                         NetworkEngine_5._0.Client.ClientSender.SendDistroyedObject(actors.IndexOf(actor));

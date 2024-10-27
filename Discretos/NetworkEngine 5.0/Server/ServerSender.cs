@@ -90,6 +90,18 @@ namespace NetworkEngine_5._0.Server
             Server.SendTCP(packet, 0, except);
         }
 
+        public static void SendBreakPlatform(int x, int y, int playerID, int except = -1)
+        {
+            string packet = CreateTCPpacket(playerID.ToString() + ";" + x + ";" + y, NetPlay.PacketType.breakPlatform);
+            Server.SendTCP(packet, 0, except);
+        }
+
+        public static void SendCheckPointHited(int index, int playerID, int except = -1)
+        {
+            string packet = CreateTCPpacket(playerID.ToString() + ";" + index, NetPlay.PacketType.checkpointHited);
+            Server.SendTCP(packet, 0, except);
+        }
+
 
         public static void SendWorldMapPositionPlayer(int x, int y)
         {
