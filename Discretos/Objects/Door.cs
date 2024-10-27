@@ -109,7 +109,7 @@ namespace Plateform_2D_v9.Objects
             else if (state == DoorState.openLeft)
             {
                 if (!hitbox.isEnabled)
-                    spriteBatch.Draw(Main.Object[(int)objectID], Position + new Vector2(5, 0) - new Vector2(15, 0), new Rectangle(0, 0, 20, 32), Color.White, NumOfTriggerObject, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                    spriteBatch.Draw(Main.Object[(int)objectID], Position + new Vector2(5, 0) - new Vector2(15, 0), new Rectangle(0, 0, 20, 32), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
                 else
                 {
                     spriteBatch.Draw(Main.Object[(int)objectID], Position + new Vector2(5, 0), new Rectangle(21, 0, 16, 32), Color.White);

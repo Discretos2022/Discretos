@@ -97,10 +97,10 @@ namespace Plateform_2D_v9.Enemy
                 Vector2 v4 = new Vector2((float)-Util.random.NextDouble(), (float)Util.random.Next(-2, 0));
 
 
-                Handler.actors.Add(new ItemV2(pos, id1, v1));
-                Handler.actors.Add(new ItemV2(pos, id2, v2));
-                Handler.actors.Add(new ItemV2(pos, id3, v3));
-                Handler.actors.Add(new ItemV2(pos, id4, v4));
+                Handler.actors.Add(new ItemV2(pos, (ItemV2.ItemID)id1, v1));
+                Handler.actors.Add(new ItemV2(pos, (ItemV2.ItemID)id2, v2));
+                Handler.actors.Add(new ItemV2(pos, (ItemV2.ItemID)id3, v3));
+                Handler.actors.Add(new ItemV2(pos, (ItemV2.ItemID)id4, v4));
 
                 if (NetPlay.IsMultiplaying)
                 {

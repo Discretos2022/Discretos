@@ -39,23 +39,20 @@ namespace Plateform_2D_v9
                         if (Main.SolidTile[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]] || Main.SolidTileTop[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]])
                         { 
                             if((int)LevelData.getLevel(Main.LevelPlaying)[j, i] != 8) // 8
-                                Handler.Level[i, j] = new TileV2(new Vector2(i*16, j*16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], false, true);
+                                Handler.Level[i, j] = new TileV2(new Vector2(i*16, j*16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], false);
                             if((int)LevelData.getLevel(Main.LevelPlaying)[j, i] == 8)
                             {
-                                Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], false, true);
-
-                                //Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), 0, false, true);
-                                //Handler.solids.Add(new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], true));
+                                Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], false);
                             }
                             if(LevelData.getLevel(Main.LevelPlaying)[j, i] - (int)LevelData.getLevel(Main.LevelPlaying)[j, i] > 0)
-                                Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], true, true);
+                                Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], true);
 
                         }
 
                     }
                     else
                     {
-                        Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), TileV2.BlockID.none, false, true);
+                        Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), TileV2.BlockID.none, false);
                         if (LevelData.getLevel(Main.LevelPlaying)[j, i] == -1) { setSpawn(i, j); }
                     }
 
@@ -81,27 +78,6 @@ namespace Plateform_2D_v9
                 Main.text = num + "";  // * tiles / 100 + "    /   100";
             }
 
-
-
-
-
-
-            Console.WriteLine(LevelData.getObjectData(Main.LevelPlaying).GetLength(1));
-
-            /// LevelObject
-            /*for (int j = 0; j < LevelData.getObjectData(Main.LevelPlaying).GetLength(1); j++)
-            {
-                for (int i = 0; i < LevelData.getObjectData(Main.LevelPlaying).GetLength(0); i++)
-                {
-                    Vector2 pos = new Vector2(j * 16, i * 16);
-                    int[,] tableau = LevelData.getObjectData(Main.LevelPlaying);
-                    int type = tableau[i, j];
-                    if (type != 0)
-                        Handler.actors.Add(new Object(pos, (Object.ObjectID)type));    //Handler.levelitem.Add(new LevelItem(pos, type));
-
-                }
-
-            }*/
 
             if(Main.LevelPlaying == 7)
             {

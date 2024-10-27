@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static Plateform_2D_v9.ItemV2;
 
 namespace NetworkEngine_5._0.Client
 {
@@ -73,9 +74,9 @@ namespace NetworkEngine_5._0.Client
                     if(index < Handler.actors.Count)
                     {
                         if (Handler.actors[index].actorType == Actor.ActorType.Item)
-                            Main.Money += Handler.actors[index].ID;
+                            Main.Money += (int)((ItemV2)Handler.actors[index]).ID;
                         if (Handler.actors[index].actorType == Actor.ActorType.Object)
-                            if (Handler.actors[index].ID == 1)
+                            if (((ObjectV2)Handler.actors[index]).objectID == ObjectV2.ObjectID.coin)
                                 Main.Money += 1;
 
                         LightManager.lights.Remove(Handler.actors[index].light);
@@ -94,7 +95,7 @@ namespace NetworkEngine_5._0.Client
                     float vx = float.Parse(itemData[3]);
                     float vy = float.Parse(itemData[4]);
 
-                    Handler.actors.Add(new ItemV2(new Vector2(x, y), idItem, new Vector2(vx, vy)));
+                    Handler.actors.Add(new ItemV2(new Vector2(x, y), (ItemID)idItem, new Vector2(vx, vy)));
 
                     break;
 

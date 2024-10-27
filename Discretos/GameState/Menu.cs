@@ -143,8 +143,6 @@ namespace Plateform_2D_v9
             L_2:;
             }
 
-            //NetPlay.IsMultiplaying = false;
-
             LightManager.isLightEnable = false;
 
         }
@@ -163,10 +161,6 @@ namespace Plateform_2D_v9
             {
                 buttons2[i].Draw(spriteBatch, false, true, Color.Black);
             }
-
-
-            //Writer.DrawText(Main.ScoreFont, "1234567890", new Vector2(10, 800), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
-
 
         }
 

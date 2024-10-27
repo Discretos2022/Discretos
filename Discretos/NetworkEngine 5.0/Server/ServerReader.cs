@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Plateform_2D_v9.ItemV2;
 
 namespace NetworkEngine_5._0.Server
 {
@@ -28,9 +29,9 @@ namespace NetworkEngine_5._0.Server
                     if (index < Handler.actors.Count && index >= 0)
                     {
                         if (Handler.actors[index].actorType == Actor.ActorType.Item)
-                            Main.Money += Handler.actors[index].ID;
+                            Main.Money += (int)((ItemV2)Handler.actors[index]).ID;
                         if (Handler.actors[index].actorType == Actor.ActorType.Object)
-                            if (Handler.actors[index].ID == 1)
+                            if (((ObjectV2)Handler.actors[index]).objectID == ObjectV2.ObjectID.coin)
                                 Main.Money += 1;
 
                         ServerSender.SendDistroyedObject(index, sender);
@@ -51,7 +52,7 @@ namespace NetworkEngine_5._0.Server
                     float vx = float.Parse(itemData[3]);
                     float vy = float.Parse(itemData[4]);
 
-                    Handler.actors.Add(new ItemV2(new Vector2(x, y), idItem, new Vector2(vx, vy)));
+                    Handler.actors.Add(new ItemV2(new Vector2(x, y), (ItemID)idItem, new Vector2(vx, vy)));
 
                     ServerSender.SendCreatedItem(x, y, idItem, vx, vy, sender);
 

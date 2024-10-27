@@ -19,8 +19,11 @@ namespace Plateform_2D_v9.Enemy
 
         public bool isLeft;
 
+        public bool Hited;
 
         public EnemyType ID;
+        public int PV;
+
 
 
         public EnemyV3(Vector2 Position) : base(Position)
@@ -81,7 +84,7 @@ namespace Plateform_2D_v9.Enemy
             }
         }
 
-        public override void RemovePV(int PV)
+        public void RemovePV(int PV)
         {
             this.PV -= PV;
         }

@@ -179,22 +179,22 @@ namespace Plateform_2D_v9
                         if (Main.SolidTile[(int)table[j, i]] || Main.SolidTileTop[(int)table[j, i]])
                         {
                             if ((int)table[j, i] != 8) // 8
-                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], false, true, Position);
+                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], false, Position);
                             if ((int)table[j, i] == 8)
                             {
-                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], false, true, Position);
+                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], false, Position);
 
                                 //Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), 0, false, true);
                                 //Handler.solids.Add(new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], true));
                             }
                             if (table[j, i] - (int)table[j, i] > 0)
-                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], true, true, Position);
+                                tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], true, Position);
 
                         }
                     }
                     else
                     {
-                        tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), TileV2.BlockID.none, false, true, Position);
+                        tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), TileV2.BlockID.none, false, Position);
                     }
 
 

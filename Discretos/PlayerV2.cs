@@ -68,6 +68,10 @@ namespace Plateform_2D_v9
         /// </summary>
         public int myPlayerID;      // my ID of player
 
+        public int ID;
+
+        public int PV;
+
         public bool LeftKey;
         public bool RightKey;
         public bool UpKey;
@@ -677,9 +681,7 @@ namespace Plateform_2D_v9
                 {
                     if (GetRectangle().Intersects(actor.GetRectangle()))
                     {
-                        Main.Money += actor.ID;
-                        //AddMoney(actor.ID);
-                        //Handler.actors.Remove(actor);
+                        Main.Money += (int)((ItemV2)actor).ID;
                         Handler.RemoveActor(actor);
                     }
 
@@ -727,8 +729,8 @@ namespace Plateform_2D_v9
                                 for(int o = 0; o < collectedObjects.Count; o++)
                                 {
                                     if (((Door)actor).trigger == ((Key)collectedObjects[o]).trigger && ((Door)actor).hitbox.isEnabled)
-                                    { 
-                                        actor.isLocked = false;
+                                    {
+                                        ((Door)actor).isLocked = false;
                                         actor.hitbox.isEnabled = false;
                                         collectedObjects.Remove(collectedObjects[o]);
 
@@ -746,7 +748,7 @@ namespace Plateform_2D_v9
                                 break;
 
                             case ObjectV2.ObjectID.gold_key:
-                                actor.isCollected = true;
+                                ((Key)actor).isCollected = true;
                                 collectedObjects.Add((ObjectV2)actor);
                                 Handler.RemoveActor(actor);
                                 break;
@@ -800,7 +802,7 @@ namespace Plateform_2D_v9
 
         }
 
-        public override void RemovePV(int PV)
+        public void RemovePV(int PV)
         {
             this.PV -= PV;
         }

@@ -21,8 +21,10 @@ namespace Plateform_2D_v9
 
         private Texture2D texture;
 
+        public ItemID ID;
 
-        public ItemV2(Vector2 Position, int ID, Vector2 Acceleration)
+
+        public ItemV2(Vector2 Position, ItemID ID, Vector2 Acceleration)
             : base(Position)
         {
             actorType = ActorType.Item;
@@ -31,7 +33,7 @@ namespace Plateform_2D_v9
             this.Acceleration = Acceleration;
             Velocity.X = Acceleration.X;
 
-            texture = Main.SpriteSheetItem[ID];
+            texture = Main.SpriteSheetItem[(int)ID];
 
             canBreakBlock = false;
             canOpenDoor = false;
@@ -141,12 +143,18 @@ namespace Plateform_2D_v9
             }
         }
 
-        public override void RemovePV(int PV)
+
+        public enum ItemID
         {
-            throw new NotImplementedException();
+
+            diamond = 1,
+            copper = 2,
+            iron = 3,
+            amethyst = 4,
+            rubis = 5,
+            saphir = 6,
+
         }
-
-
 
         /** COLLISION V3 **/
 

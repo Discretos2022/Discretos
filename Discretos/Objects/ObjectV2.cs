@@ -88,11 +88,6 @@ namespace Plateform_2D_v9.Objects
             }
         }
 
-        public override void RemovePV(int PV)
-        {
-            throw new NotImplementedException();
-        }
-
 
 
 

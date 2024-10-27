@@ -22,23 +22,12 @@ namespace Plateform_2D_v9
         public Vector2 Acceleration;
         public Vector2 Wind;
         public float Gravity = 0.35f;
-        public int PV;
         public Vector2 KnockBack;
 
         public bool isOnGround;
         public TileV2.SlopeType isOnSlope;
-        public bool Hited;
-        public bool isLocked;
-        public bool isCollected;
-        public bool CheckPointHited;
 
-        public int NumOfTriggerObject;
-
-        public int ID;
         public ActorType actorType;
-
-        //public bool LeftCollision;
-        //public bool RightCollision;
 
         public Light light;
 
@@ -77,7 +66,6 @@ namespace Plateform_2D_v9
 
         public abstract bool IsSquish();
         public abstract bool IsLower();
-        public abstract void RemovePV(int PV);
         public abstract bool HasLowerState();
 
         public abstract Rectangle GetRectangle();
@@ -99,11 +87,6 @@ namespace Plateform_2D_v9
         public Vector2 GetVelocity()
         {
             return Velocity;
-        }
-
-        public int GetID()
-        {
-            return ID;
         }
 
         public ActorType GetActorType()
