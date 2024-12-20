@@ -196,6 +196,23 @@ float4 PsRefractMonoCromeClipDarkness(float4 position : SV_Position, float4 colo
 
 float4 PsRefractAntiRefractionArea(float4 position : SV_Position, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR0
 {
+    /*if (position.x > 100 && position.x < 600)
+    {
+        // Determine distance to the anti Refract position.
+        float dist = saturate(distance(position.xy, RefractionVector) / RefractionVectorRange);
+        float2 warpedCoords = texCoord + (tex2D(DisplacementSampler, texCoord * SampleWavelength + DisplacementMotionVector).xy - float2(0.5f, 0.5f)) * Frequency;
+        float2 lerpedCoords = (warpedCoords - texCoord) * (dist * dist) + texCoord;
+        float4 col = tex2D(TextureSampler, saturate(lerpedCoords)) * color;
+        // Visually highlight effect range.
+        //col.b += (1.0f - dist) * (1.0f - dist);
+        //col.r += (dist) * (dist);
+        
+        return col;
+        
+    }
+    
+    //return tex2D(TextureSampler, texCoord);*/
+    
     // Determine distance to the anti Refract position.
     float dist = saturate(distance(position.xy, RefractionVector) / RefractionVectorRange);
     float2 warpedCoords = texCoord + (tex2D(DisplacementSampler, texCoord * SampleWavelength + DisplacementMotionVector).xy - float2(0.5f, 0.5f)) * Frequency;
@@ -204,7 +221,9 @@ float4 PsRefractAntiRefractionArea(float4 position : SV_Position, float4 color :
     // Visually highlight effect range.
     //col.b += (1.0f - dist) * (1.0f - dist);
     //col.r += (dist) * (dist);
+        
     return col;
+    
 }
 
 //__________________________________________________

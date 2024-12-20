@@ -148,6 +148,8 @@ namespace Plateform_2D_v9.Objects
             wood_ladder = 7,
             wood_ladder_snow = 8,
             torch = 9,
+            cactux = 10,
+            stone = 11,
 
         };
 

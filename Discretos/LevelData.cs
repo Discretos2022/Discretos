@@ -515,6 +515,15 @@ namespace Plateform_2D_v9
 
                     Handler.actors.Add(new Collectible(new Vector2(5 * 16, 7 * 16), Collectible.CollectibleType.life));
 
+                    Handler.actors.Add(new Stone(new Vector2(15 * 16, 16 * 16), Stone.StoneVariante.classique));
+
+                    Handler.actors.Add(new Cactux(new Vector2(11 * 16, 14 * 16), Cactux.CactuxVariante.little));
+                    Handler.actors.Add(new Cactux(new Vector2(16 * 16, 16 * 16), Cactux.CactuxVariante.classique));
+                    Handler.actors.Add(new Cactux(new Vector2(41 * 16, 10 * 16), Cactux.CactuxVariante.classique));
+                    Handler.actors.Add(new Cactux(new Vector2(2 * 16, 15 * 16), Cactux.CactuxVariante.classique));
+
+                    
+
                     break;
 
                 case 5:
