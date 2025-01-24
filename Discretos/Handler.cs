@@ -14,7 +14,7 @@ namespace Plateform_2D_v9
 
         public static List<Actor> actors = new List<Actor>();
         public static List<TileV2> solids = new List<TileV2>();
-        public static List<Solid> walls = new List<Solid>();
+        public static List<Wall> walls = new List<Wall>();
         public static List<Actor> ladder = new List<Actor>();
 
         public static Dictionary<int, PlayerV2> playersV2 = new Dictionary<int, PlayerV2>();
@@ -25,11 +25,13 @@ namespace Plateform_2D_v9
 
         public static List<MovingBlock> blocks;
 
+        public static float earthquake = 0.0f;
+
 
         public static void Initialize()
         {
             solids = new List<TileV2>();
-            walls = new List<Solid>();
+            walls = new List<Wall>();
             actors = new List<Actor>();
             ladder = new List<Actor>();
             blocks = new List<MovingBlock>();
@@ -160,15 +162,15 @@ namespace Plateform_2D_v9
 
             for (int j = yMin; j < yMax; j++)
                 for (int i = xMin; i < xMax; i++)
-                    if (Handler.Walls[i, j].getType() > 0)
-                        Handler.Walls[i, j].Draw(spriteBatch, gameTime);
+                    if ((int)(Walls[i, j].ID) > 0)
+                        Walls[i, j].Draw(spriteBatch, gameTime);
 
 
 
             for (int j = yMin; j < yMax; j++)
                 for (int i = xMin; i < xMax; i++)
-                    if (Handler.Level[i, j].ID > 0)
-                        Handler.Level[i, j].Draw(spriteBatch, gameTime);
+                    if (Level[i, j].ID > 0)
+                        Level[i, j].Draw(spriteBatch, gameTime);
 
 
             for (int i = 0; i < blocks.Count; i++)

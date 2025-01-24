@@ -119,10 +119,18 @@ namespace Plateform_2D_v9
 
         public void FollowObject(Vector2 Pos)
         {
+            float eqx = 0;
+            float eqy = 0;
+            if (Handler.earthquake != 0)
+            {
+                eqx = Util.NextFloat(-Handler.earthquake, Handler.earthquake);
+                eqy = Util.NextFloat(-Handler.earthquake, Handler.earthquake);
+            }
+                
 
             /// Deplacement camera en X
             if (Pos.X >= 240 / Main.ScreenRatioComparedWith1080p && Pos.X <= Handler.Level.GetLength(0) * 16 - 240 / Main.ScreenRatioComparedWith1080p)
-                this.position.X = Pos.X; // + Util.random.Next(-1, 1);
+                this.position.X = Pos.X + eqx;
             else if (Pos.X < 240 / Main.ScreenRatioComparedWith1080p)
                 this.position.X = 240 / Main.ScreenRatioComparedWith1080p;
             else if (Pos.X > Handler.Level.GetLength(0) * 16 - 240 / Main.ScreenRatioComparedWith1080p)
@@ -130,7 +138,7 @@ namespace Plateform_2D_v9
 
             /// Deplacement camera en Y
             if (Pos.Y >= 136 / Main.ScreenRatioComparedWith1080p && Pos.Y <= Handler.Level.GetLength(1) * 16 - 136 / Main.ScreenRatioComparedWith1080p)
-                this.position.Y = Pos.Y; //+ Util.random.Next(-1, 1);
+                this.position.Y = Pos.Y + eqy;
             else if (Pos.Y < 136 / Main.ScreenRatioComparedWith1080p)
                 this.position.Y = 136 / Main.ScreenRatioComparedWith1080p;
             else if (Pos.Y > Handler.Level.GetLength(1) * 16 - 136 / Main.ScreenRatioComparedWith1080p)

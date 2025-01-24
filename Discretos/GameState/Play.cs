@@ -160,6 +160,8 @@ namespace Plateform_2D_v9
                     ParticleEffectV2.setWind(Util.UpperInteger(Wind.X) * 4);
                     Wind = new Vector2(-1f, 0);           /// Take multiple of 2 for bug of tile
 
+                    //Handler.earthquake = 1;
+
                 }
 
                 if (Main.LevelPlaying != 5)

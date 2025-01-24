@@ -187,6 +187,9 @@ namespace Plateform_2D_v9
         public Stopwatch UpdateTime;
         public float elapsedTime;
 
+        public Stopwatch FpsTime;
+        public float fpsTime;
+
 
         public Main()
         {
@@ -198,9 +201,9 @@ namespace Plateform_2D_v9
 
             Window.IsBorderless = false;
 
-            //TargetElapsedTime = TimeSpan.FromSeconds(1f / 60f);   /// Limite le jeu a 60 fps
-            //MaxElapsedTime = TimeSpan.FromSeconds(1f / 1f);
-            //IsFixedTimeStep = false;    /// true : saute les images trop lourdes 
+            //TargetElapsedTime = TimeSpan.FromSeconds(1f / 144f);   /// Limite le jeu a 60 fps
+            //MaxElapsedTime = TimeSpan.FromSeconds(1);
+            //IsFixedTimeStep = true;    /// true : saute les images trop lourdes 
             //graphics.SynchronizeWithVerticalRetrace = true;
 
             //InactiveSleepTime = TimeSpan.FromSeconds(1f / 60f);  /// si le jeu est inactif
@@ -210,7 +213,7 @@ namespace Plateform_2D_v9
             graphics.IsFullScreen = false;
 
             graphics.HardwareModeSwitch = false;
-
+            
             graphics.ApplyChanges();
 
         }
@@ -298,6 +301,7 @@ namespace Plateform_2D_v9
 
 
             UpdateTime = new Stopwatch();
+            FpsTime = new Stopwatch();
 
             Console.WriteLine((int)Enum.Parse<TileV2.BlockID>("snow"));
 
@@ -544,6 +548,11 @@ namespace Plateform_2D_v9
 
         protected override void Draw(GameTime gameTime)
         {
+
+            FpsTime.Stop();
+            fpsTime = ((float)FpsTime.Elapsed.TotalMilliseconds);
+            FpsTime.Restart();
+
             UpdateTime.Reset();
             UpdateTime.Start();
 
@@ -722,8 +731,13 @@ namespace Plateform_2D_v9
                 render.DrawLine(Bounds, new Vector2(MouseInput.GetRectangle(screen).X, MouseInput.GetRectangle(screen).Y), 4000f, i * (float)(Math.PI / 1000), spriteBatch, Color.White * 0.05f, 10);
             }*/
 
-            if(DebugTime)
+            if (DebugTime)
+            {
                 spriteBatch.DrawString(UltimateFont, "general draw : " + elapsedTime + "ms", new Vector2(10, 200), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(UltimateFont, "max fps : " + Math.Round(1.0f / (elapsedTime / 1000)), new Vector2(10, 230), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(UltimateFont, "fps : " + Math.Round(1.0f / (fpsTime / 1000)), new Vector2(10, 260), Color.White, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+
+            }
 
 
             //render.DrawLine(Bounds, new Vector2(MouseInput.GetRectangle(screen).X - 150, MouseInput.GetRectangle(screen).Y), new Vector2(MouseInput.GetRectangle(screen).X, MouseInput.GetRectangle(screen).Y), spriteBatch, Color.Yellow   * 0.5f, 10);

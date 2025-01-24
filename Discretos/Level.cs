@@ -137,7 +137,7 @@ namespace Plateform_2D_v9
                     int type = LevelData.GetWallType(Level)[j, i];
                     int variante = LevelData.GetWallVariante(Level)[j, i];
 
-                    Handler.Walls[i, j] = new Wall(new Vector2(i * 16, j * 16), type, variante);
+                    Handler.Walls[i, j] = new Wall(new Vector2(i * 16, j * 16), (Wall.WallID)type, variante);
 
                 }
 

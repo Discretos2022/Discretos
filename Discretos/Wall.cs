@@ -6,26 +6,25 @@ using System.Text;
 
 namespace Plateform_2D_v9
 {
-    class Wall : Solid
+    class Wall
     {
 
         private int w = 16;
         private int h = 16;
 
+        public Vector2 Position;
         private Vector2 PosInLevel;
 
+        public WallID ID;
         private int variante;
 
         private Rectangle Frame;
 
-        public Wall(Vector2 Position, int type, int variante, bool isSlope = false, bool isStatic = true)
-            : base(new Vector2(Position.X, Position.Y), type)
+        public Wall(Vector2 Position, WallID id, int variante)
         {
             this.Position = Position;
-            this.type = type;
-            this.isSlope = isSlope;
-            this.isInvisible = false;
             this.variante = variante;
+            this.ID = id;
 
             Frame = GetFrame(this.variante);
 
@@ -36,24 +35,24 @@ namespace Plateform_2D_v9
 
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(Main.Wallset[type], GetPosition(), Frame, Color.White);
+            spriteBatch.Draw(Main.Wallset[(int)ID], GetPosition(), Frame, Color.White);
         }
 
-        public override void Break()
+        public void Break()
         {
             
         }
 
-        public override Vector2 GetPosition() { return Position; }
+        public Vector2 GetPosition() { return Position; }
 
-        public override Rectangle GetRectangle()
+        public Rectangle GetRectangle()
         {
             return new Rectangle((int)Position.X, (int)Position.Y, w, h);
         }
@@ -96,6 +95,14 @@ namespace Plateform_2D_v9
 
 
 
+        }
+
+
+        public enum WallID
+        {
+            none = 0,
+            snow = 4,
+            brick_gray = 6,
         }
 
         
