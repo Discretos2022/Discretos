@@ -635,8 +635,12 @@ namespace Plateform_2D_v9
 
                     Handler.actors.Add(new Collectible(new Vector2(42 * 16, 3 * 16), Collectible.CollectibleType.life));
 
+                    Handler.actors.Add(new LiquidDropGenerator(new Vector2(11 * 16 + 1, 7 * 16), Random.Shared.Next(230, 250)));
+                    Handler.actors.Add(new LiquidDropGenerator(new Vector2(10 * 16 + 5, 7 * 16), Random.Shared.Next(100, 140), LiquidDropGenerator.LiquidType.Lava));
+                    Handler.actors.Add(new LiquidDropGenerator(new Vector2(10 * 16 + 11, 7 * 16), Random.Shared.Next(40, 60)));
 
-                    Handler.actors.Add(new SpearKnight(new Vector2(200, 100)));
+
+                    Handler.actors.Add(new SpearKnight(new Vector2(50, 100)));
                     Handler.actors.Add(new SpearKnight(new Vector2(300, 100)));
                     Handler.actors.Add(new SwordMan(new Vector2(400, 120)));
                     Handler.actors.Add(new SwordMan(new Vector2(500, 50)));

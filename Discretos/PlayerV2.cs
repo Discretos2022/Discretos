@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Framework.Utilities.Deflate;
 using NetworkEngine_5._0.Client;
 using NetworkEngine_5._0.Server;
 using Plateform_2D_v9.Core;
@@ -238,7 +239,8 @@ namespace Plateform_2D_v9
                 else
                     infiniJump = false;
 
-                ApplyPhysic();
+                if(!OnLadder)
+                    ApplyPhysic();
             }
 
             UpdateCollectedObject(gameTime);
@@ -404,26 +406,43 @@ namespace Plateform_2D_v9
         {
             if (time == 0 || time == 5 || time == 10 || time == 15 || time == 20 || time == 25 || time == 30 || time == 35 || time == 40 || time == 45 || time == 50 || time == 55 || time == 60)
             {
-                if (isRight && !goRight && !goLeft && !isJump && !isLower)
+                /// Idle Player
+                if (isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White);
-                else if (!isRight && !goRight && !goLeft && !isJump && !isLower)
+                else if (!isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
 
-                if (isRight && goRight && !isJump && !isLower) //     && isOnGround)
+                /// Simple walk
+                if (isRight && goRight && !isJump && !isLower && (int)Velocity.Y <= 0) //     && isOnGround)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10));
-                else if (!isRight && goLeft && !isJump && !isLower)
+                else if (!isRight && goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10), SpriteEffects.FlipHorizontally);
 
-                if (isRight && isJump && !isLower)       //&& !isOnGround)
-                    spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(60, 0, 30, 50), Color.White);
-                else if (!isRight && isJump && !isLower)
-                    spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(60, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                /// Jump
+                if (isRight && isJump && !isLower && (int)Velocity.Y <= 0)       //&& !isOnGround)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White);
+                else if (!isRight && isJump && !isLower && (int)Velocity.Y <= 0)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
 
+                /// Fall before jump
+                if (isRight && isJump && !isLower && (int)Velocity.Y > 0)       //&& !isOnGround)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 50, 30, 50), Color.White);
+                else if (!isRight && isJump && !isLower && (int)Velocity.Y > 0)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 50, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+
+                /// Fall
+                if (isRight && !isJump && !isLower && (int)Velocity.Y > 0)       //&& !isOnGround)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 50, 30, 50), Color.White);
+                else if (!isRight && !isJump && !isLower && (int)Velocity.Y > 0)
+                    spriteBatch.Draw(Main.Player_Jump, Position + new Vector2(-7, -10), new Rectangle(0, 50, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+
+                /// Jump with lowing
                 if (isLower && isRight && !isJump)
                     spriteBatch.Draw(Main.Player_Down, Position + new Vector2(-7, -26), new Rectangle(0, 0, 30, 50), Color.White);
                 else if (isLower && !isRight && !isJump)
                     spriteBatch.Draw(Main.Player_Down, new Vector2(Position.X - 7, GetRectangle().Y - 26), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
 
+                /// Lowing
                 if (isLower && isRight && isJump)
                     spriteBatch.Draw(Main.Player_Down, Position + new Vector2(-7, -26), new Rectangle(0, 0, 30, 50), Color.White);
                 else if (isLower && !isRight && isJump)
@@ -758,6 +777,39 @@ namespace Plateform_2D_v9
                                 break;
 
                             case ObjectV2.ObjectID.wood_ladder:
+
+
+                                if (GetRectangleForLadder().Intersects(((Ladder)actor).GetRectangle()))
+                                {
+                                    if ((KeyInput.getKeyState().IsKeyDown(Keys.Space) || (KeyInput.getKeyState().IsKeyDown(Main.Down) && GetRectangle().Y + GetRectangle().Height != ((Ladder)actor).GetRectangle().Y + ((Ladder)actor).GetRectangle().Height)) && !OnLadder && GetRectangle().Y > ((Ladder)actor).GetRectangle().Y - 16)
+                                    { OnLadder = true; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; } 
+                                    if (GetRectangle().Y < ((Ladder)actor).GetRectangle().Y - 16)              ///  /!\ DANGER  \\\
+                                        OnTopOfLadder = true;
+                                    else
+                                        OnTopOfLadder = false;
+                                }
+                                else
+                                { OnLadder = false; OnTopOfLadder = false; }
+
+
+                                break;
+
+                            case ObjectV2.ObjectID.wood_ladder_snow:
+
+
+                                if (GetRectangleForLadder().Intersects(((Ladder)actor).GetRectangle()))
+                                {
+                                    if ((KeyInput.getKeyState().IsKeyDown(Keys.Space) || (KeyInput.getKeyState().IsKeyDown(Main.Down) && GetRectangle().Y + GetRectangle().Height != ((Ladder)actor).GetRectangle().Y + ((Ladder)actor).GetRectangle().Height)) && !OnLadder && GetRectangle().Y > ((Ladder)actor).GetRectangle().Y - 16)
+                                    { OnLadder = true; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; }
+                                    if (GetRectangle().Y < ((Ladder)actor).GetRectangle().Y - 16)              ///  /!\ DANGER  \\\
+                                        OnTopOfLadder = true;
+                                    else
+                                        OnTopOfLadder = false;
+                                }
+                                else
+                                { OnLadder = false; OnTopOfLadder = false; }
+
+
                                 break;
 
                         }
@@ -769,7 +821,7 @@ namespace Plateform_2D_v9
             }
 
 
-            for (int i = 0; i < Handler.ladder.Count; i++)
+            /*for (int i = 0; i < Handler.ladder.Count; i++)
             {
 
                 Actor ladder = Handler.ladder[i];
@@ -788,7 +840,7 @@ namespace Plateform_2D_v9
                 else
                 { OnLadder = false; OnTopOfLadder = false; }
 
-            }
+            }*/
 
 
 
@@ -900,7 +952,9 @@ namespace Plateform_2D_v9
             Velocity.X = 0;
             if ((KeyInput.getKeyState().IsKeyDown(Main.Left) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.LeftPad)) && ((!isLower && !isJump) || (isLower && !isOnGround) || isJump) && ID == myPlayerID)
                 if (!KeyInput.getKeyState().IsKeyDown(Main.Right)) /// Solve collision between 2 blocks
-                { Velocity.X = -2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
+                    if (!KeyInput.getKeyState().IsKeyDown(Keys.Space) || !OnLadder)
+                        if(!KeyInput.getKeyState().IsKeyDown(Main.Down) || !OnLadder)
+                        { Velocity.X = -2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = false; OnLadder = false; }
 
             Position.X += Velocity.X;
 
@@ -914,7 +968,10 @@ namespace Plateform_2D_v9
             Velocity.X = 0;
             if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && ((!isLower && !isJump) || (isLower && !isOnGround) || isJump) && ID == myPlayerID)
                 if (!KeyInput.getKeyState().IsKeyDown(Main.Left)) /// Solve collision between 2 blocks
-                { Velocity.X = 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
+                    if (!KeyInput.getKeyState().IsKeyDown(Keys.Space) || !OnLadder)
+                        if (!KeyInput.getKeyState().IsKeyDown(Main.Down) || !OnLadder)
+
+                        { Velocity.X = 2f * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; isRight = true; OnLadder = false; }
 
             /// /!\ PHYSIQUE !!!!!
             //if (isOnSlope == TileV2.SlopeType.LeftDown)
@@ -929,7 +986,8 @@ namespace Plateform_2D_v9
 
         public override void DownDisplacement(GameTime gameTime)
         {
-            if(Velocity.Y > 0) Position.Y += (int)Velocity.Y;
+            if(!OnLadder)
+                if(Velocity.Y > 0) Position.Y += (int)Velocity.Y;
 
             pressDown = false;
             if (KeyInput.getKeyState().IsKeyDown(Main.Down) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.DownPad))
@@ -941,6 +999,9 @@ namespace Plateform_2D_v9
             else if ((KeyInput.getKeyState().IsKeyDown(Main.Right) || GamePadInput.GetPadState((PlayerIndex)ID - 1).IsButtonDown(Main.RightPad)) && isOnSlope == TileV2.SlopeType.RightDown && !isJump)
                 Position.Y += 2;
 
+            if (OnLadder && KeyInput.getKeyState().IsKeyDown(Main.Down))
+                Position.Y += 1;
+
 
             UpdateHitbox();
         }
@@ -950,6 +1011,10 @@ namespace Plateform_2D_v9
             Jump();
             Lowing();
             if (Velocity.Y < 0) Position.Y += (int)Velocity.Y;
+
+            if (OnLadder && !OnTopOfLadder && KeyInput.getKeyState().IsKeyDown(Keys.Space))
+                Position.Y -= 1;
+
             UpdateHitbox();
         }
 

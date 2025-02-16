@@ -126,7 +126,7 @@ namespace Plateform_2D_v9.Objects
 
         public override void DownStaticCollision()
         {
-            
+            base.DownStaticCollision();
         }
 
         public override void UpStaticCollision()
@@ -150,6 +150,7 @@ namespace Plateform_2D_v9.Objects
             torch = 9,
             cactux = 10,
             stone = 11,
+            liquid_drop = 12,
 
         };
 

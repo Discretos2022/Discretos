@@ -25,7 +25,7 @@ namespace Plateform_2D_v9.Enemy
 
             PV = 3;
 
-            Walk = new Animation(Main.Enemy[(int)ID], 4, 1, 0.15f);
+            Walk = new Animation(Main.Enemy[(int)ID], 9, 1, 0.08f);
             Velocity = new Vector2(0.6f, 0); // 0.6f, 0
             BaseVelocity = new Vector2(0.6f, 0);
             KnockBack = new Vector2(3, 2);
@@ -112,9 +112,9 @@ namespace Plateform_2D_v9.Enemy
 
 
             if (isLeft)
-                Walk.Draw(spriteBatch, Position + new Vector2(-14, -3), SpriteEffects.FlipHorizontally);
+                Walk.Draw(spriteBatch, Position + new Vector2(-16, -15), SpriteEffects.FlipHorizontally);
             else
-                Walk.Draw(spriteBatch, Position + new Vector2(-15, -3));
+                Walk.Draw(spriteBatch, Position + new Vector2(-16, -15));
 
 
             if (Main.Debug)
@@ -191,9 +191,9 @@ namespace Plateform_2D_v9.Enemy
         public override Rectangle GetAttackRectangle()
         {
             if (!isLeft)
-                return new Rectangle((int)Position.X + 12, (int)Position.Y + 13, 14, 6);
+                return new Rectangle((int)Position.X + 17, (int)Position.Y + 15, 8, 6);
             else
-                return new Rectangle((int)Position.X - 12, (int)Position.Y + 13, 14, 6);
+                return new Rectangle((int)Position.X - 8, (int)Position.Y + 15, 8, 6);
         }
 
 

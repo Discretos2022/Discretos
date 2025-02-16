@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:25
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:28
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -20,6 +20,7 @@ Game Interface
 	* New Button - Settings (build 3)
 	* New Title Bar Icon - Forest Icon (build 7)
 	* New Menu Screen - SnowLand (build 8)
+	* New Menu Screen - Autumn (build 8)
 	* New Font - ScoreFont (build 8)
 	* Menu Screen improved - GrassLand (build 8)
 	* Game Bar improved (build 8)
@@ -77,6 +78,9 @@ Level
 	* New Object - CheckPoint (build "6", 7)
 	* New Object - Wood Ladder (build 7)
 	* New Object - Torch (build 8)
+	* New Object - Cactux (build 8)
+	* New Object - Stone (build 8)
+	* New Object - WaterDrop (build 8)
 	* New Wall - Brick Wall (build 6)
 	* Object Sprite improved - CheckPoint (build 7)
 
