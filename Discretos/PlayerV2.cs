@@ -812,6 +812,12 @@ namespace Plateform_2D_v9
 
                                 break;
 
+                            case ObjectV2.ObjectID.trigger:
+
+                                ((Trigger)actor).action.Action();
+
+                                break;
+
                         }
                         
                     }

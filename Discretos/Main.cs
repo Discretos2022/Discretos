@@ -246,7 +246,7 @@ namespace Plateform_2D_v9
             
             Tileset = new Texture2D[11 + 1];
             Wallset = new Texture2D[200];
-            Object = new Texture2D[12 + 1];
+            Object = new Texture2D[13 + 1];
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3 + 1];
             BackgroundTexture = new Texture2D[20];

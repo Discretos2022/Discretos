@@ -151,7 +151,7 @@ namespace Plateform_2D_v9.Objects
             cactux = 10,
             stone = 11,
             liquid_drop = 12,
-
+            trigger = 13,
         };
 
 
