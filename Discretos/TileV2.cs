@@ -131,6 +131,11 @@ namespace Plateform_2D_v9
                     blockType = BlockType.block;
                     break;
 
+                case BlockID.water:
+                    blockType = BlockType.liquid;
+                    //hitbox.isEnabled = false;
+                    break;
+
             }
         }
 
@@ -228,7 +233,7 @@ namespace Plateform_2D_v9
         {
             this.grid = grid;
 
-            if (blockType == BlockType.block)
+            if (blockType == BlockType.block || blockType == BlockType.liquid)
             {
 
                 if (!isSlope)
@@ -758,6 +763,7 @@ namespace Plateform_2D_v9
             platform_brick_break = 9,
             ice = 10,
             low_snow = 11,
+            water = 12,
         }
 
         public enum BlockType

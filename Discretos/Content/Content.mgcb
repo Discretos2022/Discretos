@@ -97,6 +97,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Background/Background_15.png
 
+#begin Images/Background/Background_16.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Background/Background_16.png
+
 #begin Images/Background/Background_2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -828,6 +840,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Tile/Tile_11.png
+
+#begin Images/Tile/Tile_12.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Tile/Tile_12.png
 
 #begin Images/Tile/Tile_2.png
 /importer:TextureImporter

@@ -13,7 +13,7 @@ using System.Threading;
 /// Les Aventures De Discretos 𝕯𝖎𝖘𝖈𝖗𝖊𝖙𝖔𝖘
 /// Version : 0.0.0.9
 /// Build : 8
-/// SIEDEL Joshua © 2022-2024
+/// SIEDEL Joshua © 2022-2025
 /// Copyright © 2022-2024 SIEDEL Joshua
 /// </summary>
 
@@ -21,9 +21,10 @@ namespace Plateform_2D_v9
 {
     public class Main : Game
     {
+
         public GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-
+        
         public static Texture2D[] Tileset;
         public static Texture2D[] Wallset;
         public static Texture2D[] Object;
@@ -73,11 +74,9 @@ namespace Plateform_2D_v9
 
         public static int TILESIZE = 16;
 
-        public static bool[] SolidTile = new bool[100];
-        public static bool[] SolidTileTop = new bool[100];
-        public static bool[] LevelItem = new bool[100];
-
         public static int LevelPlaying = 0;
+        public static bool distortionShaderEnable = false;
+        public static bool lightShaderEnable = false;
 
         public static bool camActived = true;
 
@@ -182,6 +181,8 @@ namespace Plateform_2D_v9
         /// </summary>
         public static bool PixelPerfect = true;
 
+        public static bool WaterShader = false;
+
         Vector3 HullCameraPosition = new Vector3(0f, 0f, 1f);
         Vector3 HullCameraLookAt = new Vector3(0, 0, 0);
 
@@ -224,7 +225,7 @@ namespace Plateform_2D_v9
 
             #region Screen Parametre
 
-            
+            // 1440x1080 -> 4/3
             this.graphics.PreferredBackBufferWidth = 1920 / 2;      //(1920/5) * 5;      //500;         640* 360
             this.graphics.PreferredBackBufferHeight = 1080 / 2;     //(1080/5) * 5;     //250;
 
@@ -244,27 +245,13 @@ namespace Plateform_2D_v9
             #endregion
 
             
-            Tileset = new Texture2D[11 + 1];
+            Tileset = new Texture2D[12 + 1];
             Wallset = new Texture2D[200];
             Object = new Texture2D[13 + 1];
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3 + 1];
             BackgroundTexture = new Texture2D[20];
             Screens = new Texture2D[3 + 1];
-
-
-            SolidTile[0] = false; // vide
-            SolidTile[1] = true; // block de terre
-            SolidTileTop[2] = true; // platform
-            SolidTile[3] = true; // block de sable
-            SolidTile[4] = true; // block de neige
-            SolidTile[5] = true; // block de nuage
-            SolidTile[6] = true; // brick
-            SolidTile[7] = true; // cendre
-            SolidTile[8] = true; // movingblock
-            SolidTileTop[9] = true; // platform brick break
-            SolidTile[10] = true; // ice
-            SolidTile[11] = true; // low-snow
 
 
             LoadImg();
@@ -311,7 +298,7 @@ namespace Plateform_2D_v9
 
         protected override void LoadContent()
         {
-            LoadImg();
+            //LoadImg();
         }
 
         public void LoadImg()
@@ -374,10 +361,9 @@ namespace Plateform_2D_v9
 
 
             //TileMap = new Texture2D(GraphicsDevice, 10, 20);
-            //TileMap = Texture2D.FromFile(GraphicsDevice, "Content\\Images\\Map\\TileMap.jpg");
+            // -> TileMap = Texture2D.FromFile(GraphicsDevice, "Content\\Images\\Map\\TileMap.jpg");
 
             refractionEffect = Content.Load<Effect>("Shaders\\RefractionEffect");
-
 
             LightEffect = Content.Load<Effect>("Shaders\\LightEffect");
 
@@ -618,7 +604,7 @@ namespace Plateform_2D_v9
 
             #region Background
 
-            screen.Set(Screen.BackTarget);
+            screen.Set(Screen.BackTarget_1);
             
             render.Begin5(false, gameTime, spriteBatch, null);
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -640,17 +626,30 @@ namespace Plateform_2D_v9
             #region InCamera
             
 
-            screen.Set(Screen.LevelTarget);
+            screen.Set(Screen.LevelTarget_1);
             render.Begin5(false, gameTime, spriteBatch, camera);
-            GraphicsDevice.Clear(new Color(0,0,0,0));
+            GraphicsDevice.Clear(new Color(0, 0, 0, 0));
 
-            DEBUG.DebugCollision(new Rectangle((int)camera.Position.X - 1920/4/2, (int)camera.Position.Y - 1080/4/2, 1920/4, 1080/4), Color.RoyalBlue, spriteBatch);
+            DEBUG.DebugCollision(new Rectangle((int)camera.Position.X - 1920 / 4 / 2, (int)camera.Position.Y - 1080 / 4 / 2, 1920 / 4, 1080 / 4), Color.RoyalBlue, spriteBatch);
 
             state.DrawInCamera(spriteBatch, gameState, gameTime);
 
 
             render.End(spriteBatch);
             screen.UnSet();
+
+
+            /*screen.Set(Screen.WaterTarget);
+            render.Begin5(false, gameTime, spriteBatch, camera);
+            GraphicsDevice.Clear(new Color(0, 0, 0, 0));
+
+            Handler.DrawWater(spriteBatch, gameTime);
+
+
+            render.End(spriteBatch);
+            screen.UnSet();*/
+
+
 
 
             #region Light
@@ -719,7 +718,7 @@ namespace Plateform_2D_v9
 
             #region OffCamera
 
-            screen.Set(Screen.FontTarget);
+            screen.Set(Screen.FontTarget_1);
             render.Begin5(false, gameTime, spriteBatch, null);
             GraphicsDevice.Clear(new Color(0, 0, 0, 0));
 
@@ -815,7 +814,7 @@ namespace Plateform_2D_v9
         public static void LevelSelector()
         {
 
-            Console.WriteLine("{LEVEL SELECTOR} VER 2.0");
+            Console.WriteLine("{NATIVE LEVEL SELECTOR} VER 3.0");
             Console.WriteLine("ENTRER UN NIVEAU POUR LE JOUER : ");
             text = Console.ReadLine();
 
@@ -831,17 +830,6 @@ namespace Plateform_2D_v9
             Console.WriteLine("PRESSER UNE TOUCHE POUR JOUER !");
             Console.ReadLine();
 
-
-
-            Handler.Initialize();
-
-
-            Handler.Level = null;
-            Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
-
-            Handler.Walls = null;
-            Handler.Walls = new Wall[LevelData.GetWallType(LevelPlaying).GetLength(1), LevelData.GetWallType(LevelPlaying).GetLength(0)];
-
             StartLevel(LevelPlaying);
 
         }
@@ -849,11 +837,9 @@ namespace Plateform_2D_v9
         public static void LevelSelector(int level)
         {
 
-            Console.WriteLine("{LEVEL SELECTOR} VER 3.0");
+            Console.WriteLine("{LEVEL SELECTOR} VER 4.0");
 
             LevelPlaying = level;
-
-            Handler.Initialize();
 
             LightManager.Init();
 
@@ -861,13 +847,7 @@ namespace Plateform_2D_v9
                 if(Handler.playersV2.ContainsKey(i))
                     Handler.playersV2[i].InitLight();
 
-            Handler.Level = null;
-            Handler.Level = new TileV2[LevelData.getLevel(LevelPlaying).GetLength(1), LevelData.getLevel(LevelPlaying).GetLength(0)];
-
-            Handler.Walls = null;
-            Handler.Walls = new Wall[LevelData.GetWallType(LevelPlaying).GetLength(1), LevelData.GetWallType(LevelPlaying).GetLength(0)];
-
-            ThreadPool.QueueUserWorkItem(new WaitCallback(Level.LoadLevel), 1);
+            ThreadPool.QueueUserWorkItem(_ => Level.LoadLevel());
 
         }
 
@@ -877,54 +857,6 @@ namespace Plateform_2D_v9
             LevelSelector(level);
             inWorldMap = false;
             inLevel = true;
-            Camera.Zoom = 4f;
-            Background.shift = 150;
-
-            ParticleEffectV2.particles.Clear();
-
-            switch (level)
-            {
-                case 3 :
-                    LightManager.isLightEnable = true;
-
-                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
-                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
-                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
-
-                    break;
-
-                case 5:
-                    ParticleEffectV2.SetScale(1f);
-                    ParticleEffectV2.type = 1;
-                    ParticleEffectV2.Actived = false;
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
-                    break;
-
-                case 7:
-                    ParticleEffectV2.type = 2;
-                    ParticleEffectV2.Actived = false;
-                    ParticleEffectV2.SetScale(0.5f);
-                    ParticleEffectV2.setWind(-1);
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
-                    break;
-
-                case 10:
-                    LightManager.isLightEnable = true;
-
-                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
-                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
-                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
-
-                    break;
-
-                case 11:
-
-                    Background.shift = 80;
-
-                    break;
-
-            }
-
         }
 
 
@@ -971,53 +903,6 @@ namespace Plateform_2D_v9
             //  connectServer.player.Disconnect();         plus tard
 
             base.OnExiting(sender, args);
-        }
-
-
-        public static void Draw2dRefractionTechnique(string technique, Texture2D texture, Texture2D displacementTexture, Rectangle screenRectangle, float refractionSpeed, float refractiveIndex, float frequency, float sampleWavelength, Vector2 refractionVector, float refractionVectorRange, Vector2 windDirection, bool useWind, GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            Vector2 displacement;
-            double time = gameTime.TotalGameTime.TotalSeconds * refractionSpeed;
-            if (useWind)
-                displacement = -(Vector2.Normalize(windDirection) * (float)time);
-            else
-                displacement = new Vector2((float)Math.Cos(time), (float)Math.Sin(time));
-
-            // Set an effect parameter to make the displacement texture scroll in a giant circle.
-            refractionEffect.CurrentTechnique = refractionEffect.Techniques[technique];
-            refractionEffect.Parameters["DisplacementTexture"].SetValue(displacementTexture);
-            refractionEffect.Parameters["DisplacementMotionVector"].SetValue(displacement);
-            refractionEffect.Parameters["SampleWavelength"].SetValue(sampleWavelength);
-            refractionEffect.Parameters["Frequency"].SetValue(frequency);
-            refractionEffect.Parameters["RefractiveIndex"].SetValue(refractiveIndex);
-            // for the very last little test.
-            refractionEffect.Parameters["RefractionVector"].SetValue(refractionVector);
-            refractionEffect.Parameters["RefractionVectorRange"].SetValue(refractionVectorRange);
-
-            refractionEffect.Parameters["SpriteTexture"].SetValue(texture);
-            //refractionEffect.Parameters["pixelisation"].SetValue(0.5f);
-            refractionEffect.Parameters["MousePosX"].SetValue(0.3f);
-            //refractionEffect.Parameters["MousePosY"].SetValue(MouseInput.GetLevelPos(false, camera).Y);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, refractionEffect);
-            spriteBatch.Draw(texture, screenRectangle, Color.White/**0.5f**/);
-            spriteBatch.End();
-
-            //DisplayName(screenRectangle, technique, useWind);
-        }
-
-        public void DisplayName(Rectangle screenRectangle, string technique, bool useWind)
-        {
-            spriteBatch.Begin();
-            var offset = screenRectangle;
-            offset.Location += new Point(20, 20);
-            spriteBatch.DrawString(UltimateFont, technique, offset.Location.ToVector2(), Color.White);
-            if (useWind)
-            {
-                offset.Location += new Point(0, 30);
-                spriteBatch.DrawString(UltimateFont, "wind on", offset.Location.ToVector2(), Color.White);
-            }
-            spriteBatch.End();
         }
 
     }

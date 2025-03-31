@@ -151,7 +151,7 @@ namespace Plateform_2D_v9
 
                 handler.Draw(spriteBatch, gameTime);
 
-                if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
+                if (ParticleEffectV2.Actived)
                     ParticleEffectV2.Draw(spriteBatch);
 
                 if(Main.Money > 100 && Main.LevelPlaying == 5)
@@ -182,6 +182,10 @@ namespace Plateform_2D_v9
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
+            if (Main.inLevel && !Main.MapLoaded)
+                spriteBatch.Draw(Main.Bounds, new Rectangle(0, 0, 1920, 1080), Color.Black);
+
+
             if (Main.inWorldMap && NetPlay.MyPlayerID() == 1)
             {
                 Level_3.setPos(ButtonV2.Position.centerX, y: 200);
@@ -204,8 +208,6 @@ namespace Plateform_2D_v9
                     Camera.Zoom = 4f;
                 }
 
-            
-
         }
 
 
@@ -221,7 +223,7 @@ namespace Plateform_2D_v9
                 if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
                     Background.SetBackground(3);
                 else if (Main.LevelPlaying == 7)
-                    Background.SetBackground(4);
+                    Background.SetBackground(16); // 4
                 else if (Main.LevelPlaying == 3 || Main.LevelPlaying == 11)
                     Background.SetBackground(6, 7, 8, 9, 10, 11);
                 else if (Main.LevelPlaying == 8)

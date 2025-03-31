@@ -159,7 +159,7 @@ namespace Plateform_2D_v9
                             break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope && !Handler.Level[index, j].isSlope)
                         {
 
                             Position.X = tile.Position.X + tile.hitbox.rectangle.Width;
@@ -239,7 +239,7 @@ namespace Plateform_2D_v9
                             //break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope && !Handler.Level[index, j].isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope && !Handler.Level[index, j].isSlope)
                         {
 
                             Position.X = tile.Position.X - hitbox.rectangle.Width;
@@ -689,7 +689,7 @@ namespace Plateform_2D_v9
                         int v = 0;
                         if (block.Velocity.X < 0 && (i == block.tiles.GetLength(0) - 1 || block.tiles[i + 1, j].blockType != TileV2.BlockType.block)) v = (int)block.Velocity.X;
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(new Rectangle(tile.hitbox.rectangle.X + v, tile.hitbox.rectangle.Y, tile.hitbox.rectangle.Width, tile.hitbox.rectangle.Height)) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(new Rectangle(tile.hitbox.rectangle.X + v, tile.hitbox.rectangle.Y, tile.hitbox.rectangle.Width, tile.hitbox.rectangle.Height)) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             Position.X = tile.hitbox.rectangle.X + v + tile.hitbox.rectangle.Width;
@@ -748,7 +748,7 @@ namespace Plateform_2D_v9
                             break;
 
 
-                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && Main.SolidTile[(int)tile.ID] && !tile.isSlope)
+                        if (tile.hitbox.isEnabled && hitbox.rectangle.Intersects(tile.hitbox.rectangle) && tile.blockType == TileV2.BlockType.block && !tile.isSlope)
                         {
 
                             Position.X = tile.Position.X - hitbox.rectangle.Width;

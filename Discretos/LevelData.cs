@@ -5,6 +5,7 @@ using Plateform_2D_v9.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Plateform_2D_v9
 {
@@ -690,40 +691,6 @@ namespace Plateform_2D_v9
 
             }
         }
-        
-
-        //public static void GetWallData(int Level)
-        //{
-        //    switch (Level)
-        //    {
-        //        case 7:
-
-        //            Handler.walls.Add(new Wall(new Vector2(6 * 16, 15 * 16), 6, new Vector2(3, 2)));
-        //            Handler.walls.Add(new Wall(new Vector2(7 * 16, 15 * 16), 6, new Vector2(4, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(7 * 16, 14 * 16), 6, new Vector2(3, 2)));
-        //            Handler.walls.Add(new Wall(new Vector2(8 * 16, 14 * 16), 6, new Vector2(1, 0)));
-        //            Handler.walls.Add(new Wall(new Vector2(9 * 16, 14 * 16), 6, new Vector2(4, 2)));
-        //            Handler.walls.Add(new Wall(new Vector2(9 * 16, 15 * 16), 6, new Vector2(3, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(10 * 16, 15 * 16), 6, new Vector2(4, 2)));
-
-
-        //            Handler.walls.Add(new Wall(new Vector2(44 * 16, 8 * 16), 6, new Vector2(0, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(44 * 16, 9 * 16), 6, new Vector2(0, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(44 * 16, 10 * 16), 6, new Vector2(0, 1)));
-
-        //            Handler.walls.Add(new Wall(new Vector2(45 * 16, 8 * 16), 6, new Vector2(1, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(45 * 16, 9 * 16), 6, new Vector2(1, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(45 * 16, 10 * 16), 6, new Vector2(1, 1)));
-
-        //            Handler.walls.Add(new Wall(new Vector2(46 * 16, 8 * 16), 6, new Vector2(2, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(46 * 16, 9 * 16), 6, new Vector2(2, 1)));
-        //            Handler.walls.Add(new Wall(new Vector2(46 * 16, 10 * 16), 6, new Vector2(2, 1)));
-
-
-
-        //            break;
-        //    }
-        //}
 
 
         public static int[,] GetWallType(int Level)
@@ -1635,6 +1602,114 @@ namespace Plateform_2D_v9
             return WallVariante;
         }
 
+
+        public static void InitMovingBlock(int level)
+        {
+
+            switch (level)
+            {
+
+                case 7:
+
+                    float[,] table = new float[,]
+                    {
+                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                        { 0, 8, 6, 6, 2, 2, 6, 6, 8, 0 },
+                        { 0, 6, 6, 6, 0, 0, 6, 6, 6, 0 },
+                        { 0, 6, 6, 6, 0, 0, 6, 6, 6, 0 },
+                        { 0, 8, 6, 6, 6, 6, 6, 6, 8, 0 },
+                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    };
+
+                    Handler.blocks.Add(new MovingBlock(new Vector2(75 * 16 + 1, 16 * 16), table)); // new Vector2(300, 100)
+
+                    break;
+
+            }
+
+        }
+
+
+        public static void InitLevelSystem(int level)
+        {
+
+            Camera.Zoom = 4f;
+            Background.shift = 150;
+
+            ParticleEffectV2.particles.Clear();
+
+            Main.distortionShaderEnable = false;
+            Main.lightShaderEnable = false;
+
+            switch (level)
+            {
+                case 3:
+                    Main.lightShaderEnable = true;
+                    LightManager.isLightEnable = true;
+
+                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
+                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
+
+                    break;
+
+                case 4:
+
+                    Main.distortionShaderEnable = true;
+
+                    //Main.lightShaderEnable = true;
+                    //LightManager.isLightEnable = true;
+
+                    //LightManager.AmbianteLightR = new Color(1, 0, 0, 0.1f);
+                    //LightManager.AmbianteLightG = new Color(0, 1, 0, 0.1f);
+                    //LightManager.AmbianteLightB = new Color(0, 0, 1, 0.4f);
+
+                    break;
+
+                case 5:
+                    ParticleEffectV2.SetScale(1f);
+                    ParticleEffectV2.type = 1;
+                    ParticleEffectV2.Actived = false;
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
+                    break;
+
+                case 7:
+                    ParticleEffectV2.type = 2;
+                    ParticleEffectV2.Actived = false;
+                    ParticleEffectV2.SetScale(0.5f);
+                    ParticleEffectV2.setWind(-1);
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ParticleEffectV2.Generate), 1);
+
+
+                    //Main.distortionShaderEnable = true;
+                    //Main.lightShaderEnable = true;
+                    //LightManager.isLightEnable = true;
+
+                    //LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
+                    //LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
+                    //LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
+
+
+                    break;
+
+                case 10:
+                    LightManager.isLightEnable = true;
+
+                    LightManager.AmbianteLightR = new Color(1, 0, 0, 0.0f);
+                    LightManager.AmbianteLightG = new Color(0, 1, 0, 0.0f);
+                    LightManager.AmbianteLightB = new Color(0, 0, 1, 0.0f);
+
+                    break;
+
+                case 11:
+
+                    Background.shift = 80;
+
+                    break;
+
+            }
+
+        }
 
     }
 

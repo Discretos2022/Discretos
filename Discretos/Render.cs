@@ -234,7 +234,7 @@ namespace Plateform_2D_v9
         }
 
 
-        public void GetLightAndHullProcess(Texture2D texture, Texture2D lightMask, Texture2D hullMask, Texture2D colorMask, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        public void GetLightAndHullProcess(ref Texture2D texture, Texture2D lightMask, Texture2D hullMask, Texture2D colorMask, RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch)
         {
 
             game.GraphicsDevice.SetRenderTarget(textureOUT);
@@ -254,9 +254,11 @@ namespace Plateform_2D_v9
             End(spriteBatch);
             game.GraphicsDevice.SetRenderTarget(null);
 
+            texture = textureOUT;
+
         }
 
-        public void GetDistorsionProcess(Texture2D texture, ref RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
+        public void GetDistorsionProcess(ref Texture2D texture, RenderTarget2D textureOUT, GameTime gameTime, SpriteBatch spriteBatch) // 
         {
 
             game.GraphicsDevice.SetRenderTarget(textureOUT);
@@ -289,6 +291,8 @@ namespace Plateform_2D_v9
 
             End(spriteBatch);
             game.GraphicsDevice.SetRenderTarget(null);
+
+            texture = textureOUT;
 
         }
 

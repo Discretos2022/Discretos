@@ -17,7 +17,7 @@ namespace Plateform_2D_v9
 
         public static int lastCheckPointNumber = 0;
 
-        public static void LoadLevel(object threadContext)
+        public static void LoadLevel()
         {
 
             lastCheckPointNumber = 0;
@@ -28,6 +28,15 @@ namespace Plateform_2D_v9
                 Console.WriteLine("Chargement ...");
             }
 
+            Handler.Initialize();
+
+            Handler.Level = null;
+            Handler.Level = new TileV2[LevelData.getLevel(Main.LevelPlaying).GetLength(1), LevelData.getLevel(Main.LevelPlaying).GetLength(0)];
+
+            Handler.Walls = null;
+            Handler.Walls = new Wall[LevelData.GetWallType(Main.LevelPlaying).GetLength(1), LevelData.GetWallType(Main.LevelPlaying).GetLength(0)];
+
+
             /// TileMap
             for (int j = 0; j < Handler.Level.GetLength(1); j++)
             {
@@ -36,8 +45,8 @@ namespace Plateform_2D_v9
 
                     if (LevelData.getLevel(Main.LevelPlaying)[j, i] > 0)
                     {
-                        if (Main.SolidTile[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]] || Main.SolidTileTop[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]])
-                        { 
+                        //if (Main.SolidTile[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]] || Main.SolidTileTop[(int)LevelData.getLevel(Main.LevelPlaying)[j, i]])
+                        //{ 
                             if((int)LevelData.getLevel(Main.LevelPlaying)[j, i] != 8) // 8
                                 Handler.Level[i, j] = new TileV2(new Vector2(i*16, j*16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], false);
                             if((int)LevelData.getLevel(Main.LevelPlaying)[j, i] == 8)
@@ -47,7 +56,7 @@ namespace Plateform_2D_v9
                             if(LevelData.getLevel(Main.LevelPlaying)[j, i] - (int)LevelData.getLevel(Main.LevelPlaying)[j, i] > 0)
                                 Handler.Level[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)LevelData.getLevel(Main.LevelPlaying)[j, i], true);
 
-                        }
+                        //}
 
                     }
                     else
@@ -79,25 +88,11 @@ namespace Plateform_2D_v9
             }
 
 
-            if(Main.LevelPlaying == 7)
-            {
-
-                float[,] table = new float[,]
-                {
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 0, 8, 6, 6, 2, 2, 6, 6, 8, 0 },
-                    { 0, 6, 6, 6, 0, 0, 6, 6, 6, 0 },
-                    { 0, 6, 6, 6, 0, 0, 6, 6, 6, 0 },
-                    { 0, 8, 6, 6, 6, 6, 6, 6, 8, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                };
-
-                Handler.blocks.Add(new MovingBlock(new Vector2(75 * 16 + 1, 16 * 16), table)); // new Vector2(300, 100)
-            }
+            LevelData.InitMovingBlock(Main.LevelPlaying);
 
 
             LevelData.getEnnemyData(Main.LevelPlaying);
-            //LevelData.GetWallData(Main.LevelPlaying);
+            
             LoadWall(Main.LevelPlaying);
             
             Console.Clear();
@@ -107,7 +102,8 @@ namespace Plateform_2D_v9
             {
                 Handler.playersV2[i].Position = getSpawn() - new Vector2(i * 10, 0);
             }
-            
+
+            LevelData.InitLevelSystem(Main.LevelPlaying);
 
             Main.MapLoaded = true;
 
@@ -142,8 +138,6 @@ namespace Plateform_2D_v9
                 }
 
             }
-
-
 
         }
 

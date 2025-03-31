@@ -176,8 +176,8 @@ namespace Plateform_2D_v9
 
                     if (table[j, i] > 0)
                     {
-                        if (Main.SolidTile[(int)table[j, i]] || Main.SolidTileTop[(int)table[j, i]])
-                        {
+                        //if (Main.SolidTile[(int)table[j, i]] || Main.SolidTileTop[(int)table[j, i]])
+                        //{
                             if ((int)table[j, i] != 8) // 8
                                 tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], false, Position);
                             if ((int)table[j, i] == 8)
@@ -190,7 +190,7 @@ namespace Plateform_2D_v9
                             if (table[j, i] - (int)table[j, i] > 0)
                                 tiles[i, j] = new TileV2(new Vector2(i * 16, j * 16), (TileV2.BlockID)table[j, i], true, Position);
 
-                        }
+                        //}
                     }
                     else
                     {

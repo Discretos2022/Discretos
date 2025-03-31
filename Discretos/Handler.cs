@@ -20,7 +20,6 @@ namespace Plateform_2D_v9
         public static Dictionary<int, PlayerV2> playersV2 = new Dictionary<int, PlayerV2>();
 
         public static TileV2[,] Level;
-
         public static Wall[,] Walls;
 
         public static List<MovingBlock> blocks;
@@ -170,7 +169,8 @@ namespace Plateform_2D_v9
             for (int j = yMin; j < yMax; j++)
                 for (int i = xMin; i < xMax; i++)
                     if (Level[i, j].ID > 0)
-                        Level[i, j].Draw(spriteBatch, gameTime);
+                        if (Level[i, j].ID != TileV2.BlockID.water || !Main.WaterShader)
+                            Level[i, j].Draw(spriteBatch, gameTime);
 
 
             for (int i = 0; i < blocks.Count; i++)
@@ -195,6 +195,32 @@ namespace Plateform_2D_v9
                 playersV2[i].Draw(spriteBatch, gameTime);
             }
 
+
+        }
+
+        public static void DrawWater(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+
+            #region Tiles and Walls Optimization
+
+            int xMin = ((int)Main.camera.Position.X - 1920 / 8) / 16 - 2;
+            int xMax = ((int)Main.camera.Position.X + 1920 / 8) / 16 + 2;
+
+            int yMin = ((int)Main.camera.Position.Y - 1080 / 8) / 16 - 2;
+            int yMax = ((int)Main.camera.Position.Y + 1080 / 8) / 16 + 2;
+
+            if (xMin < 0) xMin = 0;
+            if (xMax > Level.GetLength(0)) xMax = Level.GetLength(0);
+            if (yMin < 0) yMin = 0;
+            if (yMax > Level.GetLength(1)) yMax = Level.GetLength(1);
+
+            #endregion
+
+            // Water for shader
+            for (int j = yMin; j < yMax; j++)
+                for (int i = xMin; i < xMax; i++)
+                    if (Level[i, j].ID == TileV2.BlockID.water && Main.WaterShader)
+                        Level[i, j].Draw(spriteBatch, gameTime);
 
         }
 
