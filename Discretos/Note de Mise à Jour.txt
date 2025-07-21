@@ -1,6 +1,6 @@
 Version 0.0.0.9 Changes -----------------------------------------------------------------------------------------
 
-New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:28
+New Content			1:10		2:16		3:9		4:4		5:8		6:12		7:18		8:29
 
 	* World Map added (implemented) (build 1)
 	* World Map added (almost functional) (build 6)
@@ -81,6 +81,7 @@ Level
 	* New Object - Cactux (build 8)
 	* New Object - Stone (build 8)
 	* New Object - WaterDrop (build 8)
+	* New Object - Chain (build 8)
 	* New Wall - Brick Wall (build 6)
 	* Object Sprite improved - CheckPoint (build 7)
 

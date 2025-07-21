@@ -621,6 +621,9 @@ namespace Plateform_2D_v9
 
                 case 7:
 
+                    Handler.actors.Add(new Chain(new Vector2(3 * 16, 3 * 16), Chain.DownType.fixedLink, 5));
+                    Handler.actors.Add(new Chain(new Vector2(14 * 16, 6 * 16), Chain.DownType.freeLink, 3));
+
                     Handler.actors.Add(new Door(new Vector2(44 * 16, 9 * 16), Door.DoorVariante.wood, 1));
                     Handler.actors.Add(new Door(new Vector2(46 * 16, 9 * 16), Door.DoorVariante.wood, 1));
                     Handler.actors.Add(new Key(new Vector2(20 * 16, 3 * 16), 1));

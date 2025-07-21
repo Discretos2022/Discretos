@@ -541,6 +541,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Object/Object_13.png
 
+#begin Images/Object/Object_14.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Object/Object_14.png
+
 #begin Images/Object/Object_2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -672,6 +684,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Player/Player_Jump.png
+
+#begin Images/Player/Player_Ladder.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Player/Player_Ladder.png
 
 #begin Images/Player/Player.png
 /importer:TextureImporter

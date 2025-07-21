@@ -38,6 +38,7 @@ namespace Plateform_2D_v9
         private Animation Walk;
         private Animation BasicAttack;
         private Animation SquishPlayer;
+        private Animation PlayerLadder;
 
         public bool BlockMove = false;          /// For Collision correction
 
@@ -109,6 +110,7 @@ namespace Plateform_2D_v9
             Walk = new Animation(Main.Player, 9, 1, 0.03f, 1);
             BasicAttack = new Animation(Main.Player_Basic_Attack, 6, 1, 0.02f);
             SquishPlayer = new Animation(Main.Squish_Player, 6, 1, 0.03f);
+            PlayerLadder = new Animation(Main.Player_Ladder, 6, 1, 0.07f);
             Walk.Start();
             BasicAttack.Start();
             SquishPlayer.Start();
@@ -144,7 +146,9 @@ namespace Plateform_2D_v9
         public override void Update(GameTime gameTime)
         {
 
-            if(myPlayerID == ID)
+            //PlayerLadder = new Animation(Main.Player_Ladder, 6, 1, 0.07f);
+
+            if (myPlayerID == ID)
             {
 
                 //GamePad.SetVibration(PlayerIndex.One, 1f, 1f);
@@ -241,6 +245,13 @@ namespace Plateform_2D_v9
 
                 if(!OnLadder)
                     ApplyPhysic();
+
+                if (KeyInput.getKeyState().IsKeyDown(Keys.Space) && OnLadder && !OnTopOfLadder)
+                    PlayerLadder.Update(gameTime);
+
+                if (KeyInput.getKeyState().IsKeyDown(Main.Down) && OnLadder)
+                    PlayerLadder.UpdateReverse(gameTime);
+
             }
 
             UpdateCollectedObject(gameTime);
@@ -407,15 +418,15 @@ namespace Plateform_2D_v9
             if (time == 0 || time == 5 || time == 10 || time == 15 || time == 20 || time == 25 || time == 30 || time == 35 || time == 40 || time == 45 || time == 50 || time == 55 || time == 60)
             {
                 /// Idle Player
-                if (isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
+                if (isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0 && !OnLadder)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White);
-                else if (!isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
+                else if (!isRight && !goRight && !goLeft && !isJump && !isLower && (int)Velocity.Y <= 0 && !OnLadder)
                     spriteBatch.Draw(Main.Player, Position + new Vector2(-7, -10), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
 
                 /// Simple walk
-                if (isRight && goRight && !isJump && !isLower && (int)Velocity.Y <= 0) //     && isOnGround)
+                if (isRight && goRight && !isJump && !isLower && (int)Velocity.Y <= 0 && !OnLadder) //     && isOnGround)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10));
-                else if (!isRight && goLeft && !isJump && !isLower && (int)Velocity.Y <= 0)
+                else if (!isRight && goLeft && !isJump && !isLower && (int)Velocity.Y <= 0 && !OnLadder)
                     Walk.Draw(spriteBatch, Position + new Vector2(-7, -10), SpriteEffects.FlipHorizontally);
 
                 /// Jump
@@ -447,6 +458,9 @@ namespace Plateform_2D_v9
                     spriteBatch.Draw(Main.Player_Down, Position + new Vector2(-7, -26), new Rectangle(0, 0, 30, 50), Color.White);
                 else if (isLower && !isRight && isJump)
                     spriteBatch.Draw(Main.Player_Down, new Vector2(Position.X - 7, GetRectangle().Y - 26), new Rectangle(0, 0, 30, 50), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+
+                if (OnLadder)
+                    PlayerLadder.Draw(spriteBatch, Position + new Vector2(-7, -10), SpriteEffects.None);
 
             }
 
@@ -782,7 +796,7 @@ namespace Plateform_2D_v9
                                 if (GetRectangleForLadder().Intersects(((Ladder)actor).GetRectangle()))
                                 {
                                     if ((KeyInput.getKeyState().IsKeyDown(Keys.Space) || (KeyInput.getKeyState().IsKeyDown(Main.Down) && GetRectangle().Y + GetRectangle().Height != ((Ladder)actor).GetRectangle().Y + ((Ladder)actor).GetRectangle().Height)) && !OnLadder && GetRectangle().Y > ((Ladder)actor).GetRectangle().Y - 16)
-                                    { OnLadder = true; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; } 
+                                    { OnLadder = true; isLower = false; isJump = false; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; } 
                                     if (GetRectangle().Y < ((Ladder)actor).GetRectangle().Y - 16)              ///  /!\ DANGER  \\\
                                         OnTopOfLadder = true;
                                     else
@@ -800,7 +814,7 @@ namespace Plateform_2D_v9
                                 if (GetRectangleForLadder().Intersects(((Ladder)actor).GetRectangle()))
                                 {
                                     if ((KeyInput.getKeyState().IsKeyDown(Keys.Space) || (KeyInput.getKeyState().IsKeyDown(Main.Down) && GetRectangle().Y + GetRectangle().Height != ((Ladder)actor).GetRectangle().Y + ((Ladder)actor).GetRectangle().Height)) && !OnLadder && GetRectangle().Y > ((Ladder)actor).GetRectangle().Y - 16)
-                                    { OnLadder = true; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; }
+                                    { OnLadder = true; isLower = false; isJump = false; isOnGround = false; Acceleration.Y = 0; Velocity.Y = 0; Position.X = ((Ladder)actor).GetRectangle().X - 1; }
                                     if (GetRectangle().Y < ((Ladder)actor).GetRectangle().Y - 16)              ///  /!\ DANGER  \\\
                                         OnTopOfLadder = true;
                                     else

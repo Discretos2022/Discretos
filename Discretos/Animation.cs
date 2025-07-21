@@ -65,6 +65,20 @@ namespace Plateform_2D_v9
             }
         }
 
+        public void UpdateReverse(GameTime gameTime)
+        {
+            if (!active) return;
+
+            frameTimeLeft -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (frameTimeLeft <= 0)
+            {
+                frameTimeLeft += frameTime;
+                frame = (frame - 1) % frames;
+                if (frame < 0) frame = frames + frame;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 pos, SpriteEffects effect = SpriteEffects.None)
         {
             spriteBatch.Draw(Texture, pos, _sourceRectangles[frame], Color.White, 0, Vector2.Zero, 1f, effect, 0f);

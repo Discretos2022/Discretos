@@ -152,6 +152,7 @@ namespace Plateform_2D_v9.Objects
             stone = 11,
             liquid_drop = 12,
             trigger = 13,
+            chain = 14,
         };
 
 

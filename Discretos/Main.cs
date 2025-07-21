@@ -40,6 +40,8 @@ namespace Plateform_2D_v9
         public static Texture2D Player_Basic_Attack;
         public static Texture2D Player_Jump;
         public static Texture2D Squish_Player;
+        public static Texture2D Player_Ladder;
+
         public static Texture2D effect;
 
         public static Texture2D BlackBar;
@@ -247,7 +249,7 @@ namespace Plateform_2D_v9
             
             Tileset = new Texture2D[12 + 1];
             Wallset = new Texture2D[200];
-            Object = new Texture2D[13 + 1];
+            Object = new Texture2D[14 + 1];
             SpriteSheetItem = new Texture2D[7];
             Enemy = new Texture2D[3 + 1];
             BackgroundTexture = new Texture2D[20];
@@ -308,6 +310,7 @@ namespace Plateform_2D_v9
             Player_Basic_Attack = Content.Load<Texture2D>("Images\\Player\\Player_Basic_Attack");
             Player_Jump = Content.Load<Texture2D>("Images\\Player\\Player_Jump");
             Squish_Player = Content.Load<Texture2D>("Images\\Player\\Squish_Player");
+            Player_Ladder = Content.Load<Texture2D>("Images\\Player\\Player_Ladder");
 
             effect = Content.Load<Texture2D>("Images\\effect");
 
