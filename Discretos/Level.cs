@@ -104,6 +104,7 @@ namespace Plateform_2D_v9
             }
 
             LevelData.InitLevelSystem(Main.LevelPlaying);
+            LevelData.InitBackground(Main.LevelPlaying);
 
             Main.MapLoaded = true;
 

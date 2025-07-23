@@ -1633,6 +1633,78 @@ namespace Plateform_2D_v9
         }
 
 
+        public static void InitBackground(int level)
+        {
+
+            BackgroundV2.Reset();
+
+            /*if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
+                    Background.SetBackground(3);
+                else if (Main.LevelPlaying == 7)
+                    Background.SetBackground(16); // 4
+                else if (Main.LevelPlaying == 3 || Main.LevelPlaying == 11)
+                    Background.SetBackground(6, 7, 8, 9, 10, 11);
+                else if (Main.LevelPlaying == 8)
+                    Background.SetBackground(3);
+                else if (Main.LevelPlaying == 8)
+                    Background.SetBackground(6, 7, 8, 9, 10, 11);
+                else if (Main.LevelPlaying == 10)
+                    Background.SetBackground(6, 7, 8, 9, 10, 11);
+                else if(Main.LevelPlaying == 6)
+                    Background.SetBackground(15, 15, 15); //Background.SetBackground(13, 14);
+                else
+                    Background.SetBackground(2);*/
+
+            switch (level)
+            {
+
+                case 3:
+                    BackgroundV2.AddLayer(new Layer(6, 1f / 7));
+                    BackgroundV2.AddLayer(new Layer(7, 1f / 6));
+                    BackgroundV2.AddLayer(new Layer(8, 1f / 5));
+                    BackgroundV2.AddLayer(new Layer(9, 1f / 4));
+                    BackgroundV2.AddLayer(new Layer(10, 1f / 3));
+                    BackgroundV2.AddLayer(new Layer(11, 1f / 2));
+                    BackgroundV2.SetCameraBasePosition(new Vector2(0, 150));
+                    break;
+
+                case 4:
+                    BackgroundV2.AddLayer(new Layer(3, 0.5f));
+                    BackgroundV2.SetCameraBasePosition(new Vector2(0, 150));
+                    break;
+
+                case 7:
+                    BackgroundV2.AddLayer(new Layer(16, 0.15f));
+                    BackgroundV2.SetCameraBasePosition(new Vector2(0, 150));
+                    break;
+
+                case 9:
+                    BackgroundV2.AddLayer(new Layer(3, 0.5f));
+                    break;
+
+                case 11:
+                    BackgroundV2.AddLayer(new Layer(3, 1f / 7));
+                    BackgroundV2.AddLayer(new Layer(7, 1f / 6));
+                    BackgroundV2.AddLayer(new Layer(8, 1f / 5));
+                    BackgroundV2.AddLayer(new Layer(9, 1f / 4));
+                    BackgroundV2.AddLayer(new Layer(10, 1f / 3));
+                    BackgroundV2.AddLayer(new Layer(11, 1f / 2));
+
+                    BackgroundV2.SetBasePosition(new Vector2(0, 150));
+                    BackgroundV2.SetCameraBasePosition(new Vector2(0, 520));
+                    break;
+
+                default:
+                    BackgroundV2.AddLayer(new Layer(2, 0.5f));
+                    BackgroundV2.SetCameraBasePosition(new Vector2(0, 150));
+                    break;
+
+
+            }
+
+        }
+
+
         public static void InitLevelSystem(int level)
         {
 

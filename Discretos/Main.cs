@@ -212,7 +212,7 @@ namespace Plateform_2D_v9
 
             //InactiveSleepTime = TimeSpan.FromSeconds(1f / 60f);  /// si le jeu est inactif
 
-            graphics.PreferHalfPixelOffset = false;
+            graphics.PreferHalfPixelOffset = true;
 
             graphics.IsFullScreen = false;
 
@@ -294,6 +294,8 @@ namespace Plateform_2D_v9
             FpsTime = new Stopwatch();
 
             Console.WriteLine((int)Enum.Parse<TileV2.BlockID>("snow"));
+
+            BackgroundV2.AddLayer(new Layer(2));
 
             base.Initialize();
         }
@@ -614,8 +616,10 @@ namespace Plateform_2D_v9
 
             math += Math.PI / 100;
 
+            BackgroundV2.Draw(spriteBatch);
 
-            Background.Draw(spriteBatch);
+
+            //Background.Draw(spriteBatch);
 
             //Background.SetBackground(3);
 

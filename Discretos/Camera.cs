@@ -137,12 +137,12 @@ namespace Plateform_2D_v9
                 this.position.X = Handler.Level.GetLength(0) * 16 - 240 / Main.ScreenRatioComparedWith1080p;
 
             /// Deplacement camera en Y
-            if (Pos.Y >= 136 / Main.ScreenRatioComparedWith1080p && Pos.Y <= Handler.Level.GetLength(1) * 16 - 136 / Main.ScreenRatioComparedWith1080p)
+            if (Pos.Y >= 135 / Main.ScreenRatioComparedWith1080p && Pos.Y <= Handler.Level.GetLength(1) * 16 - 135 / Main.ScreenRatioComparedWith1080p)
                 this.position.Y = Pos.Y + eqy;
-            else if (Pos.Y < 136 / Main.ScreenRatioComparedWith1080p)
-                this.position.Y = 136 / Main.ScreenRatioComparedWith1080p;
-            else if (Pos.Y > Handler.Level.GetLength(1) * 16 - 136 / Main.ScreenRatioComparedWith1080p)
-                this.position.Y = Handler.Level.GetLength(1) * 16 - 136 / Main.ScreenRatioComparedWith1080p;
+            else if (Pos.Y < 135 / Main.ScreenRatioComparedWith1080p)
+                this.position.Y = 135 / Main.ScreenRatioComparedWith1080p;
+            else if (Pos.Y > Handler.Level.GetLength(1) * 16 - 135 / Main.ScreenRatioComparedWith1080p)
+                this.position.Y = Handler.Level.GetLength(1) * 16 - 135 / Main.ScreenRatioComparedWith1080p;
 
         }
 

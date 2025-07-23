@@ -220,7 +220,7 @@ namespace Plateform_2D_v9
                 if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
                     ParticleEffectV2.Update(gameTime);
 
-                if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
+                /*if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
                     Background.SetBackground(3);
                 else if (Main.LevelPlaying == 7)
                     Background.SetBackground(16); // 4
@@ -235,7 +235,7 @@ namespace Plateform_2D_v9
                 else if(Main.LevelPlaying == 6)
                     Background.SetBackground(15, 15, 15); //Background.SetBackground(13, 14);
                 else
-                    Background.SetBackground(2);
+                    Background.SetBackground(2);*/
 
                 if (Main.LevelPlaying == 10)
                     Background.SetBaseBackgroundPos(0, 200);
@@ -376,7 +376,7 @@ namespace Plateform_2D_v9
 
             spriteBatch.Draw(Main.ObjectInterface, new Rectangle(10, 10, 15 * 4, 14 * 4), new Rectangle(30, 0, 15, 15), Color.White);
             Writer.DrawText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(80, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
-
+            
             ///Writer.DrawSuperText(Main.ScoreFont, Main.Money.ToString("00000"), new Vector2(0, 18), Color.Black, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, 0f, 4f, spriteBatch);
 
 

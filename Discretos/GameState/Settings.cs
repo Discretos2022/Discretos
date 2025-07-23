@@ -104,20 +104,23 @@ namespace Plateform_2D_v9
                 if(settingState == SettingState.SettingMenu)
                 {
                     Main.gameState = GameState.Menu;
-                    Background.SetBackground(2);
+                    BackgroundV2.Reset();
+                    BackgroundV2.AddLayer(new Layer(2));
                     ButtonManager.mainMenuButtons[2].SetIsSelected(true);
                 }
                 else if(settingState == SettingState.Video)
                 {
                     settingState = SettingState.SettingMenu;
-                    Background.SetBackground(3);
+                    BackgroundV2.Reset();
+                    BackgroundV2.AddLayer(new Layer(3));
                     Back.SetIsSelected(false);
                     General.SetIsSelected(true);
                 }
                 else if (settingState == SettingState.Controls)
                 {
                     settingState = SettingState.SettingMenu;
-                    Background.SetBackground(3);
+                    BackgroundV2.Reset();
+                    BackgroundV2.AddLayer(new Layer(3));
                     Back.SetIsSelected(false);
                     General.SetIsSelected(true);
                 }
@@ -220,7 +223,8 @@ namespace Plateform_2D_v9
             if (Video.IsCliqued())
             {
                 settingState = SettingState.Video;
-                Background.SetBackground(4);
+                BackgroundV2.Reset();
+                BackgroundV2.AddLayer(new Layer(4));
 
                 if (!MouseInput.IsActived)
                     VerticalSync.SetIsSelected(true);
@@ -230,7 +234,13 @@ namespace Plateform_2D_v9
             if (Controls.IsCliqued())
             {
                 settingState = SettingState.Controls;
-                Background.SetBackground(3);
+                BackgroundV2.Reset();
+                BackgroundV2.AddLayer(new Layer(6));
+                BackgroundV2.AddLayer(new Layer(7));
+                BackgroundV2.AddLayer(new Layer(8));
+                BackgroundV2.AddLayer(new Layer(9));
+                BackgroundV2.AddLayer(new Layer(10));
+                BackgroundV2.AddLayer(new Layer(11));
 
                 if (!MouseInput.IsActived)
                     PlayerControls.SetIsSelected(true);

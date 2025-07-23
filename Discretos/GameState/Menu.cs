@@ -83,7 +83,8 @@ namespace Plateform_2D_v9
             if (MultiPlayer2.IsCliqued())
             {
                 //MultiPlayer2.SetText("not exist");
-                Background.SetBackground(3);
+                BackgroundV2.Reset();
+                BackgroundV2.AddLayer(new Layer(3));
                 Main.gameState = GameState.MultiplayerMode;
             }
 
@@ -102,7 +103,8 @@ namespace Plateform_2D_v9
             if (Settings2.IsCliqued())
             {
                 Main.gameState = GameState.Settings;
-                Background.SetBackground(3);
+                BackgroundV2.Reset();
+                BackgroundV2.AddLayer(new Layer(3));
 
                 if (!MouseInput.IsActived)
                     ButtonManager.settingsButtons[0].SetIsSelected(true);
