@@ -1638,23 +1638,6 @@ namespace Plateform_2D_v9
 
             BackgroundV2.Reset();
 
-            /*if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
-                    Background.SetBackground(3);
-                else if (Main.LevelPlaying == 7)
-                    Background.SetBackground(16); // 4
-                else if (Main.LevelPlaying == 3 || Main.LevelPlaying == 11)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if (Main.LevelPlaying == 8)
-                    Background.SetBackground(3);
-                else if (Main.LevelPlaying == 8)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if (Main.LevelPlaying == 10)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if(Main.LevelPlaying == 6)
-                    Background.SetBackground(15, 15, 15); //Background.SetBackground(13, 14);
-                else
-                    Background.SetBackground(2);*/
-
             switch (level)
             {
 
@@ -1683,7 +1666,7 @@ namespace Plateform_2D_v9
                     break;
 
                 case 11:
-                    BackgroundV2.AddLayer(new Layer(3, 1f / 7));
+                    BackgroundV2.AddLayer(new Layer(6, 1f / 7));
                     BackgroundV2.AddLayer(new Layer(7, 1f / 6));
                     BackgroundV2.AddLayer(new Layer(8, 1f / 5));
                     BackgroundV2.AddLayer(new Layer(9, 1f / 4));
@@ -1709,7 +1692,6 @@ namespace Plateform_2D_v9
         {
 
             Camera.Zoom = 4f;
-            Background.shift = 150;
 
             ParticleEffectV2.particles.Clear();
 
@@ -1777,9 +1759,6 @@ namespace Plateform_2D_v9
                     break;
 
                 case 11:
-
-                    Background.shift = 80;
-
                     break;
 
             }

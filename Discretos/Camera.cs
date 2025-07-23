@@ -154,13 +154,6 @@ namespace Plateform_2D_v9
         }
 
 
-        public void UpdateBackground()
-        {
-            if(Main.gameState == GameState.Playing)
-                Background.SetBackgroundPos(position.X, position.Y + Background.shift); // + 150
-        }
-
-
         public void Follow(Vector2 Pos)
         {
             position.X = 0 + 480 * 2 - 10;

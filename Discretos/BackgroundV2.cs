@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Plateform_2D_v9
@@ -10,16 +9,8 @@ namespace Plateform_2D_v9
     class BackgroundV2
     {
 
-        private static Vector2 Pos;
-
         private static Vector2 BasePosition;
         private static Vector2 CameraBasePosition;
-
-        private static int Paralaxe = 2;
-
-
-        public static int shift = 150;
-
 
         private static List<Layer> layers = new List<Layer>();
 
@@ -41,16 +32,6 @@ namespace Plateform_2D_v9
                     layers[i].Draw(spriteBatch, new Vector2(0, 0), Vector2.Zero);
             }
 
-
-            Paralaxe = 2; // 2
-
-        }
-
-        public static void SetBackgroundPos(float x, float y)
-        {
-            //Pos.X = (x - 220) / Paralaxe;
-            //Pos.Y = (y - 300) / Paralaxe;
-
         }
 
         public static void SetBaseBackgroundPos(float x, float y)
@@ -62,7 +43,6 @@ namespace Plateform_2D_v9
         {
             layers.Add(layer);
         }
-
 
         public static void Reset()
         {
@@ -80,7 +60,6 @@ namespace Plateform_2D_v9
         {
             CameraBasePosition = position;
         }
-
 
     }
 
@@ -110,18 +89,13 @@ namespace Plateform_2D_v9
 
             if (infinite)
             {
-
                 Vector2 p = -new Vector2(cameraPos.X % (1920 / velocity), cameraPos.Y % (1080 / velocity));
                 spriteBatch.Draw(Main.BackgroundTexture[backgroundID],  p * velocity, null, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(Main.BackgroundTexture[backgroundID], p * velocity + new Vector2(1920, 0), null, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
-
             }
 
         }
 
-
-
     }
-
 
 }

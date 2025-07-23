@@ -220,30 +220,6 @@ namespace Plateform_2D_v9
                 if (Main.LevelPlaying == 5 || Main.LevelPlaying == 7)
                     ParticleEffectV2.Update(gameTime);
 
-                /*if (Main.LevelPlaying == 4 || Main.LevelPlaying == 9)
-                    Background.SetBackground(3);
-                else if (Main.LevelPlaying == 7)
-                    Background.SetBackground(16); // 4
-                else if (Main.LevelPlaying == 3 || Main.LevelPlaying == 11)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if (Main.LevelPlaying == 8)
-                    Background.SetBackground(3);
-                else if (Main.LevelPlaying == 8)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if (Main.LevelPlaying == 10)
-                    Background.SetBackground(6, 7, 8, 9, 10, 11);
-                else if(Main.LevelPlaying == 6)
-                    Background.SetBackground(15, 15, 15); //Background.SetBackground(13, 14);
-                else
-                    Background.SetBackground(2);*/
-
-                if (Main.LevelPlaying == 10)
-                    Background.SetBaseBackgroundPos(0, 200);
-                else if (Main.LevelPlaying == 3)
-                    Background.SetBaseBackgroundPos(0, 12);
-                else
-                    Background.SetBaseBackgroundPos(0, 0);
-
                 handler.Update(gameTime);
 
                 Main.camera.FollowObject(new Vector2(Handler.playersV2[NetPlay.MyPlayerID()].GetPosForCamera().X + Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().Width / 2, Handler.playersV2[NetPlay.MyPlayerID()].GetPosForCamera().Y + Handler.playersV2[NetPlay.MyPlayerID()].GetRectangle().Height / 2));

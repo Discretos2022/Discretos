@@ -393,9 +393,6 @@ namespace Plateform_2D_v9
 
             state.Update(gameState, gameTime, screen, this);
 
-            camera.UpdateBackground();
-            Background.Update();
-
             KeyInput.Update();
             MouseInput.Update(screen);
             GamePadInput.Update(PlayerIndex.One);
@@ -424,7 +421,6 @@ namespace Plateform_2D_v9
 
             if (((KeyInput.getKeyState().IsKeyDown(Keys.F12) && !KeyInput.getOldKeyState().IsKeyDown(Keys.F12)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.BigButton) && !GamePadInput.GetOldPadState(PlayerIndex.One).IsButtonDown(Buttons.BigButton))) && gameState != GameState.Menu)
             {
-                Background.SetBaseBackgroundPos(0, 0);
                 gameState = GameState.Menu;
                 MapLoaded = false;
             }
@@ -617,13 +613,6 @@ namespace Plateform_2D_v9
             math += Math.PI / 100;
 
             BackgroundV2.Draw(spriteBatch);
-
-
-            //Background.Draw(spriteBatch);
-
-            //Background.SetBackground(3);
-
-            //camera.UpdateBackground();
 
             render.End(spriteBatch);
             screen.UnSet();
